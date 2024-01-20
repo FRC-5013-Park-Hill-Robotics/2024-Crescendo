@@ -5,4 +5,8 @@
 package frc.robot.subsystems;
 
 /** Add your docs here. */
-public class LauncherShoulder {}
+public class LauncherShoulder {
+    public LauncherShoulder() {
+        
+    }
+}

@@ -5,4 +5,9 @@
 package frc.robot.subsystems;
 
 /** Add your docs here. */
-public class IntakeRollers {}
+public class IntakeRollers {
+
+    public IntakeRollers() {
+        
+    }
+}
