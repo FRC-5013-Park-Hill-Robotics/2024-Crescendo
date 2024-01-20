@@ -4,5 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 /** Add your docs here. */
-public class IntakeRollers {}
+public class IntakeRollers extends SubsystemBase{}

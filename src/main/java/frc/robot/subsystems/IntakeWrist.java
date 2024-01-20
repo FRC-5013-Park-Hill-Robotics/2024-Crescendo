@@ -5,4 +5,4 @@
 package frc.robot.subsystems;
 
 /** Add your docs here. */
-public class IntakeWrist {}
+public class IntakeWrist extends SubsystemBase {}

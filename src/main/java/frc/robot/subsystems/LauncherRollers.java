@@ -5,4 +5,4 @@
 package frc.robot.subsystems;
 
 /** Add your docs here. */
-public class LauncherRollers {}
+public class LauncherRollers extends SubsystemBase {}
