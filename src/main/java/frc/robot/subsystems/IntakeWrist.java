@@ -5,7 +5,13 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.math.controller.ArmFeedforward;
-/** Add your docs here. */
-public class IntakeWrist extends SubsystemBase {}
+
+public class IntakeShoulder extends SubsystemBase {
+  /** Creates a new IntakeShoulder. */
+  public IntakeShoulder() {}
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+  }
+}

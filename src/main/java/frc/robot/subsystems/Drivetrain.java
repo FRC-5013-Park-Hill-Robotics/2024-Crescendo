@@ -6,5 +6,12 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-/** Add your docs here. */
-public class Drivetrain extends SubsystemBase {}
+public class Drivetrain extends SubsystemBase {
+  /** Creates a new Drivetrain. */
+  public Drivetrain() {}
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+  }
+}
