@@ -6,7 +6,6 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-<<<<<<<< HEAD:src/main/java/frc/robot/subsystems/Limelight.java
 public class Limelight extends SubsystemBase {
   /** Creates a new Limelight. */
   public Limelight() {}
@@ -16,13 +15,4 @@ public class Limelight extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 }
-========
-/** Add your docs here. */
-public class StatusLED extends SubsystemBase {
-    public StatusLED() {
-        
-    }
-    
-}
-    
->>>>>>>> main:src/main/java/frc/robot/subsystems/StatusLED.java
+

@@ -6,9 +6,9 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class IntakeShoulder extends SubsystemBase {
+public class IntakeWrist extends SubsystemBase {
   /** Creates a new IntakeShoulder. */
-  public IntakeShoulder() {}
+  public IntakeWrist() {}
 
   @Override
   public void periodic() {
