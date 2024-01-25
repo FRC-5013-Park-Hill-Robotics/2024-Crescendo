@@ -4,9 +4,14 @@
 
 package frc.robot.subsystems;
 
-/** Add your docs here. */
-public class IntakeWrist {
-    public IntakeWrist() {
-        
-    }
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+public class IntakeWrist extends SubsystemBase {
+  /** Creates a new IntakeShoulder. */
+  public IntakeWrist() {}
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+  }
 }

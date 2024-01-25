@@ -4,9 +4,15 @@
 
 package frc.robot.subsystems;
 
-/** Add your docs here. */
-public class LauncherShoulder {
-    public LauncherShoulder() {
-        
-    }
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+public class LauncherShoulder extends SubsystemBase {
+  /** Creates a new LauncherShoulder. */
+  public LauncherShoulder() {}
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+  }
+
 }

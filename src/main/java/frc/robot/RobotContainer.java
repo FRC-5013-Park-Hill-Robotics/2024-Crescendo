@@ -7,7 +7,9 @@ package frc.robot;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -21,7 +23,6 @@ import frc.robot.subsystems.IntakeWrist;
 import frc.robot.subsystems.LauncherRollers;
 import frc.robot.subsystems.LauncherShoulder;
 import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.StatusLED;
 
 public class RobotContainer {
   private double MaxSpeed = 6; // 6 meters per second desired top speed
@@ -42,7 +43,7 @@ public class RobotContainer {
   private Limelight m_LimelightFront = new Limelight(); //creates the limelight front instance variable
   private Limelight m_LimelightBack = new Limelight(); //creates the limelight back instance variable
 
-  private StatusLED m_statusLED = new StatusLED(); //creates the status led instanc variable
+  //private StatusLED m_statusLED = new StatusLED(); //creates the status led instanc variable
 
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
