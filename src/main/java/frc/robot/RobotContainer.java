@@ -18,12 +18,12 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.IntakeRollers;
 import frc.robot.subsystems.IntakeWrist;
 import frc.robot.subsystems.LauncherRollers;
-import frc.robot.subsystems.LauncherShoulder; 
-import frc.robot.subsystems.LimeLight;
+import frc.robot.subsystems.LauncherShoulder;
+import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.StatusLED;
 
 public class RobotContainer {
   private double MaxSpeed = 6; // 6 meters per second desired top speed
@@ -32,6 +32,20 @@ public class RobotContainer {
   /* Setting up bindings for necessary control of the swerve drive platform */
   private final CommandXboxController joystick = new CommandXboxController(0); // My joystick
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
+
+  private Climber m_climber = new Climber(); //creates the climber instance variable
+
+  private IntakeRollers m_intakeRollers = new IntakeRollers(); //creates the intake rollers instance variable
+  private IntakeWrist m_intakeWrist = new IntakeWrist(); //creates the intake wrist instance variable
+
+  private LauncherRollers m_launcherRollers = new LauncherRollers(); //creates the launcher rollers instance variable
+  private LauncherShoulder m_launcherShoulder = new LauncherShoulder(); //creates the launcher shoulder variable
+
+  private Limelight m_LimelightFront = new Limelight(); //creates the limelight front instance variable
+  private Limelight m_LimelightBack = new Limelight(); //creates the limelight back instance variable
+
+  private StatusLED m_statusLED = new StatusLED(); //creates the status led instanc variable
+
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
       .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
