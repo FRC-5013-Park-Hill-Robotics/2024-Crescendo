@@ -5,10 +5,22 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.math.controller.ArmFeedforward;
 
 public class IntakeWrist extends SubsystemBase {
   /** Creates a new IntakeShoulder. */
   public IntakeWrist() {}
+
+public void stop(){
+
+}
+
+
+public double getGroundRelativeWristPositionRadians(){
+    return ();
+}
 
   @Override
   public void periodic() {
