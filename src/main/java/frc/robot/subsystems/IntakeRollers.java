@@ -7,12 +7,27 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeRollers extends SubsystemBase {
-  /** Creates a new IntakeRollers. */
-  public IntakeRollers() {}
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
+    // private Motor intakeMotor = new Motor(ID, MotorType);
+
+    public IntakeRollers() {
+    }
+
+    public void feedIn() {
+        //intakeMotor.set(IntakeConstants.intakeMotorSpeed);
+    }
+
+    public void feedOut() {
+        //intakeMotor.set(-IntakeConstants.intakeMotorSpeed);
+    }
+
+    public void stop() {
+        //intakeMotor.set(0);
+    }
+
+    @Override
+    public void periodic() {
+        // This method will be called once per scheduler run
+    }
 
 }
