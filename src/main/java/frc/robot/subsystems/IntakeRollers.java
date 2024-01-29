@@ -4,10 +4,15 @@
 
 package frc.robot.subsystems;
 
-/** Add your docs here. */
-public class IntakeRollers {
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-    public IntakeRollers() {
-        
-    }
+public class IntakeRollers extends SubsystemBase {
+  /** Creates a new IntakeRollers. */
+  public IntakeRollers() {}
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+  }
+
 }

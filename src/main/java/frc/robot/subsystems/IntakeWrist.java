@@ -4,9 +4,79 @@
 
 package frc.robot.subsystems;
 
-/** Add your docs here. */
-public class IntakeWrist {
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.reduxrobotics.sensors.canandcoder.Canandcoder;
+
+import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.MutableMeasure.mutable;
+
+import edu.wpi.first.units.Angle;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.MutableMeasure;
+import edu.wpi.first.units.Velocity;
+import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+
+public class IntakeWrist extends SubsystemBase {
+
+    private final TalonFX intakeWristMotor = new TalonFX(1);
+    private final Canandcoder encoder = new Canandcoder(1);
+
+    /** Creates a new IntakeShoulder. */
     public IntakeWrist() {
-        
+    }
+
+    @Override
+    public void periodic() {
+        // This method will be called once per scheduler run
+    }
+
+    // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
+    private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
+    // Mutable holder for unit-safe linear distance values, persisted to avoid
+    // reallocation.
+    private final MutableMeasure<Angle> m_rotation = mutable(Radians.of(0));
+    // Mutable holder for unit-safe linear velocity values, persisted to avoid
+    // reallocation.
+    private final MutableMeasure<Velocity<Angle>> m_velocity = mutable(RadiansPerSecond.of(0));
+    private final SysIdRoutine m_sysIdRoutine = new SysIdRoutine(
+            // Empty config defaults to 1 volt/second ramp rate and 7 volt step voltage.
+            new SysIdRoutine.Config(),
+            new SysIdRoutine.Mechanism(
+                    // Tell SysId how to plumb the driving voltage to the motors.
+                    (Measure<Voltage> volts) -> {
+                        intakeWristMotor.setVoltage(volts.in(Volts));
+                    },
+                    // Tell SysId how to record a frame of data for each motor on the mechanism
+                    // being
+                    // characterized.
+                    log -> {
+                        // Record a frame for the left motors. Since these share an encoder, we consider
+                        // the entire group to be one motor.
+                        log.motor("drive-left")
+                                .voltage(
+                                        m_appliedVoltage.mut_replace(
+                                                intakeWristMotor.get() * RobotController.getBatteryVoltage(), Volts))
+                                .angularPosition(m_rotation.mut_replace(encoder.getAbsPosition(), Radians))
+                                .angularVelocity(
+                                        m_velocity.mut_replace(encoder.getVelocity(), RadiansPerSecond));
+
+                    },
+                    // Tell SysId to make generated commands require this subsystem, suffix test
+                    // state in
+                    // WPILog with this subsystem's name ("drive")
+                    this));
+
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return m_sysIdRoutine.quasistatic(direction);
+    }
+
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return m_sysIdRoutine.dynamic(direction);
     }
 }

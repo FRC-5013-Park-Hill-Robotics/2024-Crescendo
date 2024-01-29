@@ -3,10 +3,15 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-/** Add your docs here. */
-public class LauncherRollers {
-    public LauncherRollers() {
-        
-    }
+public class LauncherRollers extends SubsystemBase {
+  /** Creates a new LauncherRollers. */
+  public LauncherRollers() {}
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+  }
+
 }
