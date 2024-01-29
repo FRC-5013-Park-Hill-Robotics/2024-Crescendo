@@ -6,12 +6,11 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class StatusLEDS extends SubsystemBase {
-  /** Creates a new StatusLEDS. */
-  public StatusLEDS() {}
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
+/** Add your docs here. */
+public class StatusLED extends SubsystemBase {
+    public StatusLED() {
+        
+    }
+    
 }
+    
