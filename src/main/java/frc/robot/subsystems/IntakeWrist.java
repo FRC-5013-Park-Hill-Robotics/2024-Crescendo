@@ -58,7 +58,7 @@ public class IntakeWrist extends SubsystemBase {
                     log -> {
                         // Record a frame for the left motors. Since these share an encoder, we consider
                         // the entire group to be one motor.
-                        log.motor("drive-left")
+                        log.motor("wrist")
                                 .voltage(
                                         m_appliedVoltage.mut_replace(
                                                 intakeWristMotor.get() * RobotController.getBatteryVoltage(), Volts))
