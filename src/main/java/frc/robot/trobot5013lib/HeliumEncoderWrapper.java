@@ -11,12 +11,18 @@ public class HeliumEncoderWrapper {
     private Canandcoder encoder; 
 
     public HeliumEncoderWrapper () {
-
+        super();
     }
 
 
     public HeliumEncoderWrapper (int canID) {
+       this(canID, false);
+    }
+
+    public HeliumEncoderWrapper(int canID, boolean inverted) {
+        super();
         this.encoder = new Canandcoder(canID);
+        this.encoder.getSettings().setInvertDirection(inverted);
     }
 
     public double getAbsPositionRadians() {

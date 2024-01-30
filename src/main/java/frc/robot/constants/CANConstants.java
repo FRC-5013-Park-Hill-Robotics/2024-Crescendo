@@ -32,5 +32,9 @@ public class CANConstants {
     public static final int INTAKE_ID = 0;
     public static final int EXTENSION_ID = 0;
 
-    public static final int WRIST_ID = 0;
+    public static final int INTAKE_WRIST_MOTOR_CAN_ID = 0;
+    public static final int INTAKE_ENCODER_CAN_ID = 0;
+
+    public static final int LAUNCHER_MOTOR_CAN_ID = 0;
+    public static final int LAUNCHER_ENCODER_CAN_ID = 0;
 }

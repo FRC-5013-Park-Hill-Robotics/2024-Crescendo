@@ -44,7 +44,6 @@ public class RobotContainer {
 
   private StatusLED m_statusLED = new StatusLED(); //creates the status led instance variable
 
-
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
       .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
@@ -52,6 +51,13 @@ public class RobotContainer {
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   private final Telemetry logger = new Telemetry(MaxSpeed);
+  private static RobotContainer instance;
+
+  public RobotContainer() {
+    super();
+    instance = this;
+    configureBindings();
+  }
 
   private void configureBindings() {
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
@@ -74,11 +80,16 @@ public class RobotContainer {
     drivetrain.registerTelemetry(logger::telemeterize);
   }
 
-  public RobotContainer() {
-    configureBindings();
-  }
-
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
   }
+
+  public static RobotContainer getInstance() {
+    return instance;
+  }
+
+  public LauncherShoulder getLauncherShoulder() {
+    return m_launcherShoulder;
+  }
+
 }

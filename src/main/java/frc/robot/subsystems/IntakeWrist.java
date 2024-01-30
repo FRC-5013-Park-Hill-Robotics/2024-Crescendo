@@ -12,6 +12,7 @@ import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.MutableMeasure.mutable;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
@@ -21,12 +22,17 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.RobotContainer;
+import frc.robot.constants.IntakeConstants;
 import frc.robot.trobot5013lib.HeliumEncoderWrapper;
 
 public class IntakeWrist extends SubsystemBase {
 
-    private final TalonFX intakeWristMotor = new TalonFX(1);
-    private final HeliumEncoderWrapper encoder = new HeliumEncoderWrapper(1);
+    private final TalonFX intakeWristMotor = new TalonFX(IntakeConstants.INTAKE_WRIST_MOTOR_CAN_ID);
+    private final HeliumEncoderWrapper encoder = new HeliumEncoderWrapper(IntakeConstants.INTAKE_ENCODER_CAN_ID);
+    public double setpointRadians = 0;
+    private ArmFeedforward feedforward = new ArmFeedforward(IntakeConstants.Gains.kS, IntakeConstants.Gains.kG,
+            IntakeConstants.Gains.kV, IntakeConstants.Gains.kA);
 
     /** Creates a new IntakeShoulder. */
     public IntakeWrist() {
@@ -35,6 +41,23 @@ public class IntakeWrist extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
+    }
+
+    public void deploy() {
+        
+    }
+
+    public void retract() {
+
+    }
+
+    private LauncherShoulder getLauncherShoulder() {
+        return RobotContainer.getInstance().getLauncherShoulder();
+    }
+
+
+    public double getGroundRelativeWristPossitionRadians(){
+        return (getLauncherShoulder().getShoulderAngleRadians()  + encoder.getAbsPositionRadians()) % (Math.PI * 2);
     }
 
     // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
