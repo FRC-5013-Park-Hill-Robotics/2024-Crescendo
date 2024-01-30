@@ -5,4 +5,4 @@
 package frc.robot.constants;
 
 /** Add your docs here. */
-public class LEDConstants {}
+public final class LEDConstants {}

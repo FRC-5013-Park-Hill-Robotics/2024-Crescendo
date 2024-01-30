@@ -7,7 +7,7 @@ package frc.robot.constants;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 /** Add your docs here. */
-public class IntakeConstants {
+public final class IntakeConstants {
     public final static int INTAKE_WRIST_MOTOR_CAN_ID = CANConstants.INTAKE_WRIST_MOTOR_CAN_ID;
     public final static int INTAKE_ENCODER_CAN_ID = CANConstants.INTAKE_ENCODER_CAN_ID;
     public static final class Gains {
