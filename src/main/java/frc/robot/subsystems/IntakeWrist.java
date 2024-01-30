@@ -21,11 +21,12 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.trobot5013lib.HeliumEncoderWrapper;
 
 public class IntakeWrist extends SubsystemBase {
 
     private final TalonFX intakeWristMotor = new TalonFX(1);
-    private final Canandcoder encoder = new Canandcoder(1);
+    private final HeliumEncoderWrapper encoder = new HeliumEncoderWrapper(1);
 
     /** Creates a new IntakeShoulder. */
     public IntakeWrist() {
@@ -56,20 +57,19 @@ public class IntakeWrist extends SubsystemBase {
                     // being
                     // characterized.
                     log -> {
-                        // Record a frame for the left motors. Since these share an encoder, we consider
-                        // the entire group to be one motor.
+                        // Record a frame for the wrist motor. 
                         log.motor("wrist")
                                 .voltage(
                                         m_appliedVoltage.mut_replace(
                                                 intakeWristMotor.get() * RobotController.getBatteryVoltage(), Volts))
-                                .angularPosition(m_rotation.mut_replace(encoder.getAbsPosition(), Radians))
+                                .angularPosition(m_rotation.mut_replace(encoder.getAbsPositionRadians(), Radians))
                                 .angularVelocity(
-                                        m_velocity.mut_replace(encoder.getVelocity(), RadiansPerSecond));
+                                        m_velocity.mut_replace(encoder.getVelocityRadians(), RadiansPerSecond));
 
                     },
                     // Tell SysId to make generated commands require this subsystem, suffix test
                     // state in
-                    // WPILog with this subsystem's name ("drive")
+                    // WPILog with this subsystem's name ("IntakeWrist")
                     this));
 
     public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
