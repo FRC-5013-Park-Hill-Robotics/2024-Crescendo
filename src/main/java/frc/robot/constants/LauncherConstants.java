@@ -5,4 +5,7 @@
 package frc.robot.constants;
 
 /** Add your docs here. */
-public final class LEDConstants {}
+public final class LauncherConstants {
+    public final static int LAUNCHER_SHOULDER_MOTOR_CAN_ID = CANConstants.LAUNCHER_SHOULDER_MOTOR_CAN_ID;
+    public final static int LAUNCHER_ENCODER_CAN_ID = CANConstants.LAUNCHER_ENCODER_CAN_ID;
+}
