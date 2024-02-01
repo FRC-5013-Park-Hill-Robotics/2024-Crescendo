@@ -28,13 +28,22 @@ public final class CANConstants {
 
 
     public static final int PIGEON_ID = 0;
-    public static final int SHOULDER_ID = 0;
-    public static final int INTAKE_ID = 0;
+    public static final int SHOULDER_ID = 16;
+    public static final int INTAKE_ROLLER_ID = 19;
     public static final int EXTENSION_ID = 0;
 
-    public static final int INTAKE_WRIST_MOTOR_CAN_ID = 0;
+    public static final int INTAKE_WRIST_MOTOR_CAN_ID = 18;
     public static final int INTAKE_ENCODER_CAN_ID = 0;
 
-    public static final int LAUNCHER_SHOULDER_MOTOR_CAN_ID = 0;
+    public static final int LAUNCHER_SHOULDER_MOTOR_CAN_ID = 15;
     public static final int LAUNCHER_ENCODER_CAN_ID = 0;
+
+    public static final int LAUNCHER_LEFT_CAN_ID = 17;
+    public static final int LAUNCHER_RIGHT_CAN_ID = 16;
+
+    public static final int CLIMBER_LEFT_CAN_ID = 21;
+    public static final int CLIMBER_RIGHT_CAN_ID = 20;
+
+
+
 }
