@@ -21,4 +21,6 @@ public final class IntakeConstants {
         public static final double kV = 3.4;
         public static final double kA = 0.044465;
     }
+    public final static double DEPLOY_SETPOINT_TO_GROUND = 0;
+    public final static double RETRACT_SETPOINT = 0;
 }
