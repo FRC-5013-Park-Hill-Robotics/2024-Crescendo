@@ -29,6 +29,7 @@ public class IntakeRollers extends SubsystemBase {
     //Create PID controller for velocity control usie IntakeConstants.RollerGains
     //Create Feed Forward controller for velocity control using IntakeConstants.RollerGains
     //Create Control Request for Motor of tpe VelocityTorqueCurrentFOC
+    //add time of flight sensor for game piece detection
 
     public IntakeRollers() {
         //Clear motor configs - config facgtory default
@@ -48,6 +49,11 @@ public class IntakeRollers extends SubsystemBase {
 
     public void stop() {
         //intakeMotor.set(0);
+    }
+
+    public boolean hasGamePiece(){
+        //TODO implement sensor check for game piece
+        return false;
     }
 
     @Override

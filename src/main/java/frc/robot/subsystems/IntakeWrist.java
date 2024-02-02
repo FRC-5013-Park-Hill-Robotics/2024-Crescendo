@@ -44,21 +44,26 @@ public class IntakeWrist extends SubsystemBase {
     }
 
     public void deploy() {
+        //TODO calculate setpoint for deployment
         
     }
 
     public void retract() {
-
+        //TODO calculate setpoint for retraction
     }
+
 
     private LauncherShoulder getLauncherShoulder() {
         return RobotContainer.getInstance().getLauncherShoulder();
     }
 
-
+    public boolean atSetpoint(){
+        return false;
+    }
     public double getGroundRelativeWristPossitionRadians(){
         return (getLauncherShoulder().getShoulderAngleRadians()  + encoder.getAbsPositionRadians()) % (Math.PI * 2);
     }
+
 
     // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
     private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
