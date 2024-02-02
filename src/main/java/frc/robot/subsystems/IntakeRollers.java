@@ -31,6 +31,8 @@ public class IntakeRollers extends SubsystemBase {
     //Create Control Request for Motor of tpe VelocityTorqueCurrentFOC
 
     public IntakeRollers() {
+        //Clear motor configs
+        //set motor configs, PID slot 0, inversion.
     }
 
     public void feedIn() {
