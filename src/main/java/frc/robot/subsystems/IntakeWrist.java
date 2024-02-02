@@ -31,8 +31,8 @@ public class IntakeWrist extends SubsystemBase {
     private final TalonFX intakeWristMotor = new TalonFX(IntakeConstants.INTAKE_WRIST_MOTOR_CAN_ID);
     private final HeliumEncoderWrapper encoder = new HeliumEncoderWrapper(IntakeConstants.INTAKE_ENCODER_CAN_ID);
     public double setpointRadians = 0;
-    private ArmFeedforward feedforward = new ArmFeedforward(IntakeConstants.Gains.kS, IntakeConstants.Gains.kG,
-            IntakeConstants.Gains.kV, IntakeConstants.Gains.kA);
+    private ArmFeedforward feedforward = new ArmFeedforward(IntakeConstants.RotatinGains.kS, IntakeConstants.RotatinGains.kG,
+            IntakeConstants.RotatinGains.kV, IntakeConstants.RotatinGains.kA);
 
     /** Creates a new IntakeShoulder. */
     public IntakeWrist() {
