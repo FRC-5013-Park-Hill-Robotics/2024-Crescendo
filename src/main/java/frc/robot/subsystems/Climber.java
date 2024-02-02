@@ -4,10 +4,22 @@
 
 package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.Command;
 
 public class Climber extends SubsystemBase {
+    // TODO Create 2 motor controllers (left and right) of type TalonFx using the climber constants for the id
+
+    //Create PID controller using pigeon to help avoid side load guessing .48 for P that would produce 2.4 v differnce at 5 degrees
+    //Create Control Request for Motor of tpe VoltageOut
   /** Creates a new Climber. */
-  public Climber() {}
+  public Climber() {
+          //Clear motor configs - config facgtory default
+        //set motor configs, 
+            //PID slot 0, 
+            //inversion.
+            //idle mode brake.
+            //limit switch
+  }
 
   public void extendUp(){
 
@@ -24,4 +36,16 @@ public class Climber extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
+  public Command getClimbComand(){
+    //TODO make climb command
+    //apply 9.6 v to the low motor and 9.6 minus abssolute value of the pid for the high motor. +   gravity feed forward
+    //stop when one motor hits extend limit switch
+    return null;
+  }
+  public Command reseteClimberComand(){
+        //TODO make climb command
+    //apply - 3 v +  feed forward
+    //stop when one motor hits extend limit switch (if we don't have lower limit when amperage spikes)
+    return null;
+  }
 }

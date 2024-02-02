@@ -31,8 +31,8 @@ public class IntakeWrist extends SubsystemBase {
     private final TalonFX intakeWristMotor = new TalonFX(IntakeConstants.INTAKE_WRIST_MOTOR_CAN_ID);
     private final HeliumEncoderWrapper encoder = new HeliumEncoderWrapper(IntakeConstants.INTAKE_ENCODER_CAN_ID);
     public double setpointRadians = 0;
-    private ArmFeedforward feedforward = new ArmFeedforward(IntakeConstants.Gains.kS, IntakeConstants.Gains.kG,
-            IntakeConstants.Gains.kV, IntakeConstants.Gains.kA);
+    private ArmFeedforward feedforward = new ArmFeedforward(IntakeConstants.RotatinGains.kS, IntakeConstants.RotatinGains.kG,
+            IntakeConstants.RotatinGains.kV, IntakeConstants.RotatinGains.kA);
 
     /** Creates a new IntakeShoulder. */
     public IntakeWrist() {
@@ -44,21 +44,26 @@ public class IntakeWrist extends SubsystemBase {
     }
 
     public void deploy() {
+        //TODO calculate setpoint for deployment
         
     }
 
     public void retract() {
-
+        //TODO calculate setpoint for retraction
     }
+
 
     private LauncherShoulder getLauncherShoulder() {
         return RobotContainer.getInstance().getLauncherShoulder();
     }
 
-
+    public boolean atSetpoint(){
+        return false;
+    }
     public double getGroundRelativeWristPossitionRadians(){
         return (getLauncherShoulder().getShoulderAngleRadians()  + encoder.getAbsPositionRadians()) % (Math.PI * 2);
     }
+
 
     // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
     private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
