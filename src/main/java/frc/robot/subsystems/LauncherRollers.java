@@ -30,6 +30,12 @@ public class LauncherRollers extends SubsystemBase {
 
   public LauncherRollers() {}
 
+
+  public void stopLauncher(){
+
+  }
+
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

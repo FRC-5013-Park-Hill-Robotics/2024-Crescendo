@@ -9,6 +9,16 @@ public class Climber extends SubsystemBase {
   /** Creates a new Climber. */
   public Climber() {}
 
+  public void extendUp(){
+
+  }
+
+  public void extendDown(){
+
+  }
+
+
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
