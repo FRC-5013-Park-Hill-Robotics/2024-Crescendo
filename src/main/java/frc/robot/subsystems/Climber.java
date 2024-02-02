@@ -9,8 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class Climber extends SubsystemBase {
     // TODO Create 2 motor controllers (left and right) of type TalonFx using the climber constants for the id
 
-    //Create PID controller using pigeon to help avoid side load
-    //Create Elevator Feed Forward controller 
+    //Create PID controller using pigeon to help avoid side load guessing .48 for P that would produce 2.4 v differnce at 5 degrees
     //Create Control Request for Motor of tpe VoltageOut
   /** Creates a new Climber. */
   public Climber() {
@@ -39,7 +38,7 @@ public class Climber extends SubsystemBase {
 
   public Command getClimbComand(){
     //TODO make climb command
-    //apply 9.6 v to the low motor and 9.6 minus abssolute value of the pid for the high motor. +  feed forward
+    //apply 9.6 v to the low motor and 9.6 minus abssolute value of the pid for the high motor. +   gravity feed forward
     //stop when one motor hits extend limit switch
     return null;
   }
