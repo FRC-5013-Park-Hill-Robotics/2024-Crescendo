@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.IntakeConstants;
+import frc.robot.constants.LauncherConstants;
 import frc.robot.trobot5013lib.HeliumEncoderWrapper;
 
 import static edu.wpi.first.units.Units.Volts;
@@ -27,7 +28,6 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
 public class LauncherShoulder extends SubsystemBase {
     private final TalonFX launcherShoulderMotor = new TalonFX(IntakeConstants.INTAKE_WRIST_MOTOR_CAN_ID);
     private final HeliumEncoderWrapper encoder = new HeliumEncoderWrapper(IntakeConstants.INTAKE_ENCODER_CAN_ID);
-
   /** Creates a new LauncherShoulder. */
   public LauncherShoulder() {}
 
@@ -37,7 +37,8 @@ public class LauncherShoulder extends SubsystemBase {
   }
 
   public double getShoulderAngleRadians() {
-    return encoder.getAbsPositionRadians();
+    //offset is required because launcher cannot be zeroed parallel to ground due to other mechanims.
+    return encoder.getAbsPositionRadians() + LauncherConstants.OFFSET_RADIANS;
   }
     // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
     private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
