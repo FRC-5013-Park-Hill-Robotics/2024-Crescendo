@@ -10,7 +10,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public final class IntakeConstants {
     public final static int INTAKE_WRIST_MOTOR_CAN_ID = CANConstants.INTAKE_WRIST_MOTOR_CAN_ID;
     public final static int INTAKE_ENCODER_CAN_ID = CANConstants.INTAKE_ENCODER_CAN_ID;
-    public static final class RotatinGains {
+    public static final class RotationGains {
         public static final Rotation2d TOLERANCE= Rotation2d.fromDegrees(2.5);
         public static final double kP = .5;
         public static final double kI = 0;
