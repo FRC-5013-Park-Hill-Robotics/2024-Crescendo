@@ -13,7 +13,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.GamepadDrive;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.IntakeRollers;
@@ -60,22 +63,27 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with
-                                                                                           // negative Y (forward)
-            .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-            .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
-        ));
-
-    joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-    joystick.b().whileTrue(drivetrain
-        .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
+    drivetrain.setDefaultCommand(new GamepadDrive(drivetrain, joystick));
+    //joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+    //joystick.b().whileTrue(drivetrain
+        //.applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
 
     // reset the field-centric heading on left bumper press
     joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+    joystick.back().onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyroscope()));
+ /* 
+    joystick.a().whileTrue(m_launcherRollers.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    joystick.b().whileTrue(m_launcherRollers.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+
+    joystick.x().whileTrue(m_launcherRollers.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    joystick.y().whileTrue(m_launcherRollers.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+*/
+    joystick.a().whileTrue(new InstantCommand(() -> m_launcherRollers.setSpeed(1)));
+
+
 
     if (Utils.isSimulation()) {
-      drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
+      drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(0)));
     }
     drivetrain.registerTelemetry(logger::telemeterize);
   }

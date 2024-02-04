@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.constants.LauncherConstants;
 
 import static edu.wpi.first.units.Units.Volts;
 import static edu.wpi.first.units.Units.Radians;
@@ -25,15 +26,18 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
 
 public class LauncherRollers extends SubsystemBase {
   /** Creates a new LauncherRollers. */
-  private TalonFX rightMotor = new TalonFX(0);
-  private TalonFX leftMotor= new TalonFX(0);
+  private TalonFX rightMotor = new TalonFX(LauncherConstants.LAUNCHER_RIGHT_CAN_ID);
+  private TalonFX leftMotor= new TalonFX(LauncherConstants.LAUNCHER_LEFT_CAN_ID);
 
-  public LauncherRollers() {}
+  public LauncherRollers() {
+      rightMotor.setInverted(true);
+      leftMotor.setInverted(false);
+  }
 
 
   public void stopLauncher(){
 
-  }
+  } 
 
 
   @Override
@@ -60,19 +64,27 @@ public class LauncherRollers extends SubsystemBase {
                     // Tell SysId how to plumb the driving voltage to the motors.
                     (Measure<Voltage> volts) -> {
                         rightMotor.setVoltage(volts.in(Volts));
+                        leftMotor.setVoltage(volts.in(Volts));
                     },
                     // Tell SysId how to record a frame of data for each motor on the mechanism
                     // being
                     // characterized.
                     log -> {
                         // Record a frame for the wheel motor. 
-                        log.motor("wheel")
+                        log.motor("right")
                                 .voltage(
                                         m_appliedVoltage.mut_replace(
                                                 rightMotor.get() * RobotController.getBatteryVoltage(), Volts))
                                 .angularPosition(m_rotation.mut_replace(rightMotor.getPosition().getValueAsDouble(), Rotations))
                                 .angularVelocity(
                                         m_velocity.mut_replace(rightMotor.getVelocity().getValueAsDouble(), RadiansPerSecond));
+                        log.motor("left")
+                                .voltage(
+                                        m_appliedVoltage.mut_replace(
+                                                leftMotor.get() * RobotController.getBatteryVoltage(), Volts))
+                                .angularPosition(m_rotation.mut_replace(leftMotor.getPosition().getValueAsDouble(), Rotations))
+                                .angularVelocity(
+                                        m_velocity.mut_replace(leftMotor.getVelocity().getValueAsDouble(), RadiansPerSecond));
 
                     },
                     // Tell SysId to make generated commands require this subsystem, suffix test
