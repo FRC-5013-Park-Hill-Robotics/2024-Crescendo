@@ -10,4 +10,6 @@ public final class LauncherConstants {
     public final static int LAUNCHER_ENCODER_CAN_ID = CANConstants.LAUNCHER_ENCODER_CAN_ID;
     public final static double AMP_ANGLE = 0;
     public final static double OFFSET_RADIANS = Math.PI /2;
+    public final static int LAUNCHER_LEFT_CAN_ID = CANConstants.LAUNCHER_LEFT_CAN_ID;
+    public final static int LAUNCHER_RIGHT_CAN_ID = CANConstants.LAUNCHER_RIGHT_CAN_ID;
 }
