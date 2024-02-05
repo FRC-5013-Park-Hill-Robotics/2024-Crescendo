@@ -6,6 +6,13 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.MutableMeasure.mutable;
+
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
@@ -15,30 +22,49 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.RobotContainer;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.trobot5013lib.HeliumEncoderWrapper;
 
-import static edu.wpi.first.units.Units.Volts;
-import static edu.wpi.first.units.Units.Radians;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
-import static edu.wpi.first.units.Units.Seconds;
-import static edu.wpi.first.units.MutableMeasure.mutable;
+public class IntakeWrist extends SubsystemBase {
 
-public class LauncherShoulder extends SubsystemBase {
-private final TalonFX launcherShoulderMotor = new TalonFX(IntakeConstants.INTAKE_WRIST_MOTOR_CAN_ID);
+    private final TalonFX intakeWristMotor = new TalonFX(IntakeConstants.INTAKE_WRIST_MOTOR_CAN_ID);
     private final HeliumEncoderWrapper encoder = new HeliumEncoderWrapper(IntakeConstants.INTAKE_ENCODER_CAN_ID);
+    public double setpointRadians = 0;
+    private ArmFeedforward feedforward = new ArmFeedforward(IntakeConstants.RotationGains.kS, IntakeConstants.RotationGains.kG,
+            IntakeConstants.RotationGains.kV, IntakeConstants.RotationGains.kA);
 
-  /** Creates a new LauncherShoulder. */
-  public LauncherShoulder() {}
+    /** Creates a new IntakeShoulder. */
+    public IntakeWrist() {
+    }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
+    @Override
+    public void periodic() {
+        // This method will be called once per scheduler run
+    }
 
-  public double getShoulderAngleRadians() {
-    return encoder.getAbsPositionRadians();
-  }
+    public void deploy() {
+        //TODO calculate setpoint for deployment
+        
+    }
+
+    public void retract() {
+        //TODO calculate setpoint for retraction
+    }
+
+
+    private LauncherShoulder getLauncherShoulder() {
+        return RobotContainer.getInstance().getLauncherShoulder();
+    }
+
+    public boolean atSetpoint(){
+        return false;
+    }
+    public double getGroundRelativeWristPossitionRadians(){
+        return (getLauncherShoulder().getShoulderAngleRadians()  + encoder.getAbsPositionRadians()) % (Math.PI * 2);
+    }
+
+
     // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
     private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
     // Mutable holder for unit-safe linear distance values, persisted to avoid
@@ -53,17 +79,17 @@ private final TalonFX launcherShoulderMotor = new TalonFX(IntakeConstants.INTAKE
             new SysIdRoutine.Mechanism(
                     // Tell SysId how to plumb the driving voltage to the motors.
                     (Measure<Voltage> volts) -> {
-                        launcherShoulderMotor.setVoltage(volts.in(Volts));
+                        intakeWristMotor.setVoltage(volts.in(Volts));
                     },
                     // Tell SysId how to record a frame of data for each motor on the mechanism
                     // being
                     // characterized.
                     log -> {
                         // Record a frame for the wrist motor. 
-                        log.motor("launcher")
+                        log.motor("wrist")
                                 .voltage(
                                         m_appliedVoltage.mut_replace(
-                                                launcherShoulderMotor.get() * RobotController.getBatteryVoltage(), Volts))
+                                                intakeWristMotor.get() * RobotController.getBatteryVoltage(), Volts))
                                 .angularPosition(m_rotation.mut_replace(encoder.getAbsPositionRadians(), Radians))
                                 .angularVelocity(
                                         m_velocity.mut_replace(encoder.getVelocityRadians(), RadiansPerSecond));
@@ -71,7 +97,7 @@ private final TalonFX launcherShoulderMotor = new TalonFX(IntakeConstants.INTAKE
                     },
                     // Tell SysId to make generated commands require this subsystem, suffix test
                     // state in
-                    // WPILog with this subsystem's name ("LauncherShoulder")
+                    // WPILog with this subsystem's name ("IntakeWrist")
                     this));
 
     public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
