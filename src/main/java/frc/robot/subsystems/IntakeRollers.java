@@ -5,7 +5,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.controls.TorqueCurrentFOC;
+import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
@@ -15,6 +17,9 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.constants.CANConstants;
+import frc.robot.constants.IntakeConstants;
+
 
 import static edu.wpi.first.units.Units.Volts;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
@@ -24,12 +29,12 @@ import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.MutableMeasure.mutable;
 
 public class IntakeRollers extends SubsystemBase {
-    // TODO Create motor controller of type TalonFx using the can constants for the id
 
-    //Create PID controller for velocity control usie IntakeConstants.RollerGains
+    private final TalonFX m_intakeRoller = new TalonFX(CANConstants.INTAKE_ROLLER_ID);
+    private ArmFeedforward m_intakFeedforward = new ArmFeedforward(0, 0, 0);
     //Create Feed Forward controller for velocity control using IntakeConstants.RollerGains
     //Create Control Request for Motor of tpe VelocityTorqueCurrentFOC
-    //add time of flight sensor for game piece detection
+    //add time of flight sensor for game piece intake/outtake detection
 
     public IntakeRollers() {
         //Clear motor configs - config facgtory default
