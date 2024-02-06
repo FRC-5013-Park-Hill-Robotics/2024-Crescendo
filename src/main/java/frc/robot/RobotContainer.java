@@ -72,20 +72,13 @@ public class RobotContainer {
 
     // reset the field-centric heading on left bumper press
     joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-    joystick.back().onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyroscope()));
- /* 
-    joystick.a().whileTrue(m_launcherRollers.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    joystick.b().whileTrue(m_launcherRollers.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    joystick.back().onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyroscope())); 
+    
+    joystick.a().whileTrue(sysIdIntakeWrist.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    joystick.b().whileTrue(sysIdIntakeWrist.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
 
-    joystick.x().whileTrue(m_launcherRollers.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    joystick.y().whileTrue(m_launcherRollers.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-*/
-    joystick.a().whileTrue(new InstantCommand(() -> m_launcherRollers.setSpeed(.6)));
-    joystick.b().whileTrue(new InstantCommand(() -> m_launcherRollers.setSpeed(0)));
-    joystick.x().whileTrue(new RunCommand(() -> m_intakeRollers.feedIn()));
-    joystick.x().onFalse(new InstantCommand(() -> m_intakeRollers.stop()));
-    joystick.y().whileTrue(new RunCommand(() -> m_intakeRollers.feedOut()));
-    joystick.y().onFalse(new InstantCommand(() -> m_intakeRollers.stop()));
+    joystick.x().whileTrue(sysIdIntakeWrist.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    joystick.y().whileTrue(sysIdIntakeWrist.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
 
 

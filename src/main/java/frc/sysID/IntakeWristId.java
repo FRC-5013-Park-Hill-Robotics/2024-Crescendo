@@ -38,6 +38,7 @@ public class IntakeWristId extends SubsystemBase {
 
     /** Creates a new IntakeShoulder. */
     public IntakeWristId() {
+        intakeWristMotor.setInverted(true);
     }
 
     @Override
@@ -46,7 +47,7 @@ public class IntakeWristId extends SubsystemBase {
     }
 
     public double offsetPosition(){
-        return encoder.getAbsPositionRadians() - (2 * Math.PI * 0.055);
+        return encoder.getAbsPositionRadians() - (2 * Math.PI * 0.049);
     }
 //.055
     // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
@@ -60,7 +61,7 @@ public class IntakeWristId extends SubsystemBase {
      private final TorqueCurrentFOC m_torqueCurrentFOC = new TorqueCurrentFOC(0);
     private final SysIdRoutine m_sysIdRoutine = new SysIdRoutine(
             // Empty config defaults to 1 volt/second ramp rate and 7 volt step voltage.
-            new SysIdRoutine.Config( Volts.of(2).per(Seconds.of(1)), Volts.of(20), null,null),
+            new SysIdRoutine.Config( Volts.of(10).per(Seconds.of(1)), Volts.of(65), null,null),
             new SysIdRoutine.Mechanism(
                     // Tell SysId how to plumb the driving voltage to the motors.
                     (Measure<Voltage> volts) -> {

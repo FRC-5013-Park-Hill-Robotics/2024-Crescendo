@@ -45,6 +45,7 @@ public class IntakeWrist extends SubsystemBase {
     /** Creates a new IntakeShoulder. */
     public IntakeWrist() {
         intakeWristMotor.getConfigurator().apply(new TalonFXConfiguration());
+        intakeWristMotor.setInverted(true);
         wristController.setTolerance(IntakeConstants.RotationGains.kPositionTolerance.getRadians());
         wristController.disableContinuousInput();
     }
