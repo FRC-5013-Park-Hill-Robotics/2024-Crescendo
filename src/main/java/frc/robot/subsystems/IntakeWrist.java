@@ -80,7 +80,7 @@ public class IntakeWrist extends SubsystemBase {
     }
 
     protected double getGroundRelativeWristPositionRadians(double launcherRelativeAngleRadians) {
-        return Math.PI - getLauncherShoulder().getShoulderAngleRadians() + launcherRelativeAngleRadians;
+        return Math.PI - getLauncherShoulder().getShoulderAngleRadians() - launcherRelativeAngleRadians;
     }
 
     public double getGroundRelativeWristPositionRadians(){
