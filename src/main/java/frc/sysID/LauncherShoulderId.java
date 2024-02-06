@@ -51,7 +51,7 @@ private final TalonFX launcherShoulderMotor = new TalonFX(IntakeConstants.INTAKE
     private final TorqueCurrentFOC m_torqueCurrentFOC = new TorqueCurrentFOC(0);
     private final SysIdRoutine m_sysIdRoutine = new SysIdRoutine(
             // Empty config defaults to amps preting to be volts
-            new SysIdRoutine.Config( Volts.of(10).per(Seconds.of(1)), Volts.of(80), null,null),
+            new SysIdRoutine.Config( Volts.of(10).per(Seconds.of(1)), Volts.of(60), null,null),
             new SysIdRoutine.Mechanism(
                     // Tell SysId how to plumb the driving voltage to the motors.
                     (Measure<Voltage> volts) -> {
