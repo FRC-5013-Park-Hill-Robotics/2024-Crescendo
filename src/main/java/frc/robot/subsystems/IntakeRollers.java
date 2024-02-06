@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.playingwithfusion.TimeOfFlight;
@@ -41,7 +42,7 @@ public class IntakeRollers extends SubsystemBase {
     //add time of flight sensor for game piece intake/outtake detection
 
     public IntakeRollers() {
-    
+    intakeRollerMotor.getConfigurator().apply(new TalonFXConfiguration());
         //Clear motor configs - config facgtory default
         //set motor configs, 
             //PID slot 0, 

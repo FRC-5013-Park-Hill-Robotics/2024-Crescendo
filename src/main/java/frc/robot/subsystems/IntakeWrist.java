@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -55,6 +56,7 @@ public class IntakeWrist extends SubsystemBase {
 
     /** Creates a new IntakeShoulder. */
     public IntakeWrist() {
+        intakeWristMotor.getConfigurator().apply(new TalonFXConfiguration());
         wristController.setTolerance(IntakeConstants.RotationGains.kPositionTolerance.getRadians());
         wristController.disableContinuousInput();
     }
