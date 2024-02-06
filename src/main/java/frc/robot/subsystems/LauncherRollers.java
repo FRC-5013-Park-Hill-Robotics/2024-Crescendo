@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.units.Angle;
@@ -30,6 +31,8 @@ public class LauncherRollers extends SubsystemBase {
   private TalonFX leftMotor= new TalonFX(LauncherConstants.LAUNCHER_LEFT_CAN_ID);
 
   public LauncherRollers() {
+      rightMotor.getConfigurator().apply(new TalonFXConfiguration());
+      leftMotor.getConfigurator().apply(new TalonFXConfiguration());
       rightMotor.setInverted(true);
       leftMotor.setInverted(false);
   }

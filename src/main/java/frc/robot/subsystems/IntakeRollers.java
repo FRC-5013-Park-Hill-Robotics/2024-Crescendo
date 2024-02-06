@@ -4,8 +4,10 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.playingwithfusion.TimeOfFlight;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.units.Angle;
@@ -30,44 +32,58 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
 
 public class IntakeRollers extends SubsystemBase {
 
-    private final TalonFX m_intakeRoller = new TalonFX(CANConstants.INTAKE_ROLLER_ID);
+    // TODO Create motor controller of type TalonFx using the can constants for the id
+    private TalonFX intakeRollerMotor = new TalonFX(IntakeConstants.INTAKE_ROLLER_ID);
+    private double target = 0;
     private ArmFeedforward m_intakFeedforward = new ArmFeedforward(0, 0, 0);
+    private TimeOfFlight m_timeOfFlight = new TimeOfFlight(IntakeConstants.TIME_OF_FLIGHT_CAN_ID);
     //Create Feed Forward controller for velocity control using IntakeConstants.RollerGains
     //Create Control Request for Motor of tpe VelocityTorqueCurrentFOC
     //add time of flight sensor for game piece intake/outtake detection
 
     public IntakeRollers() {
+    intakeRollerMotor.getConfigurator().apply(new TalonFXConfiguration());
         //Clear motor configs - config facgtory default
         //set motor configs, 
             //PID slot 0, 
             //inversion.
             //idle mode brake.
+        intakeRollerMotor.set(0);
     }
 
     public void feedIn() {
-        //intakeMotor.set(IntakeConstants.intakeMotorSpeed);
+         //TODO should be constant
+        target = .33;
+       
     }
 
     public void feedOut() {
-        //intakeMotor.set(-IntakeConstants.intakeMotorSpeed);
+        //TODO should be constant
+        target = -.25;
     }
 
     public void stop() {
-        //intakeMotor.set(0);
+        target = 0;
     }
 
     public boolean hasGamePiece(){
-        //TODO implement sensor check for game piece
-        return false;
+        return m_timeOfFlight.getRange() < IntakeConstants.TIME_OF_FLIGHT_RANGE;
     }
 
     @Override
     public void periodic() {
+        intakeRollerMotor.set(target);
         // This method will be called once per scheduler run
         //PID calculate
         //Feed Forward Calculate
         //Set motor output
     }
+
+    public Command intakeGamepieceCommand(){
+        Command result = run(this::feedIn).until(this::hasGamePiece).andThen(runOnce(this::stop));
+        return result;
+    } 
+    
     //TODO update characterization routine for the motor created. Uncomment below code and fix broken motor reference to the motorcontroller you create above.
 /*
 

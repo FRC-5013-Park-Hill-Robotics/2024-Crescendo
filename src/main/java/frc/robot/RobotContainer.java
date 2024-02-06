@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.GamepadDrive;
@@ -37,7 +38,7 @@ public class RobotContainer {
   private Climber m_climber = new Climber(); //creates the climber instance variable
 
   private IntakeRollers m_intakeRollers = new IntakeRollers(); //creates the intake rollers instance variable
-  private IntakeWrist m_intakeWrist = new IntakeWrist(); //creates the intake wrist instance variable
+  //private IntakeWrist m_intakeWrist = new IntakeWrist(); //creates the intake wrist instance variable
 
   private LauncherRollers m_launcherRollers = new LauncherRollers(); //creates the launcher rollers instance variable
   private LauncherShoulder m_launcherShoulder = new LauncherShoulder(); //creates the launcher shoulder variable
@@ -55,6 +56,7 @@ public class RobotContainer {
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   private final Telemetry logger = new Telemetry(MaxSpeed);
   private static RobotContainer instance;
+  private final frc.sysID.IntakeWristId sysIdIntakeWrist = new frc.sysID.IntakeWristId();
 
   public RobotContainer() {
     super();
@@ -78,7 +80,12 @@ public class RobotContainer {
     joystick.x().whileTrue(m_launcherRollers.sysIdDynamic(SysIdRoutine.Direction.kForward));
     joystick.y().whileTrue(m_launcherRollers.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 */
-    joystick.a().whileTrue(new InstantCommand(() -> m_launcherRollers.setSpeed(1)));
+    joystick.a().whileTrue(new InstantCommand(() -> m_launcherRollers.setSpeed(.6)));
+    joystick.b().whileTrue(new InstantCommand(() -> m_launcherRollers.setSpeed(0)));
+    joystick.x().whileTrue(new RunCommand(() -> m_intakeRollers.feedIn()));
+    joystick.x().onFalse(new InstantCommand(() -> m_intakeRollers.stop()));
+    joystick.y().whileTrue(new RunCommand(() -> m_intakeRollers.feedOut()));
+    joystick.y().onFalse(new InstantCommand(() -> m_intakeRollers.stop()));
 
 
 
