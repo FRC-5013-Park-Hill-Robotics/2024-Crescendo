@@ -4,6 +4,7 @@
 
 package frc.sysID;
 
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.units.Angle;
@@ -47,13 +48,14 @@ private final TalonFX launcherShoulderMotor = new TalonFX(IntakeConstants.INTAKE
     // Mutable holder for unit-safe linear velocity values, persisted to avoid
     // reallocation.
     private final MutableMeasure<Velocity<Angle>> m_velocity = mutable(RadiansPerSecond.of(0));
+    private final TorqueCurrentFOC m_torqueCurrentFOC = new TorqueCurrentFOC(0);
     private final SysIdRoutine m_sysIdRoutine = new SysIdRoutine(
-            // Empty config defaults to 1 volt/second ramp rate and 7 volt step voltage.
-            new SysIdRoutine.Config( Volts.of(0.5).per(Seconds.of(1)), Volts.of(7), null,null),
+            // Empty config defaults to amps preting to be volts
+            new SysIdRoutine.Config( Volts.of(10).per(Seconds.of(1)), Volts.of(80), null,null),
             new SysIdRoutine.Mechanism(
                     // Tell SysId how to plumb the driving voltage to the motors.
                     (Measure<Voltage> volts) -> {
-                        launcherShoulderMotor.setVoltage(volts.in(Volts));
+                        launcherShoulderMotor.setControl(m_torqueCurrentFOC.withOutput(volts.in(Volts)));
                     },
                     // Tell SysId how to record a frame of data for each motor on the mechanism
                     // being
@@ -62,8 +64,8 @@ private final TalonFX launcherShoulderMotor = new TalonFX(IntakeConstants.INTAKE
                         // Record a frame for the wrist motor. 
                         log.motor("launcher")
                                 .voltage(
-                                        m_appliedVoltage.mut_replace(
-                                                launcherShoulderMotor.get() * RobotController.getBatteryVoltage(), Volts))
+                                  m_appliedVoltage.mut_replace(launcherShoulderMotor.getTorqueCurrent().getValueAsDouble()
+                                  , Volts))
                                 .angularPosition(m_rotation.mut_replace(encoder.getAbsPositionRadians(), Radians))
                                 .angularVelocity(
                                         m_velocity.mut_replace(encoder.getVelocityRadians(), RadiansPerSecond));
