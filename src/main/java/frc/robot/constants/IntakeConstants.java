@@ -10,8 +10,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public final class IntakeConstants {
     public final static int INTAKE_WRIST_MOTOR_CAN_ID = CANConstants.INTAKE_WRIST_MOTOR_CAN_ID;
     public final static int INTAKE_ENCODER_CAN_ID = CANConstants.INTAKE_ENCODER_CAN_ID;
+    public static final int INTAKE_ROLLER_ID = CANConstants.INTAKE_ROLLER_ID;
     public static final class RotationGains {
-        public static final Rotation2d TOLERANCE= Rotation2d.fromDegrees(2.5);
+        public static final Rotation2d kPositionTolerance= Rotation2d.fromDegrees(2.5);
         public static final double kP = .5;
         public static final double kI = 0;
         public static final double kD = 0;
@@ -20,6 +21,8 @@ public final class IntakeConstants {
         public static final double kG = 0.4;
         public static final double kV = 3.4;
         public static final double kA = 0.044465;
+        public static final double kMaxAcceleration = 0;
+        public static final double kMaxSpeed = 0 ;
     }
     public final static class RollerGains {
         public static final double kP = 0.1;

@@ -30,30 +30,35 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
 
 public class IntakeRollers extends SubsystemBase {
 
-    private final TalonFX m_intakeRoller = new TalonFX(CANConstants.INTAKE_ROLLER_ID);
+    // TODO Create motor controller of type TalonFx using the can constants for the id
+    private TalonFX intakeRollerMotor = new TalonFX(IntakeConstants.INTAKE_ROLLER_ID);
+    private double target = 0;
     private ArmFeedforward m_intakFeedforward = new ArmFeedforward(0, 0, 0);
     //Create Feed Forward controller for velocity control using IntakeConstants.RollerGains
     //Create Control Request for Motor of tpe VelocityTorqueCurrentFOC
     //add time of flight sensor for game piece intake/outtake detection
 
     public IntakeRollers() {
+    
         //Clear motor configs - config facgtory default
         //set motor configs, 
             //PID slot 0, 
             //inversion.
             //idle mode brake.
+        intakeRollerMotor.set(0);
     }
 
     public void feedIn() {
-        //intakeMotor.set(IntakeConstants.intakeMotorSpeed);
+        target = .33;
+       
     }
 
     public void feedOut() {
-        //intakeMotor.set(-IntakeConstants.intakeMotorSpeed);
+        target = -.25;
     }
 
     public void stop() {
-        //intakeMotor.set(0);
+        target = 0;
     }
 
     public boolean hasGamePiece(){
@@ -63,6 +68,7 @@ public class IntakeRollers extends SubsystemBase {
 
     @Override
     public void periodic() {
+        intakeRollerMotor.set(target);
         // This method will be called once per scheduler run
         //PID calculate
         //Feed Forward Calculate

@@ -26,7 +26,7 @@ public class HeliumEncoderWrapper {
     }
 
     public double getAbsPositionRadians() {
-        return rotationsToRadians(encoder.getAbsPosition());
+        return rotationsToRadians(encoder.getAbsPosition()) % (Math.PI * 2);
     }
 
     private double rotationsToRadians(double rotations) {
