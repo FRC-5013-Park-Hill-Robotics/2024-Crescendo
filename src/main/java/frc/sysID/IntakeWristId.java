@@ -60,7 +60,7 @@ public class IntakeWristId extends SubsystemBase {
      private final TorqueCurrentFOC m_torqueCurrentFOC = new TorqueCurrentFOC(0);
     private final SysIdRoutine m_sysIdRoutine = new SysIdRoutine(
             // Empty config defaults to 1 volt/second ramp rate and 7 volt step voltage.
-            new SysIdRoutine.Config( Volts.of(5).per(Seconds.of(1)), Volts.of(20), null,null),
+            new SysIdRoutine.Config( Volts.of(2).per(Seconds.of(1)), Volts.of(20), null,null),
             new SysIdRoutine.Mechanism(
                     // Tell SysId how to plumb the driving voltage to the motors.
                     (Measure<Voltage> volts) -> {
