@@ -51,11 +51,13 @@ public class IntakeRollers extends SubsystemBase {
     }
 
     public void feedIn() {
+         //TODO should be constant
         target = .33;
        
     }
 
     public void feedOut() {
+        //TODO should be constant
         target = -.25;
     }
 
@@ -75,6 +77,12 @@ public class IntakeRollers extends SubsystemBase {
         //Feed Forward Calculate
         //Set motor output
     }
+
+    public Command intakeGamepieceCommand(){
+        Command result = run(this::feedIn).until(this::hasGamePiece).andThen(runOnce(this::stop));
+        return result;
+    } 
+    
     //TODO update characterization routine for the motor created. Uncomment below code and fix broken motor reference to the motorcontroller you create above.
 /*
 
