@@ -49,8 +49,8 @@ public class LauncherRollers extends SubsystemBase {
   }
 
   public void setSpeed(double speed) {
-    rightMotor.set(speed);
-    leftMotor.set(speed);
+    rightMotor.set(0);
+    leftMotor.set(0);
   }
     // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
     private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
