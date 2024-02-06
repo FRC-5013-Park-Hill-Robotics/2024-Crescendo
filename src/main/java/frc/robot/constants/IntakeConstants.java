@@ -35,4 +35,5 @@ public final class IntakeConstants {
     }
     public final static double DEPLOY_SETPOINT_TO_GROUND = 0;
     public final static double RETRACT_SETPOINT = 0;
+    public static final int TIME_OF_FLIGHT_CAN_ID = 0;
 }

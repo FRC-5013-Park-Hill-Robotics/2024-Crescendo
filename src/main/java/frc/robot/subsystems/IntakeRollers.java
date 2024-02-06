@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.playingwithfusion.TimeOfFlight;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.units.Angle;
@@ -34,6 +35,7 @@ public class IntakeRollers extends SubsystemBase {
     private TalonFX intakeRollerMotor = new TalonFX(IntakeConstants.INTAKE_ROLLER_ID);
     private double target = 0;
     private ArmFeedforward m_intakFeedforward = new ArmFeedforward(0, 0, 0);
+    private TimeOfFlight m_timeOfFlight = new TimeOfFlight(IntakeConstants.TIME_OF_FLIGHT_CAN_ID);
     //Create Feed Forward controller for velocity control using IntakeConstants.RollerGains
     //Create Control Request for Motor of tpe VelocityTorqueCurrentFOC
     //add time of flight sensor for game piece intake/outtake detection
@@ -62,8 +64,7 @@ public class IntakeRollers extends SubsystemBase {
     }
 
     public boolean hasGamePiece(){
-        //TODO implement sensor check for game piece
-        return false;
+        return m_timeOfFlight.getRange() < IntakeConstants.TIME_OF_FLIGHT_RANGE;
     }
 
     @Override
