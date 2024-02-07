@@ -59,7 +59,7 @@ public class IntakeWristId extends SubsystemBase {
     private final MutableMeasure<Velocity<Angle>> m_velocity = mutable(RadiansPerSecond.of(0));
     private final  VoltageOut m_voltageOut = new VoltageOut(0);
     private final SysIdRoutine m_sysIdRoutine = new SysIdRoutine(
-            new SysIdRoutine.Config( Volts.of(1).per(Seconds.of(1)), Volts.of(7), null,ModifiedSignalLogger.logState()),
+            new SysIdRoutine.Config( Volts.of(1).per(Seconds.of(1)), Volts.of(5), null,ModifiedSignalLogger.logState()),
             new SysIdRoutine.Mechanism(
                     // Tell SysId how to plumb the driving voltage to the motors.
                     (Measure<Voltage> volts) -> {
