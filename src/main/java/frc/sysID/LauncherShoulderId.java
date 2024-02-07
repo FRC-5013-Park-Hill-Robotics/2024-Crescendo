@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.trobot5013lib.HeliumEncoderWrapper;
+import frc.robot.trobot5013lib.ModifiedSignalLogger;
 
 import static edu.wpi.first.units.Units.Volts;
 import static edu.wpi.first.units.Units.Radians;
@@ -51,7 +52,7 @@ private final TalonFX launcherShoulderMotor = new TalonFX(IntakeConstants.INTAKE
     private final TorqueCurrentFOC m_torqueCurrentFOC = new TorqueCurrentFOC(0);
     private final SysIdRoutine m_sysIdRoutine = new SysIdRoutine(
             // Empty config defaults to amps preting to be volts
-            new SysIdRoutine.Config( Volts.of(10).per(Seconds.of(1)), Volts.of(60), null,null),
+            new SysIdRoutine.Config( Volts.of(10).per(Seconds.of(1)), Volts.of(60), null,ModifiedSignalLogger.logState()),
             new SysIdRoutine.Mechanism(
                     // Tell SysId how to plumb the driving voltage to the motors.
                     (Measure<Voltage> volts) -> {

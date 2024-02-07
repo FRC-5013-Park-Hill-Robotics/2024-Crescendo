@@ -27,6 +27,7 @@ import frc.robot.RobotContainer;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.LauncherShoulder;
 import frc.robot.trobot5013lib.HeliumEncoderWrapper;
+import frc.robot.trobot5013lib.ModifiedSignalLogger;
 
 public class IntakeWristId extends SubsystemBase {
 
@@ -60,8 +61,7 @@ public class IntakeWristId extends SubsystemBase {
     private final MutableMeasure<Velocity<Angle>> m_velocity = mutable(RadiansPerSecond.of(0));
      private final TorqueCurrentFOC m_torqueCurrentFOC = new TorqueCurrentFOC(0);
     private final SysIdRoutine m_sysIdRoutine = new SysIdRoutine(
-            // Empty config defaults to 1 volt/second ramp rate and 7 volt step voltage.
-            new SysIdRoutine.Config( Volts.of(10).per(Seconds.of(1)), Volts.of(65), null,null),
+            new SysIdRoutine.Config( Volts.of(10).per(Seconds.of(1)), Volts.of(65), null,ModifiedSignalLogger.logState()),
             new SysIdRoutine.Mechanism(
                     // Tell SysId how to plumb the driving voltage to the motors.
                     (Measure<Voltage> volts) -> {
