@@ -5,8 +5,7 @@
 package frc.sysID;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.configs.TalonFXConfigurator;
-import com.ctre.phoenix6.controls.TorqueCurrentFOC;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import static edu.wpi.first.units.Units.Volts;
@@ -25,9 +24,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.RobotContainer;
 import frc.robot.constants.IntakeConstants;
-import frc.robot.subsystems.LauncherShoulder;
 import frc.robot.trobot5013lib.HeliumEncoderWrapper;
 import frc.robot.trobot5013lib.ModifiedSignalLogger;
 
@@ -35,10 +32,7 @@ public class IntakeWristId extends SubsystemBase {
 
     private final TalonFX intakeWristMotor = new TalonFX(IntakeConstants.INTAKE_WRIST_MOTOR_CAN_ID);
     private final HeliumEncoderWrapper encoder = new HeliumEncoderWrapper(IntakeConstants.INTAKE_ENCODER_CAN_ID);
-    public double setpointRadians = 0;
-    private ArmFeedforward feedforward = new ArmFeedforward(IntakeConstants.RotationGains.kS, IntakeConstants.RotationGains.kG,
-            IntakeConstants.RotationGains.kV, IntakeConstants.RotationGains.kA);
-
+ 
     /** Creates a new IntakeShoulder. */
     public IntakeWristId() {
         TalonFXConfiguration config = new TalonFXConfiguration();
@@ -63,13 +57,13 @@ public class IntakeWristId extends SubsystemBase {
     // Mutable holder for unit-safe linear velocity values, persisted to avoid
     // reallocation.
     private final MutableMeasure<Velocity<Angle>> m_velocity = mutable(RadiansPerSecond.of(0));
-     private final TorqueCurrentFOC m_torqueCurrentFOC = new TorqueCurrentFOC(0);
+    private final  VoltageOut m_voltageOut = new VoltageOut(0);
     private final SysIdRoutine m_sysIdRoutine = new SysIdRoutine(
-            new SysIdRoutine.Config( Volts.of(10).per(Seconds.of(1)), Volts.of(65), null,ModifiedSignalLogger.logState()),
+            new SysIdRoutine.Config( Volts.of(1).per(Seconds.of(1)), Volts.of(7), null,ModifiedSignalLogger.logState()),
             new SysIdRoutine.Mechanism(
                     // Tell SysId how to plumb the driving voltage to the motors.
                     (Measure<Voltage> volts) -> {
-                        intakeWristMotor.setControl(m_torqueCurrentFOC.withOutput(volts.in(Volts)));
+                        intakeWristMotor.setControl(m_voltageOut.withOutput(volts.in(Volts)));
                     },
                     // Tell SysId how to record a frame of data for each motor on the mechanism
                     // being
@@ -78,7 +72,7 @@ public class IntakeWristId extends SubsystemBase {
                         // Record a frame for the wrist motor. 
                         log.motor("wrist")
                                 .voltage(
-                                        m_appliedVoltage.mut_replace(intakeWristMotor.getTorqueCurrent().getValueAsDouble()
+                                        m_appliedVoltage.mut_replace(intakeWristMotor.get() * RobotController.getBatteryVoltage()
                                                 , Volts))
                                 .angularPosition(m_rotation.mut_replace(offsetPosition(), Radians))
                                 .angularVelocity(

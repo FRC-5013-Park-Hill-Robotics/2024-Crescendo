@@ -5,7 +5,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.TorqueCurrentFOC;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 
@@ -37,7 +37,7 @@ public class IntakeWrist extends SubsystemBase {
         IntakeConstants.RotationGains.kI,
         IntakeConstants.RotationGains.kD,
          wristConstraints);
-    private final TorqueCurrentFOC wrisTorqueCurrentFOC = new TorqueCurrentFOC(0);
+    private final VoltageOut wristVoltageOut = new VoltageOut(0);
     private double wristGoalRadians = 0;
     private double lastSpeed = 0;
     private double lastTime = 0;
@@ -57,7 +57,7 @@ public class IntakeWrist extends SubsystemBase {
         double groundRelativeSetpointRadians = getGroundRelativeWristPositionRadians(setpoint.position);
         double acceleration = (wristController.getSetpoint().velocity - lastSpeed) / (Timer.getFPGATimestamp() - lastTime);
         double feedforwardVal = feedforward.calculate(groundRelativeSetpointRadians,wristController.getSetpoint().velocity, acceleration);
-    //    intakeWristMotor.setControl(wrisTorqueCurrentFOC.withOutput(pidVal + feedforwardVal));
+    //    intakeWristMotor.setControl(wristVoltageOut.withOutput(pidVal + feedforwardVal));
         lastSpeed = wristController.getSetpoint().velocity;
         lastTime = Timer.getFPGATimestamp();
     }
