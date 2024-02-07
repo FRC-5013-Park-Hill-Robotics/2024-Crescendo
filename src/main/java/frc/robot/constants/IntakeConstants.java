@@ -21,7 +21,7 @@ public final class IntakeConstants {
         public static final double kG = 0.4;
         public static final double kV = 3.4;
         public static final double kA = 0.044465;
-        public static final double kMaxSpeed = 2* Math.PI; 
+        public static final double kMaxSpeed = 2* Math.PI; //theoretical free speed of intake is 133.3333 radians per second we want to limit to 2pi
         public static final double kMaxAcceleration = kMaxSpeed * 3;
     }
     public final static class RollerGains {

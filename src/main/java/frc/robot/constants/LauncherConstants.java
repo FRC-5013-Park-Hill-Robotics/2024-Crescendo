@@ -23,7 +23,7 @@ public final class LauncherConstants {
         public static final double kG = 0.4;
         public static final double kV = 3.4;
         public static final double kA = 0.044465;
-        public static final double kMaxSpeed = 1.6 ;
+        public static final double kMaxSpeed = 1.6 ; //theoretial free speed of the arm is 1.8868
         public static final double kMaxAcceleration = kMaxSpeed * 3;
     }
     public final static class RollerGains {
