@@ -38,7 +38,7 @@ public class RobotContainer {
   private Climber m_climber = new Climber(); //creates the climber instance variable
 
   private IntakeRollers m_intakeRollers = new IntakeRollers(); //creates the intake rollers instance variable
-  //private IntakeWrist m_intakeWrist = new IntakeWrist(); //creates the intake wrist instance variable
+  private IntakeWrist m_intakeWrist = new IntakeWrist(); //creates the intake wrist instance variable
 
   private LauncherRollers m_launcherRollers = new LauncherRollers(); //creates the launcher rollers instance variable
   private LauncherShoulder m_launcherShoulder = new LauncherShoulder(); //creates the launcher shoulder variable
@@ -74,11 +74,14 @@ public class RobotContainer {
     joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
     joystick.back().onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyroscope())); 
     
-    joystick.a().whileTrue(sysIdIntakeWrist.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    joystick.b().whileTrue(sysIdIntakeWrist.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    //joystick.a().whileTrue(sysIdIntakeWrist.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    //joystick.b().whileTrue(sysIdIntakeWrist.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
 
-    joystick.x().whileTrue(sysIdIntakeWrist.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    joystick.y().whileTrue(sysIdIntakeWrist.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    //joystick.x().whileTrue(sysIdIntakeWrist.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    //joystick.y().whileTrue(sysIdIntakeWrist.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+
+    joystick.a().whileTrue(m_intakeWrist.deployCommand()).onFalse(getAutonomousCommand());
+    joystick.b().whileTrue(m_intakeWrist.retractCommand());
 
 
 

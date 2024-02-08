@@ -42,34 +42,52 @@ public class IntakeWrist extends SubsystemBase {
     private double lastSpeed = 0;
     private double lastTime = 0;
 
+    private boolean stop;
+
     /** Creates a new IntakeShoulder. */
     public IntakeWrist() {
         intakeWristMotor.getConfigurator().apply(new TalonFXConfiguration());
         intakeWristMotor.setInverted(true);
         wristController.setTolerance(IntakeConstants.RotationGains.kPositionTolerance.getRadians());
         wristController.disableContinuousInput();
+
     }
 
+    public double getAngle() {
+        return encoder.getAbsPositionRadians() - (2 * Math.PI * 0.476);
+    }
     @Override
     public void periodic() {
-        double pidVal = wristController.calculate(encoder.getAbsPositionRadians(), wristGoalRadians);
-        State setpoint = wristController.getSetpoint();
-        double groundRelativeSetpointRadians = getGroundRelativeWristPositionRadians(setpoint.position);
-        double acceleration = (wristController.getSetpoint().velocity - lastSpeed) / (Timer.getFPGATimestamp() - lastTime);
-        double feedforwardVal = feedforward.calculate(groundRelativeSetpointRadians,wristController.getSetpoint().velocity, acceleration);
-    //    intakeWristMotor.setControl(wristVoltageOut.withOutput(pidVal + feedforwardVal));
-        lastSpeed = wristController.getSetpoint().velocity;
-        lastTime = Timer.getFPGATimestamp();
+
+        if (this.stop == true) {
+            intakeWristMotor.setControl(wristVoltageOut.withOutput(0));
+        } 
+        else {
+            double pidVal = wristController.calculate(getAngle(), wristGoalRadians);
+            State setpoint = wristController.getSetpoint();
+            double groundRelativeSetpointRadians = getGroundRelativeWristPositionRadians(setpoint.position);
+            double acceleration = (wristController.getSetpoint().velocity - lastSpeed) / (Timer.getFPGATimestamp() - lastTime);
+            double feedforwardVal = feedforward.calculate(groundRelativeSetpointRadians,wristController.getSetpoint().velocity, acceleration);
+            intakeWristMotor.setControl(wristVoltageOut.withOutput(pidVal + feedforwardVal));
+            lastSpeed = wristController.getSetpoint().velocity;
+            lastTime = Timer.getFPGATimestamp();
+        }
     }
 
     public void deploy() {
+        this.stop = false;
         double goal = Math.PI - IntakeConstants.DEPLOY_SETPOINT_TO_GROUND
                 - getLauncherShoulder().getShoulderAngleRadians();
         setWristGoalRadians(goal);
     }
 
     public void retract() {
+        this.stop = false;
         setWristGoalRadians(IntakeConstants.RETRACT_SETPOINT);
+    }
+
+    public void stop() {
+        this.stop = true;
     }
 
     public void setWristGoalRadians(double radians) {
@@ -85,7 +103,7 @@ public class IntakeWrist extends SubsystemBase {
     }
 
     public double getGroundRelativeWristPositionRadians(){
-        return getGroundRelativeWristPositionRadians (encoder.getAbsPositionRadians()) ;
+        return getGroundRelativeWristPositionRadians (getAngle()) ;
     }
 
     public Command deployCommand(){

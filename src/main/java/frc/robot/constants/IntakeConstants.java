@@ -13,14 +13,14 @@ public final class IntakeConstants {
     public static final int INTAKE_ROLLER_ID = CANConstants.INTAKE_ROLLER_ID;
     public static final class RotationGains {
         public static final Rotation2d kPositionTolerance= Rotation2d.fromDegrees(2.5);
-        public static final double kP = .5;
+        public static final double kP = 1.5;
         public static final double kI = 0;
         public static final double kD = 0;
         public static final double kF = 0;
-        public static final double kS = 0.1181;
-        public static final double kG = 0.4;
-        public static final double kV = 3.4;
-        public static final double kA = 0.044465;
+        public static final double kS = 1.2403;
+        public static final double kG = 0.35845;
+        public static final double kV = 0.15954;
+        public static final double kA = 0.037683;
         public static final double kMaxSpeed = 2* Math.PI; //theoretical free speed of intake is 133.3333 radians per second we want to limit to 2pi
         public static final double kMaxAcceleration = kMaxSpeed * 3;
     }
