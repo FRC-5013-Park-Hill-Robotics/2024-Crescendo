@@ -25,7 +25,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.trobot5013lib.HeliumEncoderWrapper;
-import frc.robot.trobot5013lib.ModifiedSignalLogger;
 
 public class IntakeWristId extends SubsystemBase {
 
@@ -58,7 +57,7 @@ public class IntakeWristId extends SubsystemBase {
     private final MutableMeasure<Velocity<Angle>> m_velocity = mutable(RadiansPerSecond.of(0));
     private final  VoltageOut m_voltageOut = new VoltageOut(0);
     private final SysIdRoutine m_sysIdRoutine = new SysIdRoutine(
-            new SysIdRoutine.Config( Volts.of(1).per(Seconds.of(1)), Volts.of(5), null,ModifiedSignalLogger.logState()),
+            new SysIdRoutine.Config( Volts.of(1).per(Seconds.of(1)), Volts.of(5), null,null),
             new SysIdRoutine.Mechanism(
                     // Tell SysId how to plumb the driving voltage to the motors.
                     (Measure<Voltage> volts) -> {
