@@ -80,8 +80,8 @@ public class RobotContainer {
     //joystick.x().whileTrue(sysIdIntakeWrist.sysIdDynamic(SysIdRoutine.Direction.kForward));
     //joystick.y().whileTrue(sysIdIntakeWrist.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
-    joystick.a().whileTrue(m_intakeWrist.deployCommand()).onFalse(getAutonomousCommand());
-    joystick.b().whileTrue(m_intakeWrist.retractCommand());
+    joystick.a().whileTrue(m_intakeWrist.deployCommand()).onFalse(m_intakeWrist.stopCommand());
+    //joystick.b().whileTrue(m_intakeWrist.retractCommand());
 
 
 

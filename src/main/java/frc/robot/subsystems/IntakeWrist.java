@@ -14,6 +14,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
@@ -42,7 +43,7 @@ public class IntakeWrist extends SubsystemBase {
     private double lastSpeed = 0;
     private double lastTime = 0;
 
-    private boolean stop;
+    private boolean stop = true;
 
     /** Creates a new IntakeShoulder. */
     public IntakeWrist() {
@@ -58,7 +59,7 @@ public class IntakeWrist extends SubsystemBase {
     }
     @Override
     public void periodic() {
-
+        SmartDashboard.putNumber("IntakeAngle", getAngle());
         if (this.stop == true) {
             intakeWristMotor.setControl(wristVoltageOut.withOutput(0));
         } 
@@ -76,8 +77,8 @@ public class IntakeWrist extends SubsystemBase {
 
     public void deploy() {
         this.stop = false;
-        double goal = Math.PI - IntakeConstants.DEPLOY_SETPOINT_TO_GROUND
-                - getLauncherShoulder().getShoulderAngleRadians();
+       double goal = Math.PI - IntakeConstants.DEPLOY_SETPOINT_TO_GROUND;
+       //         - getLauncherShoulder().getShoulderAngleRadians();
         setWristGoalRadians(goal);
     }
 
@@ -115,6 +116,11 @@ public class IntakeWrist extends SubsystemBase {
     public Command retractCommand(){
         Command result = run(this::retract).until(wristController::atGoal);
         result.addRequirements(getLauncherShoulder());
+        return result;
+    }
+
+    public Command stopCommand() {
+        Command result = runOnce(this::stop);
         return result;
     }
 

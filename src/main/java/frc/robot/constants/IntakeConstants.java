@@ -13,7 +13,7 @@ public final class IntakeConstants {
     public static final int INTAKE_ROLLER_ID = CANConstants.INTAKE_ROLLER_ID;
     public static final class RotationGains {
         public static final Rotation2d kPositionTolerance= Rotation2d.fromDegrees(2.5);
-        public static final double kP = 1.5;
+        public static final double kP = 3;
         public static final double kI = 0;
         public static final double kD = 0;
         public static final double kF = 0;
@@ -33,8 +33,9 @@ public final class IntakeConstants {
         public static final double kV = 3.4;
         public static final double kA = 0.044465;
     }
-    public final static double DEPLOY_SETPOINT_TO_GROUND = 0;
+    public final static double DEPLOY_SETPOINT_TO_GROUND = Math.PI/2;
     public final static double RETRACT_SETPOINT = 0;
     public static final int TIME_OF_FLIGHT_CAN_ID = 1;
     public static final double TIME_OF_FLIGHT_RANGE = 0;
+
 }
