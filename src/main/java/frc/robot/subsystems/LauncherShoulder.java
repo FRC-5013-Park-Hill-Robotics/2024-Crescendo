@@ -5,7 +5,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.TorqueCurrentFOC;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 
@@ -16,7 +16,6 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotContainer;
 //import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.LauncherConstants;
 import frc.robot.trobot5013lib.HeliumEncoderWrapper;
@@ -38,7 +37,7 @@ public class LauncherShoulder extends SubsystemBase {
         LauncherConstants.RotationGains.kI,
         LauncherConstants.RotationGains.kD,
          shoulderConstraints);
-    private final TorqueCurrentFOC shoulderTorqueCurrentFOC = new TorqueCurrentFOC(0);
+    private final VoltageOut shoulderVoltageOut = new VoltageOut(0);
     private double shoulderGoalRadians = 0;
     private double lastSpeed = 0;
     private double lastTime = 0;
@@ -57,7 +56,7 @@ public class LauncherShoulder extends SubsystemBase {
         State setpoint = shoulderController.getSetpoint();
         double acceleration = (shoulderController.getSetpoint().velocity - lastSpeed) / (Timer.getFPGATimestamp() - lastTime);
         double feedforwardVal = feedforward.calculate(setpoint.position,shoulderController.getSetpoint().velocity, acceleration);
-        //launcherShoulderMotor.setControl(shoulderTorqueCurrentFOC.withOutput(pidVal + feedforwardVal));
+        //launcherShoulderMotor.setControl(shoulderVoltageOut.withOutput(pidVal + feedforwardVal));
         lastSpeed = shoulderController.getSetpoint().velocity;
         lastTime = Timer.getFPGATimestamp();
     }
