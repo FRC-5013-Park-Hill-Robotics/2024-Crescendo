@@ -5,10 +5,12 @@
 package frc.robot.trobot5013lib;
 
 import com.reduxrobotics.sensors.canandcoder.Canandcoder;
+import com.reduxrobotics.sensors.canandcoder.Canandcoder.Settings;
 
 /** Add your docs here. */
 public class HeliumEncoderWrapper {
     private Canandcoder encoder; 
+    private boolean inverted = false;
 
     public HeliumEncoderWrapper () {
         super();
@@ -22,11 +24,16 @@ public class HeliumEncoderWrapper {
     public HeliumEncoderWrapper(int canID, boolean inverted) {
         super();
         this.encoder = new Canandcoder(canID);
-        this.encoder.getSettings().setInvertDirection(inverted);
+        this.inverted = inverted;
     }
 
     public double getAbsPositionRadians() {
-        return rotationsToRadians(encoder.getAbsPosition()) % (Math.PI * 2);
+        double absPosition = encoder.getAbsPosition();
+        if (inverted) {
+            absPosition = 1 - absPosition;
+        }
+        absPosition = absPosition % 1;
+        return rotationsToRadians(absPosition) % (Math.PI * 2);
     }
 
     private double rotationsToRadians(double rotations) {

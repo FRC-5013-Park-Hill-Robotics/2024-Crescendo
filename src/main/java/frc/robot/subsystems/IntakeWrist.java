@@ -24,7 +24,7 @@ import frc.robot.trobot5013lib.HeliumEncoderWrapper;
 public class IntakeWrist extends SubsystemBase {
 
     private final TalonFX intakeWristMotor = new TalonFX(IntakeConstants.INTAKE_WRIST_MOTOR_CAN_ID);
-    private final HeliumEncoderWrapper encoder = new HeliumEncoderWrapper(IntakeConstants.INTAKE_ENCODER_CAN_ID);
+    private final HeliumEncoderWrapper encoder = new HeliumEncoderWrapper(IntakeConstants.INTAKE_ENCODER_CAN_ID,true);
     public double setpointRadians = 0;
     private ArmFeedforward feedforward = new ArmFeedforward(
             IntakeConstants.RotationGains.kS,
@@ -55,7 +55,11 @@ public class IntakeWrist extends SubsystemBase {
     }
 
     public double getAngle() {
-        return encoder.getAbsPositionRadians() - (2 * Math.PI * 0.476);
+        double value = encoder.getAbsPositionRadians() - 3.258952;
+        if (value < 0) {
+            value += 2 * Math.PI;
+        }
+        return value;
     }
     @Override
     public void periodic() {
@@ -65,10 +69,15 @@ public class IntakeWrist extends SubsystemBase {
         } 
         else {
             double pidVal = wristController.calculate(getAngle(), wristGoalRadians);
+            SmartDashboard.putNumber("pidValue", pidVal);
             State setpoint = wristController.getSetpoint();
             double groundRelativeSetpointRadians = getGroundRelativeWristPositionRadians(setpoint.position);
             double acceleration = (wristController.getSetpoint().velocity - lastSpeed) / (Timer.getFPGATimestamp() - lastTime);
             double feedforwardVal = feedforward.calculate(groundRelativeSetpointRadians,wristController.getSetpoint().velocity, acceleration);
+            SmartDashboard.putNumber("feedforwardVal",feedforwardVal);
+            SmartDashboard.putNumber("Error",wristController.getPositionError());
+            SmartDashboard.putNumber("AbsPosition",encoder.getAbsPositionRadians());
+        
             intakeWristMotor.setControl(wristVoltageOut.withOutput(pidVal + feedforwardVal));
             lastSpeed = wristController.getSetpoint().velocity;
             lastTime = Timer.getFPGATimestamp();
