@@ -7,7 +7,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
-
+import com.ctre.phoenix6.signals.InvertedValue;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -47,8 +47,9 @@ public class IntakeWrist extends SubsystemBase {
 
     /** Creates a new IntakeShoulder. */
     public IntakeWrist() {
-        intakeWristMotor.getConfigurator().apply(new TalonFXConfiguration());
-        intakeWristMotor.setInverted(true);
+        TalonFXConfiguration config = new TalonFXConfiguration();
+        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        intakeWristMotor.getConfigurator().apply(config);
         wristController.setTolerance(IntakeConstants.RotationGains.kPositionTolerance.getRadians());
         wristController.disableContinuousInput();
 
