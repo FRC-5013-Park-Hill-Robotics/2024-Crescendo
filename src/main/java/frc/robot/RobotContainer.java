@@ -56,7 +56,7 @@ public class RobotContainer {
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   private final Telemetry logger = new Telemetry(MaxSpeed);
   private static RobotContainer instance;
-  private final frc.sysID.IntakeWristId sysIdIntakeWrist = new frc.sysID.IntakeWristId();
+  //private final frc.sysID.IntakeWristId sysIdIntakeWrist = new frc.sysID.IntakeWristId();
 
   public RobotContainer() {
     super();
