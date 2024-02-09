@@ -9,6 +9,7 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
@@ -79,7 +80,7 @@ public class IntakeWrist extends SubsystemBase {
             SmartDashboard.putNumber("Error",wristController.getPositionError());
             SmartDashboard.putNumber("AbsPosition",encoder.getAbsPositionRadians());
         
-            intakeWristMotor.setControl(wristVoltageOut.withOutput(pidVal + feedforwardVal));
+            intakeWristMotor.setControl(wristVoltageOut.withOutput(MathUtil.clamp(pidVal + feedforwardVal,-12.0,12.0)));
             lastSpeed = wristController.getSetpoint().velocity;
             lastTime = Timer.getFPGATimestamp();
         }
