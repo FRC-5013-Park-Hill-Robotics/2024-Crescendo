@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.util.datalog.BooleanLogEntry;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.util.datalog.StringLogEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -12,10 +16,15 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-
+BooleanLogEntry myBooleanLog;
+DoubleLogEntry myDoubleLog;
+StringLogEntry myStringLog;
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
+      DataLogManager.start();
+
+
   }
 
   @Override

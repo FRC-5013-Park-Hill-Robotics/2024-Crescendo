@@ -4,16 +4,16 @@
 
 package frc.sysID;
 
-import com.ctre.phoenix6.controls.TorqueCurrentFOC;
-import com.ctre.phoenix6.hardware.TalonFX;
-
-import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.MutableMeasure.mutable;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
-import static edu.wpi.first.units.MutableMeasure.mutable;
+import static edu.wpi.first.units.Units.Volts;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.TalonFX;
+
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
@@ -23,21 +23,18 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.RobotContainer;
 import frc.robot.constants.IntakeConstants;
-import frc.robot.subsystems.LauncherShoulder;
 import frc.robot.trobot5013lib.HeliumEncoderWrapper;
 
 public class IntakeWristId extends SubsystemBase {
 
     private final TalonFX intakeWristMotor = new TalonFX(IntakeConstants.INTAKE_WRIST_MOTOR_CAN_ID);
     private final HeliumEncoderWrapper encoder = new HeliumEncoderWrapper(IntakeConstants.INTAKE_ENCODER_CAN_ID);
-    public double setpointRadians = 0;
-    private ArmFeedforward feedforward = new ArmFeedforward(IntakeConstants.RotationGains.kS, IntakeConstants.RotationGains.kG,
-            IntakeConstants.RotationGains.kV, IntakeConstants.RotationGains.kA);
-
+ 
     /** Creates a new IntakeShoulder. */
     public IntakeWristId() {
+        TalonFXConfiguration config = new TalonFXConfiguration();
+        intakeWristMotor.getConfigurator().apply(config);
         intakeWristMotor.setInverted(true);
     }
 
@@ -47,7 +44,7 @@ public class IntakeWristId extends SubsystemBase {
     }
 
     public double offsetPosition(){
-        return encoder.getAbsPositionRadians() - (2 * Math.PI * 0.049);
+        return encoder.getAbsPositionRadians() - (2 * Math.PI * 0.052);
     }
 //.055
     // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
@@ -58,14 +55,13 @@ public class IntakeWristId extends SubsystemBase {
     // Mutable holder for unit-safe linear velocity values, persisted to avoid
     // reallocation.
     private final MutableMeasure<Velocity<Angle>> m_velocity = mutable(RadiansPerSecond.of(0));
-     private final TorqueCurrentFOC m_torqueCurrentFOC = new TorqueCurrentFOC(0);
+    private final  VoltageOut m_voltageOut = new VoltageOut(0);
     private final SysIdRoutine m_sysIdRoutine = new SysIdRoutine(
-            // Empty config defaults to 1 volt/second ramp rate and 7 volt step voltage.
-            new SysIdRoutine.Config( Volts.of(10).per(Seconds.of(1)), Volts.of(65), null,null),
+            new SysIdRoutine.Config( Volts.of(0.5).per(Seconds.of(1)), Volts.of(4), null,null),
             new SysIdRoutine.Mechanism(
                     // Tell SysId how to plumb the driving voltage to the motors.
                     (Measure<Voltage> volts) -> {
-                        intakeWristMotor.setControl(m_torqueCurrentFOC.withOutput(volts.in(Volts)));
+                        intakeWristMotor.setControl(m_voltageOut.withOutput(volts.in(Volts)));
                     },
                     // Tell SysId how to record a frame of data for each motor on the mechanism
                     // being
@@ -74,7 +70,7 @@ public class IntakeWristId extends SubsystemBase {
                         // Record a frame for the wrist motor. 
                         log.motor("wrist")
                                 .voltage(
-                                        m_appliedVoltage.mut_replace(intakeWristMotor.getTorqueCurrent().getValueAsDouble()
+                                        m_appliedVoltage.mut_replace(intakeWristMotor.get() * RobotController.getBatteryVoltage()
                                                 , Volts))
                                 .angularPosition(m_rotation.mut_replace(offsetPosition(), Radians))
                                 .angularVelocity(
