@@ -44,7 +44,7 @@ public class IntakeWristId extends SubsystemBase {
     }
 
     public double offsetPosition(){
-        return encoder.getAbsPositionRadians() - (2 * Math.PI * 0.049);
+        return encoder.getAbsPositionRadians() - (2 * Math.PI * 0.052);
     }
 //.055
     // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
@@ -57,7 +57,7 @@ public class IntakeWristId extends SubsystemBase {
     private final MutableMeasure<Velocity<Angle>> m_velocity = mutable(RadiansPerSecond.of(0));
     private final  VoltageOut m_voltageOut = new VoltageOut(0);
     private final SysIdRoutine m_sysIdRoutine = new SysIdRoutine(
-            new SysIdRoutine.Config( Volts.of(0.5).per(Seconds.of(1)), Volts.of(5), null,null),
+            new SysIdRoutine.Config( Volts.of(0.5).per(Seconds.of(1)), Volts.of(4), null,null),
             new SysIdRoutine.Mechanism(
                     // Tell SysId how to plumb the driving voltage to the motors.
                     (Measure<Voltage> volts) -> {

@@ -74,7 +74,7 @@ public class LauncherShoulder extends SubsystemBase {
     }
 
     protected double getShoulderAngleRadians(){
-      return encoder.getAbsPositionRadians();
+      return encoder.getAbsPositionRadians() + Math.PI/2;
     }
 
     public Command retractCommand(){
