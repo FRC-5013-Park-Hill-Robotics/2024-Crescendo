@@ -13,7 +13,7 @@ public final class IntakeConstants {
     public static final int INTAKE_ROLLER_ID = CANConstants.INTAKE_ROLLER_ID;
     public static final class RotationGains {
         public static final Rotation2d kPositionTolerance= Rotation2d.fromDegrees(2.5);
-        public static final double kP = 3;
+        public static final double kP = 1.2;
         public static final double kI = 0;
         public static final double kD = 0;
         public static final double kF = 0;
