@@ -47,8 +47,8 @@ public class RobotContainer {
   private LauncherRollers m_launcherRollers = new LauncherRollers(); //creates the launcher rollers instance variable
   private LauncherShoulder m_launcherShoulder = new LauncherShoulder(); //creates the launcher shoulder variable
 
-  private Limelight m_LimelightFront = new Limelight(); //creates the limelight front instance variable
-  private Limelight m_LimelightBack = new Limelight(); //creates the limelight back instance variable
+  private Limelight m_LimelightFront = new Limelight("",true); //creates the limelight front instance variable
+  private Limelight m_LimelightBack = new Limelight("",true); //creates the limelight back instance variable
 
   private StatusLED m_statusLED = new StatusLED(); //creates the status led instance variable
 
@@ -122,6 +122,10 @@ public class RobotContainer {
 
   public LauncherShoulder getLauncherShoulder() {
     return m_launcherShoulder;
+  }
+  
+  public CommandSwerveDrivetrain getDrivetrain() {
+    return drivetrain;
   }
 
   public Command rumbleSequence(){

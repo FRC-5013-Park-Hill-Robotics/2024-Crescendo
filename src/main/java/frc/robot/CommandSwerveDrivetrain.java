@@ -8,6 +8,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.Notifier;
@@ -122,6 +123,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     public Command runDriveSlipTest()
     {
         return m_slipSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+    }
+
+    public Pose2d getPose(){
+        return this.getState().Pose;
     }
 
     public void zeroGyroscope(){
