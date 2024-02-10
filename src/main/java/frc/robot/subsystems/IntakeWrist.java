@@ -70,7 +70,10 @@ public class IntakeWrist extends SubsystemBase {
             intakeWristMotor.setControl(wristVoltageOut.withOutput(0));
         } 
         else {
-            double pidVal = wristController.calculate(getAngle(), wristGoalRadians);
+            if (wristGoalRadians != wristController.getGoal().position) {
+                wristController.setGoal(wristGoalRadians);
+            }
+            double pidVal = wristController.calculate(getAngle());
             SmartDashboard.putNumber("pidValue", pidVal);
             State setpoint = wristController.getSetpoint();
             double groundRelativeSetpointRadians = getGroundRelativeWristPositionRadians(setpoint.position);
