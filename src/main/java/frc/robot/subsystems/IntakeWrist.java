@@ -49,15 +49,15 @@ public class IntakeWrist extends SubsystemBase {
     /** Creates a new IntakeShoulder. */
     public IntakeWrist() {
         TalonFXConfiguration config = new TalonFXConfiguration();
-        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         intakeWristMotor.getConfigurator().apply(config);
         wristController.setTolerance(IntakeConstants.RotationGains.kPositionTolerance.getRadians());
-        wristController.disableContinuousInput();
+        wristController.enableContinuousInput(0,2*Math.PI);
 
     }
 
     public double getAngle() {
-        double value = encoder.getAbsPositionRadians() - 3.258952;
+        double value = encoder.getAbsPositionRadians() - 3.211 ;
         if (value < 0) {
             value += 2 * Math.PI;
         }
@@ -65,7 +65,7 @@ public class IntakeWrist extends SubsystemBase {
     }
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("IntakeAngle", getAngle());
+        SmartDashboard.putNumber("IntakeAngle", Math.toDegrees(getAngle()));
         if (this.stop == true) {
             intakeWristMotor.setControl(wristVoltageOut.withOutput(0));
         } 
@@ -80,18 +80,20 @@ public class IntakeWrist extends SubsystemBase {
             double acceleration = (wristController.getSetpoint().velocity - lastSpeed) / (Timer.getFPGATimestamp() - lastTime);
             double feedforwardVal = feedforward.calculate(groundRelativeSetpointRadians,wristController.getSetpoint().velocity, acceleration);
             SmartDashboard.putNumber("feedforwardVal",feedforwardVal);
-            SmartDashboard.putNumber("Error",wristController.getPositionError());
-            SmartDashboard.putNumber("AbsPosition",encoder.getAbsPositionRadians());
         
             intakeWristMotor.setControl(wristVoltageOut.withOutput(MathUtil.clamp(pidVal + feedforwardVal,-12.0,12.0)));
             lastSpeed = wristController.getSetpoint().velocity;
             lastTime = Timer.getFPGATimestamp();
         }
+            SmartDashboard.putNumber("Ground Angle" , Math.toDegrees(getGroundRelativeWristPositionRadians()));
+            SmartDashboard.putNumber("Error",wristController.getPositionError());
+            SmartDashboard.putNumber("AbsPosition",Math.toDegrees(encoder.getAbsPositionRadians()));
+            SmartDashboard.putNumber("Shooter Angle", Math.toDegrees(getLauncherShoulder().getShoulderAngleRadians()));
     }
 
     public void deploy() {
         this.stop = false;
-       double goal = Math.PI - IntakeConstants.DEPLOY_SETPOINT_TO_GROUND;
+        double goal = Math.PI - IntakeConstants.DEPLOY_SETPOINT_TO_GROUND;
        //         - getLauncherShoulder().getShoulderAngleRadians();
         setWristGoalRadians(goal);
     }

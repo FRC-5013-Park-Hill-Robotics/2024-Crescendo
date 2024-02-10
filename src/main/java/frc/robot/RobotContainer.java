@@ -8,14 +8,18 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 
+import edu.wpi.first.hal.SimDevice.Direction;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.GamepadDrive;
 import frc.robot.generated.TunerConstants;
@@ -80,9 +84,26 @@ public class RobotContainer {
     //joystick.x().whileTrue(sysIdIntakeWrist.sysIdDynamic(SysIdRoutine.Direction.kForward));
     //joystick.y().whileTrue(sysIdIntakeWrist.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
-    joystick.a().whileTrue(m_intakeWrist.deployCommand()).onFalse(m_intakeWrist.stopCommand());
+    /*joystick.a().whileTrue(drivetrain.runDriveQuasiTest(SysIdRoutine.Direction.kForward));
+    joystick.b().whileTrue(drivetrain.runDriveQuasiTest(SysIdRoutine.Direction.kReverse));
+
+    joystick.x().whileTrue(drivetrain.runDriveDynamTest(SysIdRoutine.Direction.kForward));
+    joystick.y().whileTrue(drivetrain.runDriveDynamTest(SysIdRoutine.Direction.kReverse));
+
+    joystick.povDown().whileTrue(drivetrain.runSteerQuasiTest(SysIdRoutine.Direction.kForward));
+    joystick.povRight().whileTrue(drivetrain.runSteerQuasiTest(SysIdRoutine.Direction.kReverse));
+
+    joystick.povLeft().whileTrue(drivetrain.runSteerDynamTest(SysIdRoutine.Direction.kForward));
+    joystick.povUp().whileTrue(drivetrain.runSteerDynamTest(SysIdRoutine.Direction.kReverse));*/
+
+    //joystick.a().whileTrue(m_intakeWrist.deployCommand()).onFalse(m_intakeWrist.stopCommand());
     //joystick.b().whileTrue(m_intakeWrist.retractCommand());
 
+    joystick.a().whileTrue(m_intakeRollers.takeIn()).onFalse(m_intakeRollers.stopC());
+    joystick.b().whileTrue(m_intakeRollers.throwOut()).onFalse(m_intakeRollers.stopC());
+
+    joystick.x().whileTrue(m_intakeRollers.intakeGamepieceCommand()).onFalse(m_intakeRollers.stopC());
+    new Trigger(m_intakeRollers::hasGamePiece).onTrue(rumbleSequence());
 
 
     if (Utils.isSimulation()) {
@@ -103,4 +124,10 @@ public class RobotContainer {
     return m_launcherShoulder;
   }
 
+  public Command rumbleSequence(){
+    Command rumbleCommand =  new InstantCommand(() -> joystick.getHID().setRumble(RumbleType.kBothRumble, 1));
+    Command stopRumbleCommand =  new InstantCommand(() -> joystick.getHID().setRumble(RumbleType.kBothRumble, 0));
+    return rumbleCommand.andThen(new WaitCommand(0.5)).andThen(stopRumbleCommand);
+   
+  }
 }

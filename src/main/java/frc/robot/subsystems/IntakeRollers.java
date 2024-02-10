@@ -6,7 +6,11 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.TorqueCurrentFOC;
+import com.ctre.phoenix6.controls.VelocityDutyCycle;
+import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.playingwithfusion.TimeOfFlight;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -16,6 +20,7 @@ import edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -37,29 +42,35 @@ public class IntakeRollers extends SubsystemBase {
     private double target = 0;
     private ArmFeedforward m_intakFeedforward = new ArmFeedforward(0, 0, 0);
     private TimeOfFlight m_timeOfFlight = new TimeOfFlight(IntakeConstants.TIME_OF_FLIGHT_CAN_ID);
+    private VelocityVoltage m_VelocityVoltage = new VelocityVoltage(0);
     //Create Feed Forward controller for velocity control using IntakeConstants.RollerGains
     //Create Control Request for Motor of tpe VelocityTorqueCurrentFOC
     //add time of flight sensor for game piece intake/outtake detection
 
     public IntakeRollers() {
-    intakeRollerMotor.getConfigurator().apply(new TalonFXConfiguration());
-        //Clear motor configs - config facgtory default
-        //set motor configs, 
-            //PID slot 0, 
-            //inversion.
-            //idle mode brake.
+    
+        TalonFXConfiguration config = new TalonFXConfiguration();
+        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+        config.Slot0.kP = IntakeConstants.RollerGains.kP;
+        config.Slot0.kI = IntakeConstants.RollerGains.kI;
+        config.Slot0.kD = IntakeConstants.RollerGains.kD;
+        config.Slot0.kS = IntakeConstants.RollerGains.kS;
+        config.Slot0.kV = IntakeConstants.RollerGains.kV;
+        config.Slot0.kA = IntakeConstants.RollerGains.kA;
+        intakeRollerMotor.getConfigurator().apply(config);
         intakeRollerMotor.set(0);
+        m_VelocityVoltage.withSlot(0);
     }
 
     public void feedIn() {
          //TODO should be constant
-        target = .33;
+        target = IntakeConstants.RollerGains.kIntakeRotation;
        
     }
 
     public void feedOut() {
         //TODO should be constant
-        target = -.25;
+        target = -IntakeConstants.RollerGains.kIntakeRotation;
     }
 
     public void stop() {
@@ -67,12 +78,14 @@ public class IntakeRollers extends SubsystemBase {
     }
 
     public boolean hasGamePiece(){
-        return m_timeOfFlight.getRange() < IntakeConstants.TIME_OF_FLIGHT_RANGE;
+        return m_timeOfFlight.getRange() < IntakeConstants.TIME_OF_FLIGHT_RANGE_MM;
     }
 
     @Override
     public void periodic() {
-        intakeRollerMotor.set(target);
+        m_VelocityVoltage.withVelocity(target);
+        intakeRollerMotor.setControl(m_VelocityVoltage);
+        SmartDashboard.putNumber("ToF", m_timeOfFlight.getRange());
         // This method will be called once per scheduler run
         //PID calculate
         //Feed Forward Calculate
@@ -84,8 +97,22 @@ public class IntakeRollers extends SubsystemBase {
         return result;
     } 
     
-    //TODO update characterization routine for the motor created. Uncomment below code and fix broken motor reference to the motorcontroller you create above.
-/*
+    public Command takeIn(){
+        Command result = runOnce(this::feedIn);
+        return result;
+    } 
+
+    public Command throwOut(){
+        Command result = runOnce(this::feedOut);
+        return result;
+    } 
+
+    public Command stopC(){
+        Command result = runOnce(this::stop);
+        return result;
+    }
+    
+    
 
     // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
   private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
@@ -95,14 +122,14 @@ public class IntakeRollers extends SubsystemBase {
   // Mutable holder for unit-safe rotational  velocity values, persisted to avoid
   // reallocation.
   private final MutableMeasure<Velocity<Angle>> m_velocity = mutable(RotationsPerSecond.of(0));
-  private final TorqueCurrentFOC m_torqueCurrentFOC = new TorqueCurrentFOC(0);
+  private final VoltageOut m_voltageOut = new VoltageOut(0);
   private final SysIdRoutine m_sysIdRoutine = new SysIdRoutine(
       // Using amperage, since it is converted when it comes out it ok.  Config expecst type volts.
-      new SysIdRoutine.Config(Volts.of(5).per(Seconds.of(1)), Volts.of(30), null, null),
+      new SysIdRoutine.Config(Volts.of(1).per(Seconds.of(1)), Volts.of(7), null, null),
       new SysIdRoutine.Mechanism(
           // Tell SysId how to plumb the driving voltage to the motors.
           (Measure<Voltage> volts) -> {
-            rightMotor.setControl(m_torqueCurrentFOC.withOutput(volts.in(Volts)));
+            intakeRollerMotor.setControl(m_voltageOut.withOutput(volts.in(Volts)));
           },
           // Tell SysId how to record a frame of data for each motor on the mechanism
           // being
@@ -112,10 +139,10 @@ public class IntakeRollers extends SubsystemBase {
             log.motor("wheel")
                 .voltage(
                     m_appliedVoltage.mut_replace(
-                        rightMotor.get() * RobotController.getBatteryVoltage(), Volts))
-                .angularPosition(m_rotation.mut_replace(rightMotor.getPosition().getValueAsDouble(), Rotations))
+                        intakeRollerMotor.get() * RobotController.getBatteryVoltage(), Volts))
+                .angularPosition(m_rotation.mut_replace(intakeRollerMotor.getPosition().getValueAsDouble(), Rotations))
                 .angularVelocity(
-                    m_velocity.mut_replace(rightMotor.getVelocity().getValueAsDouble(), RadiansPerSecond));
+                    m_velocity.mut_replace(intakeRollerMotor.getVelocity().getValueAsDouble(), RotationsPerSecond));
 
           },
           // Tell SysId to make generated commands require this subsystem, suffix test
@@ -130,5 +157,5 @@ public class IntakeRollers extends SubsystemBase {
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     return m_sysIdRoutine.dynamic(direction);
   }
-   */
+   
 }
