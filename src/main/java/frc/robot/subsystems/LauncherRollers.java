@@ -62,7 +62,7 @@ public class LauncherRollers extends SubsystemBase {
     private final MutableMeasure<Velocity<Angle>> m_velocity = mutable(RotationsPerSecond.of(0));
     private final SysIdRoutine m_sysIdRoutine = new SysIdRoutine(
             // Empty config defaults to 1 volt/second ramp rate and 7 volt step voltage.
-            new SysIdRoutine.Config( Volts.of(1).per(Seconds.of(1)), Volts.of(9), null,null),
+            new SysIdRoutine.Config( Volts.of(1).per(Seconds.of(1)), Volts.of(7), null,null),
             new SysIdRoutine.Mechanism(
                     // Tell SysId how to plumb the driving voltage to the motors.
                     (Measure<Voltage> volts) -> {
