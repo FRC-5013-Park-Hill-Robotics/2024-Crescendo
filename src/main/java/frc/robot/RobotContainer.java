@@ -42,13 +42,13 @@ public class RobotContainer {
   private Climber m_climber = new Climber(); //creates the climber instance variable
 
   private IntakeRollers m_intakeRollers = new IntakeRollers(); //creates the intake rollers instance variable
-  private IntakeWrist m_intakeWrist = new IntakeWrist(); //creates the intake wrist instance variable
+  //private IntakeWrist m_intakeWrist = new IntakeWrist(); //creates the intake wrist instance variable
 
   private LauncherRollers m_launcherRollers = new LauncherRollers(); //creates the launcher rollers instance variable
   private LauncherShoulder m_launcherShoulder = new LauncherShoulder(); //creates the launcher shoulder variable
 
-  private Limelight m_LimelightFront = new Limelight("",true); //creates the limelight front instance variable
-  private Limelight m_LimelightBack = new Limelight("",true); //creates the limelight back instance variable
+  private Limelight m_LimelightFront = new Limelight("limelight-front",true); //creates the limelight front instance variable
+  private Limelight m_LimelightBack = new Limelight("limelight-back",true); //creates the limelight back instance variable
 
   private StatusLED m_statusLED = new StatusLED(); //creates the status led instance variable
 

@@ -33,6 +33,7 @@ public class Limelight extends SubsystemBase {
   private int fieldError = 0;
   private int distanceError = 0;
   private Pose2d botpose;
+  private String name;
   public Limelight(String name, boolean aprilTagViable) {
     /**
      * tx - Horizontal Offset
@@ -40,7 +41,7 @@ public class Limelight extends SubsystemBase {
      * ta - Area of target 
      * tv - Target Visible
      */
-
+    this.name = name;
     this.table = NetworkTableInstance.getDefault().getTable(name);
 
     this.aprilTagViable = aprilTagViable;
@@ -68,16 +69,16 @@ public class Limelight extends SubsystemBase {
     SmartDashboard.putNumber("LimelightArea", area);
 
 
-    if (aprilTagViable) {
+    if (aprilTagViable ) {
 
       CommandSwerveDrivetrain drivebase = RobotContainer.getInstance().getDrivetrain();
       LimelightHelpers.Results result =
-            LimelightHelpers.getLatestResults("limelight").targetingResults;
+            LimelightHelpers.getLatestResults(name).targetingResults;
         if (!(result.botpose[0] == 0 && result.botpose[1] == 0)) {
           if (alliance == Alliance.Blue) {
-            //botpose = LimelightHelpers.toPose2D(result.botpose_wpiblue);
+            botpose = LimelightHelpers.toPose2D(result.botpose_wpiblue);
           } else if (alliance == Alliance.Red) {
-            //botpose = LimelightHelpers.toPose2D(result.botpose_wpired);
+            botpose = LimelightHelpers.toPose2D(result.botpose_wpired);
           }
           if (botpose != null){
           if (field.isPoseWithinArea(botpose)) {
@@ -118,6 +119,16 @@ public class Limelight extends SubsystemBase {
   public double getVerticalAngleOfErrorDegrees(){
     //+1 is a fudge factor cor camera mounting
     return getTy().getDouble(0.0) + LimelightConstants.VERTICAL_OFFSET;
+  }
+
+  public void setPipelineAprilTag(){
+    aprilTagViable = true;
+    setPipeline(LimelightConstants.APRIL_TAG_TARGETING);
+  }
+
+  public void setPipelineObjectDecection(){
+    aprilTagViable = false;
+    setPipeline(LimelightConstants.GAME_PIECE_RECOGNITION);
   }
 
 

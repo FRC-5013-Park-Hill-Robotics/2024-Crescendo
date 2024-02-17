@@ -24,13 +24,18 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+
+import frc.robot.constants.IntakeConstants;
+
 import frc.robot.constants.LauncherConstants;
 import frc.robot.trobot5013lib.HeliumEncoderWrapper;
 import frc.robot.trobot5013lib.ModifiedSignalLogger;
 
 public class LauncherShoulderId extends SubsystemBase {
 private final TalonFX launcherShoulderMotor = new TalonFX(LauncherConstants.LAUNCHER_SHOULDER_MOTOR_CAN_ID);
-    private final HeliumEncoderWrapper encoder = new HeliumEncoderWrapper(LauncherConstants.LAUNCHER_ENCODER_CAN_ID);
+
+private final HeliumEncoderWrapper encoder = new HeliumEncoderWrapper(LauncherConstants.LAUNCHER_ENCODER_CAN_ID);
+
 
   /** Creates a new LauncherShoulder. */
   public LauncherShoulderId() {
@@ -73,7 +78,9 @@ private final TalonFX launcherShoulderMotor = new TalonFX(LauncherConstants.LAUN
                                 .voltage(
                                   m_appliedVoltage.mut_replace(launcherShoulderMotor.get() * RobotController.getBatteryVoltage()
                                                 , Volts))
-                                .angularPosition(m_rotation.mut_replace(encoder.getAbsPositionRadians() -Math.PI, Radians))
+
+                                .angularPosition(m_rotation.mut_replace(encoder.getAbsPositionRadians() - Math.PI, Radians))
+
                                 .angularVelocity(
                                         m_velocity.mut_replace(encoder.getVelocityRadians(), RadiansPerSecond));
 
