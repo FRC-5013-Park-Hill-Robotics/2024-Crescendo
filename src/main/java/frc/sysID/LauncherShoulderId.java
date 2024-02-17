@@ -23,11 +23,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.IntakeConstants;
+import frc.robot.constants.LauncherConstants;
 import frc.robot.trobot5013lib.HeliumEncoderWrapper;
 import frc.robot.trobot5013lib.ModifiedSignalLogger;
 
 public class LauncherShoulderId extends SubsystemBase {
-private final TalonFX launcherShoulderMotor = new TalonFX(IntakeConstants.INTAKE_WRIST_MOTOR_CAN_ID);
+private final TalonFX launcherShoulderMotor = new TalonFX(LauncherConstants.LAUNCHER_SHOULDER_MOTOR_CAN_ID);
     private final HeliumEncoderWrapper encoder = new HeliumEncoderWrapper(IntakeConstants.INTAKE_ENCODER_CAN_ID);
 
   /** Creates a new LauncherShoulder. */
@@ -52,7 +53,7 @@ private final TalonFX launcherShoulderMotor = new TalonFX(IntakeConstants.INTAKE
     private final VoltageOut m_VoltageOut = new VoltageOut(0);
     private final SysIdRoutine m_sysIdRoutine = new SysIdRoutine(
             // Empty config defaults to amps preting to be volts
-            new SysIdRoutine.Config( Volts.of(1).per(Seconds.of(1)), Volts.of(7), null,ModifiedSignalLogger.logState()),
+            new SysIdRoutine.Config( Volts.of(1).per(Seconds.of(1)), Volts.of(4), null,null),
             new SysIdRoutine.Mechanism(
                     // Tell SysId how to plumb the driving voltage to the motors.
                     (Measure<Voltage> volts) -> {
@@ -67,7 +68,7 @@ private final TalonFX launcherShoulderMotor = new TalonFX(IntakeConstants.INTAKE
                                 .voltage(
                                   m_appliedVoltage.mut_replace(launcherShoulderMotor.get() * RobotController.getBatteryVoltage()
                                                 , Volts))
-                                .angularPosition(m_rotation.mut_replace(encoder.getAbsPositionRadians(), Radians))
+                                .angularPosition(m_rotation.mut_replace(encoder.getAbsPositionRadians() - Math.PI, Radians))
                                 .angularVelocity(
                                         m_velocity.mut_replace(encoder.getVelocityRadians(), RadiansPerSecond));
 
