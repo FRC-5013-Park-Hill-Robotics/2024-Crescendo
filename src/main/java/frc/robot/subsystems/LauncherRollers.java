@@ -1,4 +1,4 @@
-// Copyright (c) FIRST and other WPILib contributors.
+// Copybottom (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
@@ -27,14 +27,14 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
 
 public class LauncherRollers extends SubsystemBase {
   /** Creates a new LauncherRollers. */
-  private TalonFX rightMotor = new TalonFX(LauncherConstants.LAUNCHER_RIGHT_CAN_ID);
-  private TalonFX leftMotor= new TalonFX(LauncherConstants.LAUNCHER_LEFT_CAN_ID);
+  private TalonFX bottomMotor = new TalonFX(LauncherConstants.LAUNCHER_BOTTOM_CAN_ID);
+  private TalonFX topMotor= new TalonFX(LauncherConstants.LAUNCHER_TOP_CAN_ID);
 
   public LauncherRollers() {
-      rightMotor.getConfigurator().apply(new TalonFXConfiguration());
-      leftMotor.getConfigurator().apply(new TalonFXConfiguration());
-      rightMotor.setInverted(true);
-      leftMotor.setInverted(false);
+      bottomMotor.getConfigurator().apply(new TalonFXConfiguration());
+      topMotor.getConfigurator().apply(new TalonFXConfiguration());
+      bottomMotor.setInverted(true);
+      topMotor.setInverted(false);
   }
 
 
@@ -49,8 +49,8 @@ public class LauncherRollers extends SubsystemBase {
   }
 
   public void setSpeed(double speed) {
-    rightMotor.set(0);
-    leftMotor.set(0);
+    bottomMotor.set(0);
+    topMotor.set(0);
   }
     // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
     private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
@@ -66,28 +66,28 @@ public class LauncherRollers extends SubsystemBase {
             new SysIdRoutine.Mechanism(
                     // Tell SysId how to plumb the driving voltage to the motors.
                     (Measure<Voltage> volts) -> {
-                        rightMotor.setVoltage(volts.in(Volts));
-                        leftMotor.setVoltage(volts.in(Volts));
+                        bottomMotor.setVoltage(volts.in(Volts));
+                        topMotor.setVoltage(volts.in(Volts));
                     },
                     // Tell SysId how to record a frame of data for each motor on the mechanism
                     // being
                     // characterized.
                     log -> {
                         // Record a frame for the wheel motor. 
-                        log.motor("right")
+                        log.motor("bottom")
                                 .voltage(
                                         m_appliedVoltage.mut_replace(
-                                                rightMotor.get() * RobotController.getBatteryVoltage(), Volts))
-                                .angularPosition(m_rotation.mut_replace(rightMotor.getPosition().getValueAsDouble(), Rotations))
+                                                bottomMotor.get() * RobotController.getBatteryVoltage(), Volts))
+                                .angularPosition(m_rotation.mut_replace(bottomMotor.getPosition().getValueAsDouble(), Rotations))
                                 .angularVelocity(
-                                        m_velocity.mut_replace(rightMotor.getVelocity().getValueAsDouble(), RadiansPerSecond));
-                        log.motor("left")
+                                        m_velocity.mut_replace(bottomMotor.getVelocity().getValueAsDouble(), RadiansPerSecond));
+                        log.motor("top")
                                 .voltage(
                                         m_appliedVoltage.mut_replace(
-                                                leftMotor.get() * RobotController.getBatteryVoltage(), Volts))
-                                .angularPosition(m_rotation.mut_replace(leftMotor.getPosition().getValueAsDouble(), Rotations))
+                                                topMotor.get() * RobotController.getBatteryVoltage(), Volts))
+                                .angularPosition(m_rotation.mut_replace(topMotor.getPosition().getValueAsDouble(), Rotations))
                                 .angularVelocity(
-                                        m_velocity.mut_replace(leftMotor.getVelocity().getValueAsDouble(), RadiansPerSecond));
+                                        m_velocity.mut_replace(topMotor.getVelocity().getValueAsDouble(), RadiansPerSecond));
 
                     },
                     // Tell SysId to make generated commands require this subsystem, suffix test
