@@ -48,7 +48,7 @@ public class RobotContainer {
   private LauncherShoulder m_launcherShoulder = new LauncherShoulder(); //creates the launcher shoulder variable
 
   private Limelight m_LimelightFront = new Limelight("limelight-front",true); //creates the limelight front instance variable
-  private Limelight m_LimelightBack = new Limelight("lilmelight-back",true); //creates the limelight back instance variable
+  private Limelight m_LimelightBack = new Limelight("limelight-back",true); //creates the limelight back instance variable
 
   private StatusLED m_statusLED = new StatusLED(); //creates the status led instance variable
 
