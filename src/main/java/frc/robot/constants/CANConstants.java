@@ -33,16 +33,17 @@ public final class CANConstants {
     public static final int EXTENSION_ID = 0;
 
     public static final int INTAKE_WRIST_MOTOR_CAN_ID = 18;
-    public static final int INTAKE_ENCODER_CAN_ID = 2;
+    public static final int INTAKE_ENCODER_CAN_ID = 22;
 
     public static final int LAUNCHER_SHOULDER_MOTOR_CAN_ID = 15;
-    public static final int LAUNCHER_ENCODER_CAN_ID = 1;
+    public static final int LAUNCHER_ENCODER_CAN_ID = 2;
 
     public static final int LAUNCHER_TOP_CAN_ID = 17;
     public static final int LAUNCHER_BOTTOM_CAN_ID = 16;
 
     public static final int CLIMBER_LEFT_CAN_ID = 21;
     public static final int CLIMBER_RIGHT_CAN_ID = 20;
+
 
 
 

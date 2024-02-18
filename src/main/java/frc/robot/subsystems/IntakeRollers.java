@@ -63,14 +63,11 @@ public class IntakeRollers extends SubsystemBase {
     }
 
     public void feedIn() {
-         //TODO should be constant
-        target = IntakeConstants.RollerGains.kIntakeRotation;
-       
+        target = IntakeConstants.RollerGains.kIntakeRotation;     
     }
 
     public void feedOut() {
-        //TODO should be constant
-        target = -IntakeConstants.RollerGains.kIntakeRotation;
+        target = IntakeConstants.RollerGains.kOuttakeRotation;
     }
 
     public void stop() {
@@ -81,15 +78,17 @@ public class IntakeRollers extends SubsystemBase {
         return m_timeOfFlight.getRange() < IntakeConstants.TIME_OF_FLIGHT_RANGE_MM;
     }
 
+       public boolean doesntHaveGamePiece(){
+        return !hasGamePiece();
+    } 
+
     @Override
     public void periodic() {
         m_VelocityVoltage.withVelocity(target);
         intakeRollerMotor.setControl(m_VelocityVoltage);
         SmartDashboard.putNumber("ToF", m_timeOfFlight.getRange());
-        // This method will be called once per scheduler run
-        //PID calculate
-        //Feed Forward Calculate
-        //Set motor output
+        SmartDashboard.putBoolean("hasGamePiece", this.hasGamePiece());
+
     }
 
     public Command intakeGamepieceCommand(){
@@ -103,7 +102,7 @@ public class IntakeRollers extends SubsystemBase {
     } 
 
     public Command throwOut(){
-        Command result = runOnce(this::feedOut);
+        Command result = run(this::feedOut).until(this::doesntHaveGamePiece).andThen(this.stopC());
         return result;
     } 
 

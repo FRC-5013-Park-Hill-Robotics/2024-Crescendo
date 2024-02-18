@@ -79,7 +79,7 @@ private final HeliumEncoderWrapper encoder = new HeliumEncoderWrapper(LauncherCo
                                   m_appliedVoltage.mut_replace(launcherShoulderMotor.get() * RobotController.getBatteryVoltage()
                                                 , Volts))
 
-                                .angularPosition(m_rotation.mut_replace(encoder.getAbsPositionRadians() - Math.PI, Radians))
+                                .angularPosition(m_rotation.mut_replace((encoder.getAbsPositionRadians() + Math.PI/2) % (Math.PI * 2), Radians))
 
                                 .angularVelocity(
                                         m_velocity.mut_replace(encoder.getVelocityRadians(), RadiansPerSecond));
