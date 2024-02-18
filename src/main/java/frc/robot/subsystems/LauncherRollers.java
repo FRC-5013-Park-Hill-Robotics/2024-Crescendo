@@ -49,8 +49,8 @@ public class LauncherRollers extends SubsystemBase {
       bottomConfig.Slot0.kA = LauncherConstants.RollerGains.kA;
       bottomConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
       bottomMotor.set(0);
-      m_BottomVoltage.withSlot(0);
       bottomMotor.getConfigurator().apply(bottomConfig);
+      m_BottomVoltage.withSlot(0);
       
 
       TalonFXConfiguration topConfig = new TalonFXConfiguration();
@@ -63,8 +63,8 @@ public class LauncherRollers extends SubsystemBase {
       topConfig.Slot0.kA = LauncherConstants.RollerGains.kA;
       topConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
       topMotor.set(0);
-      m_topVoltage.withSlot(0);
       topMotor.getConfigurator().apply(bottomConfig);
+      m_topVoltage.withSlot(0);
   }
 
 

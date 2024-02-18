@@ -27,13 +27,21 @@ public final class LauncherConstants {
         public static final double kMaxAcceleration = kMaxSpeed * 3;
     }
     public final static class RollerGains {
-        public static final double kP = 0.1;
+      /*   public static final double kP = 0.1;
         public static final double kI = 0;
         public static final double kD = 0;
         public static final double kF = 0;
         public static final double kS = 0.1181;
-        public static final double kV = 3.4;
+        public static final double kV = .34;
         public static final double kA = 0.044465;
+        */
+        public static final double kP = 0.025371;
+        public static final double kI = 0;
+        public static final double kD = 0;
+        public static final double kF = 0;
+        public static final double kS = 0.39545;
+        public static final double kV = 0.12212;
+        public static final double kA = 0.0046099;
     }
     public final static double AMP_SETPOINT = 0;
     public final static double RETRACT_SETPOINT = 0;

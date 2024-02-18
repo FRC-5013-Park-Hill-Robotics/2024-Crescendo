@@ -113,11 +113,11 @@ public class RobotContainer {
     //increase rps by 5
     joystick.povRight().onTrue(m_launcherRollers.incrementSpeedCommand(5));
 
-    //shooter angle increase by 5 deg += 5
-    joystick.povUp().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(5)));
+    //shooter angle increase by 2.5 deg += 5
+    joystick.povUp().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(2.5)));
 
-    //shooter angle decrease by 5 deg
-    joystick.povDown().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(-5)));
+    //shooter angle decrease by 2.5 deg
+    joystick.povDown().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(-2.5)));
 
     //joystick.x().whileTrue(m_shoulderId.sysIdDynamic(SysIdRoutine.Direction.kForward));
     //joystick.y().whileTrue(m_shoulderId.sysIdDynamic(SysIdRoutine.Direction.kReverse));

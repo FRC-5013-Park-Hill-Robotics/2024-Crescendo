@@ -3,8 +3,11 @@ package frc.robot;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
@@ -47,6 +50,15 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         if (Utils.isSimulation()) {
             startSimThread();
         }
+
+        for (int modIndex = 0; modIndex < 4; modIndex++){
+            SwerveModule module = getModule(modIndex);
+            CurrentLimitsConfigs configs = new CurrentLimitsConfigs();
+            module.getDriveMotor().getConfigurator().refresh(configs);
+            configs.withSupplyCurrentLimit(60);
+            module.getDriveMotor().getConfigurator().apply(configs);
+        }
+
     }
 
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
