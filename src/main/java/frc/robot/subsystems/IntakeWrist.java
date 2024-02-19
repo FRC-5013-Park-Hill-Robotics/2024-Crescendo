@@ -18,13 +18,26 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
+import edu.wpi.first.units.Angle;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.MutableMeasure;
+import edu.wpi.first.units.Velocity;
+import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotContainer;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.trobot5013lib.CANCoderWrapper;
+
+import static edu.wpi.first.units.MutableMeasure.mutable;
+import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
 
 public class IntakeWrist extends SubsystemBase {
 
@@ -151,5 +164,45 @@ public class IntakeWrist extends SubsystemBase {
     public Command intakeGamePiece(){
         return deployCommand().andThen(m_intakeRollers.intakeGamepieceCommand()).until(m_intakeRollers::hasGamePiece).andThen(retractCommand());
     }
+    private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
+    // Mutable holder for unit-safe linear distance values, persisted to avoid
+    // reallocation.
+    private final MutableMeasure<Angle> m_rotation = mutable(Radians.of(0));
+    // Mutable holder for unit-safe linear velocity values, persisted to avoid
+    // reallocation.
+    private final MutableMeasure<Velocity<Angle>> m_velocity = mutable(RadiansPerSecond.of(0));
+    private final  VoltageOut m_voltageOut = new VoltageOut(0);
+    private final SysIdRoutine m_sysIdRoutine = new SysIdRoutine(
+            new SysIdRoutine.Config( Volts.of(0.5).per(Seconds.of(1)), Volts.of(4), null,null),
+            new SysIdRoutine.Mechanism(
+                    // Tell SysId how to plumb the driving voltage to the motors.
+                    (Measure<Voltage> volts) -> {
+                        intakeWristMotor.setControl(m_voltageOut.withOutput(volts.in(Volts)));
+                    },
+                    // Tell SysId how to record a frame of data for each motor on the mechanism
+                    // being
+                    // characterized.
+                    log -> {
+                        // Record a frame for the wrist motor. 
+                        log.motor("wrist")
+                                .voltage(
+                                        m_appliedVoltage.mut_replace(intakeWristMotor.get() * RobotController.getBatteryVoltage()
+                                                , Volts))
+                                .angularPosition(m_rotation.mut_replace(getGroundRelativeWristPositionRadians(), Radians))
+                                .angularVelocity(
+                                        m_velocity.mut_replace(encoder.getVelocityRadians(), RadiansPerSecond));
 
+                    },
+                    // Tell SysId to make generated commands require this subsystem, suffix test
+                    // state in
+                    // WPILog with this subsystem's name ("IntakeWrist")
+                    this));
+
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return m_sysIdRoutine.quasistatic(direction);
+    }
+
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return m_sysIdRoutine.dynamic(direction);
+    }
 }
