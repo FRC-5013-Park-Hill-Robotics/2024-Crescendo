@@ -4,7 +4,10 @@
 
 package frc.robot.subsystems;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Measure;
@@ -12,9 +15,11 @@ import edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.LauncherConstants;
 
 import static edu.wpi.first.units.Units.Volts;
@@ -27,31 +32,86 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
 
 public class LauncherRollers extends SubsystemBase {
   /** Creates a new LauncherRollers. */
-  private TalonFX bottomMotor = new TalonFX(LauncherConstants.LAUNCHER_BOTTOM_CAN_ID);
-  private TalonFX topMotor= new TalonFX(LauncherConstants.LAUNCHER_TOP_CAN_ID);
+  private TalonFX bottomMotor = new TalonFX(LauncherConstants.LAUNCHER_TOP_CAN_ID);
+  private TalonFX topMotor= new TalonFX(LauncherConstants.LAUNCHER_BOTTOM_CAN_ID);
+  private VelocityVoltage m_BottomVoltage = new VelocityVoltage(0);
+  private VelocityVoltage m_topVoltage = new VelocityVoltage(0);
+  private double goalSpeedRPS = 0;
 
   public LauncherRollers() {
-      bottomMotor.getConfigurator().apply(new TalonFXConfiguration());
-      topMotor.getConfigurator().apply(new TalonFXConfiguration());
-      bottomMotor.setInverted(true);
-      topMotor.setInverted(false);
+      TalonFXConfiguration bottomConfig = new TalonFXConfiguration();
+      bottomConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+      bottomConfig.Slot0.kP = LauncherConstants.RollerGains.kP;
+      bottomConfig.Slot0.kI = LauncherConstants.RollerGains.kI;
+      bottomConfig.Slot0.kD = LauncherConstants.RollerGains.kD;
+      bottomConfig.Slot0.kS = LauncherConstants.RollerGains.kS;
+      bottomConfig.Slot0.kV = LauncherConstants.RollerGains.kV;
+      bottomConfig.Slot0.kA = LauncherConstants.RollerGains.kA;
+      bottomConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+      bottomMotor.set(0);
+      bottomMotor.getConfigurator().apply(bottomConfig);
+      m_BottomVoltage.withSlot(0);
+      
+
+      TalonFXConfiguration topConfig = new TalonFXConfiguration();
+      topConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+      topConfig.Slot0.kP = LauncherConstants.RollerGains.kP;
+      topConfig.Slot0.kI = LauncherConstants.RollerGains.kI;
+      topConfig.Slot0.kD = LauncherConstants.RollerGains.kD;
+      topConfig.Slot0.kS = LauncherConstants.RollerGains.kS;
+      topConfig.Slot0.kV = LauncherConstants.RollerGains.kV;
+      topConfig.Slot0.kA = LauncherConstants.RollerGains.kA;
+      topConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+      topMotor.set(0);
+      topMotor.getConfigurator().apply(bottomConfig);
+      m_topVoltage.withSlot(0);
   }
 
 
   public void stopLauncher(){
-
+    this.goalSpeedRPS = 0;
   } 
 
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+      if(goalSpeedRPS == 0){
+        bottomMotor.setVoltage(0);
+        topMotor.setVoltage(0);
+      } else {
+        m_BottomVoltage.withVelocity(goalSpeedRPS);
+        bottomMotor.setControl(m_BottomVoltage);
+        m_topVoltage.withVelocity(goalSpeedRPS);
+        topMotor.setControl(m_topVoltage);
+      }
+        SmartDashboard.putNumber("Shooter Speed", bottomMotor.getVelocity().getValueAsDouble()) ; 
+        SmartDashboard.putNumber("shooter goal", goalSpeedRPS)    ;
   }
 
-  public void setSpeed(double speed) {
-    bottomMotor.set(0);
-    topMotor.set(0);
+  public void start() {
+    this.goalSpeedRPS = 50;
   }
+
+  public void incrementSpeed(double rpsChange) {
+    this.goalSpeedRPS += rpsChange;
+
+  }
+
+  public Command incrementSpeedCommand(double rpsChange){
+    Command result = runOnce(()-> incrementSpeed(rpsChange));
+    return result;
+  } 
+
+  public Command startCommand(){
+    Command result = run(this::start);
+    return result;
+  }
+
+  public Command stopCommand(){
+    Command result = run(this::stopLauncher);
+    return result;
+  }
+
     // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
     private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
     // Mutable holder for unit-safe linear distance values, persisted to avoid

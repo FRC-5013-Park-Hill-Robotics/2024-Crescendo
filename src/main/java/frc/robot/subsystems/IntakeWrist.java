@@ -4,28 +4,45 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
+import edu.wpi.first.units.Angle;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.MutableMeasure;
+import edu.wpi.first.units.Velocity;
+import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotContainer;
 import frc.robot.constants.IntakeConstants;
-import frc.robot.trobot5013lib.HeliumEncoderWrapper;
+import frc.robot.trobot5013lib.CANCoderWrapper;
+
+import static edu.wpi.first.units.MutableMeasure.mutable;
+import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
 
 public class IntakeWrist extends SubsystemBase {
 
     private final TalonFX intakeWristMotor = new TalonFX(IntakeConstants.INTAKE_WRIST_MOTOR_CAN_ID);
-    private final HeliumEncoderWrapper encoder = new HeliumEncoderWrapper(IntakeConstants.INTAKE_ENCODER_CAN_ID,true);
+    private CANCoderWrapper encoder = new CANCoderWrapper(IntakeConstants.INTAKE_ENCODER_CAN_ID, true, IntakeConstants.CANCODER_OFFSET_ROTATIONS);
     public double setpointRadians = 0;
     private ArmFeedforward feedforward = new ArmFeedforward(
             IntakeConstants.RotationGains.kS,
@@ -45,19 +62,23 @@ public class IntakeWrist extends SubsystemBase {
     private double lastTime = 0;
 
     private boolean stop = true;
+    private IntakeRollers m_intakeRollers;
 
     /** Creates a new IntakeShoulder. */
-    public IntakeWrist() {
+    public IntakeWrist(IntakeRollers intakeRollers) {
+        super();
+        this.m_intakeRollers = intakeRollers;
+
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+        config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         intakeWristMotor.getConfigurator().apply(config);
-        wristController.setTolerance(IntakeConstants.RotationGains.kPositionTolerance.getRadians());
+        wristController.setTolerance(IntakeConstants.RotationGains.kPositionTolerance.getRadians(), 0.01);
         wristController.enableContinuousInput(0,2*Math.PI);
-
     }
 
     public double getAngle() {
-        double value = encoder.getAbsPositionRadians() - 3.211 ;
+        double value = encoder.getAbsPositionRadians() ;
         if (value < 0) {
             value += 2 * Math.PI;
         }
@@ -78,7 +99,7 @@ public class IntakeWrist extends SubsystemBase {
             State setpoint = wristController.getSetpoint();
             double groundRelativeSetpointRadians = getGroundRelativeWristPositionRadians(setpoint.position);
             double acceleration = (wristController.getSetpoint().velocity - lastSpeed) / (Timer.getFPGATimestamp() - lastTime);
-            double feedforwardVal = feedforward.calculate(groundRelativeSetpointRadians,wristController.getSetpoint().velocity, acceleration);
+            double feedforwardVal = feedforward.calculate(getGroundRelativeWristPositionRadians(),wristController.getSetpoint().velocity, acceleration);
             SmartDashboard.putNumber("feedforwardVal",feedforwardVal);
         
             intakeWristMotor.setControl(wristVoltageOut.withOutput(MathUtil.clamp(pidVal + feedforwardVal,-12.0,12.0)));
@@ -89,12 +110,12 @@ public class IntakeWrist extends SubsystemBase {
             SmartDashboard.putNumber("Error",wristController.getPositionError());
             SmartDashboard.putNumber("AbsPosition",Math.toDegrees(encoder.getAbsPositionRadians()));
             SmartDashboard.putNumber("Shooter Angle", Math.toDegrees(getLauncherShoulder().getShoulderAngleRadians()));
+            SmartDashboard.putNumber("Wrist Cancoder Rotations", encoder.getCanandcoder().getAbsolutePosition().getValueAsDouble() );
     }
 
     public void deploy() {
         this.stop = false;
-        double goal = Math.PI - IntakeConstants.DEPLOY_SETPOINT_TO_GROUND;
-       //         - getLauncherShoulder().getShoulderAngleRadians();
+        double goal = Math.PI - getLauncherShoulder().getShoulderAngleRadians() - IntakeConstants.DEPLOY_SETPOINT_TO_GROUND;
         setWristGoalRadians(goal);
     }
 
@@ -124,13 +145,13 @@ public class IntakeWrist extends SubsystemBase {
     }
 
     public Command deployCommand(){
-        Command result = run(this::deploy).until(wristController::atGoal);
+        Command result = runOnce(this::deploy);
         result.addRequirements(getLauncherShoulder());
         return result;
     }
 
     public Command retractCommand(){
-        Command result = run(this::retract).until(wristController::atGoal);
+        Command result = runOnce(this::retract);
         result.addRequirements(getLauncherShoulder());
         return result;
     }
@@ -140,4 +161,56 @@ public class IntakeWrist extends SubsystemBase {
         return result;
     }
 
+    public Command intakeGamePiece(){
+        return deployCommand().andThen(m_intakeRollers.intakeGamepieceCommand()).until(m_intakeRollers::hasGamePiece).andThen(retractCommand());
+    }
+
+    public Command intakeGamePieceManualCommand(){
+        return deployCommand().andThen(m_intakeRollers.takeIn());
+    }
+
+    public Command intakeGamePieceManualEndCommand(){
+        return m_intakeRollers.stopC().andThen(retractCommand());
+    }
+    private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
+    // Mutable holder for unit-safe linear distance values, persisted to avoid
+    // reallocation.
+    private final MutableMeasure<Angle> m_rotation = mutable(Radians.of(0));
+    // Mutable holder for unit-safe linear velocity values, persisted to avoid
+    // reallocation.
+    private final MutableMeasure<Velocity<Angle>> m_velocity = mutable(RadiansPerSecond.of(0));
+    private final  VoltageOut m_voltageOut = new VoltageOut(0);
+    private final SysIdRoutine m_sysIdRoutine = new SysIdRoutine(
+            new SysIdRoutine.Config( Volts.of(0.75).per(Seconds.of(1)), Volts.of(4), null,null),
+            new SysIdRoutine.Mechanism(
+                    // Tell SysId how to plumb the driving voltage to the motors.
+                    (Measure<Voltage> volts) -> {
+                        intakeWristMotor.setControl(m_voltageOut.withOutput(volts.in(Volts)));
+                    },
+                    // Tell SysId how to record a frame of data for each motor on the mechanism
+                    // being
+                    // characterized.
+                    log -> {
+                        // Record a frame for the wrist motor. 
+                        log.motor("wrist")
+                                .voltage(
+                                        m_appliedVoltage.mut_replace(intakeWristMotor.get() * RobotController.getBatteryVoltage()
+                                                , Volts))
+                                .angularPosition(m_rotation.mut_replace(getGroundRelativeWristPositionRadians(), Radians))
+                                .angularVelocity(
+                                        m_velocity.mut_replace(encoder.getVelocityRadians(), RadiansPerSecond));
+
+                    },
+                    // Tell SysId to make generated commands require this subsystem, suffix test
+                    // state in
+                    // WPILog with this subsystem's name ("IntakeWrist")
+                    this));
+
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return m_sysIdRoutine.quasistatic(direction);
+    }
+
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return m_sysIdRoutine.dynamic(direction);
+    }
 }

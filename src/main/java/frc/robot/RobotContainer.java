@@ -8,7 +8,6 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 
-import edu.wpi.first.hal.SimDevice.Direction;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -16,11 +15,10 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.GamepadDrive;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Climber;
@@ -30,6 +28,7 @@ import frc.robot.subsystems.LauncherRollers;
 import frc.robot.subsystems.LauncherShoulder;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.StatusLED;
+import frc.sysID.LauncherShoulderId;
 
 public class RobotContainer {
   private double MaxSpeed = 6; // 6 meters per second desired top speed
@@ -42,11 +41,11 @@ public class RobotContainer {
   private Climber m_climber = new Climber(); //creates the climber instance variable
 
   private IntakeRollers m_intakeRollers = new IntakeRollers(); //creates the intake rollers instance variable
-  //private IntakeWrist m_intakeWrist = new IntakeWrist(); //creates the intake wrist instance variable
+  private IntakeWrist m_intakeWrist = new IntakeWrist(m_intakeRollers); //creates the intake wrist instance variable
 
   private LauncherRollers m_launcherRollers = new LauncherRollers(); //creates the launcher rollers instance variable
   private LauncherShoulder m_launcherShoulder = new LauncherShoulder(); //creates the launcher shoulder variable
-
+  
   private Limelight m_LimelightFront = new Limelight("limelight-front",true); //creates the limelight front instance variable
   private Limelight m_LimelightBack = new Limelight("limelight-back",true); //creates the limelight back instance variable
 
@@ -77,12 +76,13 @@ public class RobotContainer {
     // reset the field-centric heading on left bumper press
     joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
     joystick.back().onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyroscope())); 
-    
-    //joystick.a().whileTrue(sysIdIntakeWrist.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    //joystick.b().whileTrue(sysIdIntakeWrist.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    /*
+    joystick.a().whileTrue(m_intakeWrist.sysIdQuasistatic(Direction.kForward));
+    joystick.b().whileTrue(m_intakeWrist.sysIdQuasistatic(Direction.kReverse));
 
-    //joystick.x().whileTrue(sysIdIntakeWrist.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    //joystick.y().whileTrue(sysIdIntakeWrist.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    joystick.x().whileTrue(m_intakeWrist.sysIdDynamic(Direction.kForward));
+    joystick.y().whileTrue(m_intakeWrist.sysIdDynamic(Direction.kReverse));
+    */
 
     /*joystick.a().whileTrue(drivetrain.runDriveQuasiTest(SysIdRoutine.Direction.kForward));
     joystick.b().whileTrue(drivetrain.runDriveQuasiTest(SysIdRoutine.Direction.kReverse));
@@ -99,12 +99,43 @@ public class RobotContainer {
     //joystick.a().whileTrue(m_intakeWrist.deployCommand()).onFalse(m_intakeWrist.stopCommand());
     //joystick.b().whileTrue(m_intakeWrist.retractCommand());
 
-    joystick.a().whileTrue(m_intakeRollers.takeIn()).onFalse(m_intakeRollers.stopC());
-    joystick.b().whileTrue(m_intakeRollers.throwOut()).onFalse(m_intakeRollers.stopC());
+    //joystick.a().whileTrue(m_intakeRollers.takeIn()).onFalse(m_intakeRollers.stopC());
+    //joystick.b().whileTrue(m_intakeRollers.throwOut()).onFalse(m_intakeRollers.stopC());
 
-    joystick.x().whileTrue(m_intakeRollers.intakeGamepieceCommand()).onFalse(m_intakeRollers.stopC());
-    new Trigger(m_intakeRollers::hasGamePiece).onTrue(rumbleSequence());
+    //oystick.x().whileTrue(m_intakeRollers.intakeGamepieceCommand()).onFalse(m_intakeRollers.stopC());
+    //new Trigger(m_intakeRollers::hasGamePiece).onTrue(rumbleSequence());
 
+    //joystick.a().whileTrue(m_launcherShoulder.goToSetpointCommand(45));
+    //joystick.b().whileTrue(m_launcherShoulder.goToSetpointCommand(30));
+
+
+    //decrease rps by 5
+    joystick.povLeft().onTrue(m_launcherRollers.incrementSpeedCommand(-5));
+
+    //increase rps by 5
+    joystick.povRight().onTrue(m_launcherRollers.incrementSpeedCommand(5));
+
+    //shooter angle increase by 2.5 deg += 5
+    joystick.povUp().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(1)));
+
+    //shooter angle decrease by 2.5 deg
+    joystick.povDown().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(-1)));
+
+    //joystick.x().whileTrue(m_shoulderId.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    //joystick.y().whileTrue(m_shoulderId.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+
+
+    joystick.rightBumper().onTrue(m_intakeWrist.intakeGamePiece().andThen(rumbleSequence())).onFalse(m_intakeWrist.retractCommand());
+    joystick.leftBumper().onTrue(m_intakeWrist.intakeGamePieceManualCommand()).onFalse(m_intakeWrist.intakeGamePieceManualEndCommand());
+    
+    //joystick.a().onTrue(m_intakeRollers.throwOut());
+    joystick.b().onTrue(m_launcherRollers.startCommand());
+    joystick.x().onTrue(m_launcherRollers.stopCommand());
+    joystick.y().onTrue(new InstantCommand(m_intakeRollers::feedOut)).onFalse(new InstantCommand(m_intakeRollers::stop));
+    
+    joystick.a().whileTrue(new InstantCommand(() -> m_LimelightFront.setTrust(true)))
+      .onFalse(new InstantCommand(() -> m_LimelightFront.setTrust(false)));
+   // new Trigger(m_intakeRollers::hasGamePiece).onTrue(m_launcherRollers.startCommand());
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(0)));

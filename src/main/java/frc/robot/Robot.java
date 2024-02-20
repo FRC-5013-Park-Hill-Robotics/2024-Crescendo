@@ -44,7 +44,7 @@ StringLogEntry myStringLog;
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
+    m_robotContainer.getLauncherShoulder().holdCommand().schedule();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
@@ -61,6 +61,8 @@ StringLogEntry myStringLog;
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+     m_robotContainer.getLauncherShoulder().holdCommand().schedule();
+   
   }
 
   @Override

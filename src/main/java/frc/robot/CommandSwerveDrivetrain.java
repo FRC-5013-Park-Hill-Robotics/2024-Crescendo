@@ -3,20 +3,28 @@ package frc.robot;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.DrivetrainConstants;
+import frc.robot.generated.TunerConstants;
 import frc.robot.trobot5013lib.ModifiedSignalLogger;
 import frc.robot.trobot5013lib.SwerveVoltageRequest;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -35,6 +43,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
+    private Field2d m_field = new Field2d();
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
@@ -42,11 +51,24 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             startSimThread();
         }
     }
+
+    
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
         if (Utils.isSimulation()) {
             startSimThread();
         }
+
+        for (int modIndex = 0; modIndex < 4; modIndex++){
+            SwerveModule module = getModule(modIndex);
+            CurrentLimitsConfigs configs = new CurrentLimitsConfigs();
+            module.getDriveMotor().getConfigurator().refresh(configs);
+            configs.withSupplyCurrentLimit(DrivetrainConstants.currentLimit);
+            configs.withSupplyCurrentThreshold(0.2);
+            configs.withSupplyCurrentLimitEnable(true);
+            module.getDriveMotor().getConfigurator().apply(configs);
+        }
+
     }
 
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
@@ -58,6 +80,16 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
 	public static double percentOutputToRadiansPerSecond(double percentOutput) {
 		return DrivetrainConstants.maxAngularVelocityRadiansPerSecond * percentOutput;
+	}
+	public void addVisionMeasurement(
+		Pose2d robotPose, double timestamp, boolean soft, double trustWorthiness) {
+	  if (soft) {
+        
+		addVisionMeasurement(
+			robotPose, timestamp, DrivetrainConstants.visionMeasurementStdDevs.times(1.0 / trustWorthiness));
+	  } else {
+            seedFieldRelative(robotPose);
+	  }
 	}
 
     private void startSimThread() {
@@ -85,6 +117,12 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             this));
 
     private SwerveVoltageRequest steerVoltageRequest = new SwerveVoltageRequest(false);
+
+    @Override
+    public void periodic() {
+        m_field.setRobotPose(m_odometry.getEstimatedPosition());
+        SmartDashboard.putData("Field",m_field);
+    }
 
     private SysIdRoutine m_steerSysIdRoutine =
     new SysIdRoutine(
