@@ -1,8 +1,11 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.DoubleArrayPublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -34,6 +37,7 @@ public class Limelight extends SubsystemBase {
   private int distanceError = 0;
   private Pose2d botpose;
   private String name;
+  private final DoubleArrayPublisher limelightPub;
   public Limelight(String name, boolean aprilTagViable) {
     /**
      * tx - Horizontal Offset
@@ -43,7 +47,7 @@ public class Limelight extends SubsystemBase {
      */
     this.name = name;
     this.table = NetworkTableInstance.getDefault().getTable(name);
-
+    this.limelightPub = table.getDoubleArrayTopic("llPose").publish();
     this.aprilTagViable = aprilTagViable;
 
     this.tx = table.getEntry("tx");
@@ -70,36 +74,36 @@ public class Limelight extends SubsystemBase {
 
 
     if (aprilTagViable ) {
-
-      CommandSwerveDrivetrain drivebase = RobotContainer.getInstance().getDrivetrain();
+      CommandSwerveDrivetrain drivetrain = RobotContainer.getInstance().getDrivetrain();
+      Double targetDistance = LimelightHelpers.getTargetPose3d_CameraSpace(name).getTranslation().getDistance(new Translation3d());
+      // Tune this for your robot around how much variance you see in the pose at a given distance
+      Double confidence = 1 - ((targetDistance - 1) / 6);
       LimelightHelpers.Results result =
-            LimelightHelpers.getLatestResults(name).targetingResults;
-        if (!(result.botpose[0] == 0 && result.botpose[1] == 0)) {
-          if (alliance == Alliance.Blue) {
-            botpose = LimelightHelpers.toPose2D(result.botpose_wpiblue);
-          } else if (alliance == Alliance.Red) {
-            botpose = LimelightHelpers.toPose2D(result.botpose_wpired);
-          }
-          if (botpose != null){
-          if (field.isPoseWithinArea(botpose)) {
-            if (drivebase.getPose().getTranslation().getDistance(botpose.getTranslation()) < 0.33
-                || trust || result.targets_Fiducials.length > 1) {
-              drivebase.addVisionMeasurement(
-                  botpose,
-                  Timer.getFPGATimestamp()
-                      - (result.latency_capture / 1000.0)
-                      - (result.latency_pipeline / 1000.0),
-                  true,
-                  1.0);
-              
-            } else {
-              distanceError++;
-              SmartDashboard.putNumber("Limelight Error", distanceError);
-            }
+          LimelightHelpers.getLatestResults(name).targetingResults;
+      if (result.valid) {
+        botpose = LimelightHelpers.getBotPose2d_wpiBlue(name);
+        limelightPub.set(new double[] {
+          botpose.getX(),
+          botpose.getY(),
+          botpose.getRotation().getDegrees()
+        });
+        if (field.isPoseWithinArea(botpose)) {
+          if (drivetrain.getState().Pose.getTranslation().getDistance(botpose.getTranslation()) < 0.5
+              || trust
+              || result.targets_Fiducials.length > 1) {
+            drivetrain.addVisionMeasurement(
+                botpose,
+                Timer.getFPGATimestamp()
+                    - (result.latency_capture / 1000.0)
+                    - (result.latency_pipeline / 1000.0),
+                VecBuilder.fill(confidence, confidence, .01));
           } else {
-            fieldError++;
-            SmartDashboard.putNumber("Field Error", fieldError);
+            distanceError++;
+            SmartDashboard.putNumber("Limelight Error", distanceError);
           }
+        } else {
+          fieldError++;
+          SmartDashboard.putNumber("Field Error", fieldError);
         }
       }
     }
