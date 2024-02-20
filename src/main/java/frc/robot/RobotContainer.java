@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.GamepadDrive;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Climber;
@@ -75,12 +76,13 @@ public class RobotContainer {
     // reset the field-centric heading on left bumper press
     joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
     joystick.back().onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyroscope())); 
-    
-    //joystick.a().whileTrue(sysIdIntakeWrist.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    //joystick.b().whileTrue(sysIdIntakeWrist.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    /*
+    joystick.a().whileTrue(m_intakeWrist.sysIdQuasistatic(Direction.kForward));
+    joystick.b().whileTrue(m_intakeWrist.sysIdQuasistatic(Direction.kReverse));
 
-    //joystick.x().whileTrue(sysIdIntakeWrist.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    //joystick.y().whileTrue(sysIdIntakeWrist.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    joystick.x().whileTrue(m_intakeWrist.sysIdDynamic(Direction.kForward));
+    joystick.y().whileTrue(m_intakeWrist.sysIdDynamic(Direction.kReverse));
+    */
 
     /*joystick.a().whileTrue(drivetrain.runDriveQuasiTest(SysIdRoutine.Direction.kForward));
     joystick.b().whileTrue(drivetrain.runDriveQuasiTest(SysIdRoutine.Direction.kReverse));
@@ -114,24 +116,25 @@ public class RobotContainer {
     joystick.povRight().onTrue(m_launcherRollers.incrementSpeedCommand(5));
 
     //shooter angle increase by 2.5 deg += 5
-    joystick.povUp().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(2.5)));
+    joystick.povUp().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(1)));
 
     //shooter angle decrease by 2.5 deg
-    joystick.povDown().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(-2.5)));
+    joystick.povDown().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(-1)));
 
     //joystick.x().whileTrue(m_shoulderId.sysIdDynamic(SysIdRoutine.Direction.kForward));
     //joystick.y().whileTrue(m_shoulderId.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
 
-    joystick.rightBumper().onTrue(m_intakeWrist.intakeGamePiece().andThen(rumbleSequence()));
-
-    joystick.a().onTrue(m_intakeRollers.throwOut());
-
+    joystick.rightBumper().onTrue(m_intakeWrist.intakeGamePiece().andThen(rumbleSequence())).onFalse(m_intakeWrist.retractCommand());
+    joystick.leftBumper().onTrue(m_intakeWrist.intakeGamePieceManualCommand()).onFalse(m_intakeWrist.intakeGamePieceManualEndCommand());
+    
+    //joystick.a().onTrue(m_intakeRollers.throwOut());
     joystick.b().onTrue(m_launcherRollers.startCommand());
     joystick.x().onTrue(m_launcherRollers.stopCommand());
-
     joystick.y().onTrue(new InstantCommand(m_intakeRollers::feedOut)).onFalse(new InstantCommand(m_intakeRollers::stop));
-
+    
+    joystick.a().whileTrue(new InstantCommand(() -> m_LimelightFront.setTrust(true)))
+      .onFalse(new InstantCommand(() -> m_LimelightFront.setTrust(false)));
    // new Trigger(m_intakeRollers::hasGamePiece).onTrue(m_launcherRollers.startCommand());
 
     if (Utils.isSimulation()) {

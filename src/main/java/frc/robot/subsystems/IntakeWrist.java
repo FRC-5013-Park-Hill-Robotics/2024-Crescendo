@@ -145,13 +145,13 @@ public class IntakeWrist extends SubsystemBase {
     }
 
     public Command deployCommand(){
-        Command result = run(this::deploy).until(wristController::atGoal);
+        Command result = runOnce(this::deploy);
         result.addRequirements(getLauncherShoulder());
         return result;
     }
 
     public Command retractCommand(){
-        Command result = run(this::retract).until(wristController::atGoal);
+        Command result = runOnce(this::retract);
         result.addRequirements(getLauncherShoulder());
         return result;
     }
@@ -164,6 +164,14 @@ public class IntakeWrist extends SubsystemBase {
     public Command intakeGamePiece(){
         return deployCommand().andThen(m_intakeRollers.intakeGamepieceCommand()).until(m_intakeRollers::hasGamePiece).andThen(retractCommand());
     }
+
+    public Command intakeGamePieceManualCommand(){
+        return deployCommand().andThen(m_intakeRollers.takeIn());
+    }
+
+    public Command intakeGamePieceManualEndCommand(){
+        return m_intakeRollers.stopC().andThen(retractCommand());
+    }
     private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
     // Mutable holder for unit-safe linear distance values, persisted to avoid
     // reallocation.
@@ -173,7 +181,7 @@ public class IntakeWrist extends SubsystemBase {
     private final MutableMeasure<Velocity<Angle>> m_velocity = mutable(RadiansPerSecond.of(0));
     private final  VoltageOut m_voltageOut = new VoltageOut(0);
     private final SysIdRoutine m_sysIdRoutine = new SysIdRoutine(
-            new SysIdRoutine.Config( Volts.of(0.5).per(Seconds.of(1)), Volts.of(4), null,null),
+            new SysIdRoutine.Config( Volts.of(0.75).per(Seconds.of(1)), Volts.of(4), null,null),
             new SysIdRoutine.Mechanism(
                     // Tell SysId how to plumb the driving voltage to the motors.
                     (Measure<Voltage> volts) -> {
