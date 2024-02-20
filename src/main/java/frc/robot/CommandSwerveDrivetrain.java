@@ -12,6 +12,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -36,7 +37,8 @@ import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.MutableMeasure.mutable;
 
 /**
- * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem
+ * Class that extends the Phoenix SwerveDrivetrain class and implements
+ * subsystem
  * so it can be used in command-based projects easily.
  */
 public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsystem {
@@ -44,22 +46,29 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
     private Field2d m_field = new Field2d();
+    
+    /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
+    private final Rotation2d BlueAlliancePerspectiveRotation = Rotation2d.fromDegrees(0);
+    /* Red alliance sees forward as 180 degrees (toward blue alliance wall) */
+    private final Rotation2d RedAlliancePerspectiveRotation = Rotation2d.fromDegrees(180);
+    /* Keep track if we've ever applied the operator perspective before or not */
+    private boolean hasAppliedOperatorPerspective = false;
 
-    public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
+    public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
+            SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
         if (Utils.isSimulation()) {
             startSimThread();
         }
     }
 
-    
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
         if (Utils.isSimulation()) {
             startSimThread();
         }
 
-        for (int modIndex = 0; modIndex < 4; modIndex++){
+        for (int modIndex = 0; modIndex < 4; modIndex++) {
             SwerveModule module = getModule(modIndex);
             CurrentLimitsConfigs configs = new CurrentLimitsConfigs();
             module.getDriveMotor().getConfigurator().refresh(configs);
@@ -74,23 +83,25 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
         return run(() -> this.setControl(requestSupplier.get()));
     }
-    public static double percentOutputToMetersPerSecond(double percentOutput) {
-		return DrivetrainConstants.maxSpeedMetersPerSecond  * percentOutput;
-	}
 
-	public static double percentOutputToRadiansPerSecond(double percentOutput) {
-		return DrivetrainConstants.maxAngularVelocityRadiansPerSecond * percentOutput;
-	}
-	public void addVisionMeasurement(
-		Pose2d robotPose, double timestamp, boolean soft, double trustWorthiness) {
-	  if (soft) {
-        
-		addVisionMeasurement(
-			robotPose, timestamp, DrivetrainConstants.visionMeasurementStdDevs.times(1.0 / trustWorthiness));
-	  } else {
+    public static double percentOutputToMetersPerSecond(double percentOutput) {
+        return DrivetrainConstants.maxSpeedMetersPerSecond * percentOutput;
+    }
+
+    public static double percentOutputToRadiansPerSecond(double percentOutput) {
+        return DrivetrainConstants.maxAngularVelocityRadiansPerSecond * percentOutput;
+    }
+
+    public void addVisionMeasurement(
+            Pose2d robotPose, double timestamp, boolean soft, double trustWorthiness) {
+        if (soft) {
+
+            addVisionMeasurement(
+                    robotPose, timestamp, DrivetrainConstants.visionMeasurementStdDevs.times(1.0 / trustWorthiness));
+        } else {
             seedFieldRelative(robotPose);
-	  }
-	}
+        }
+    }
 
     private void startSimThread() {
         m_lastSimTime = Utils.getCurrentTimeSeconds();
@@ -106,42 +117,48 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         });
         m_simNotifier.startPeriodic(kSimLoopPeriod);
     }
-        private SwerveVoltageRequest driveVoltageRequest = new SwerveVoltageRequest(true);
 
-    private SysIdRoutine m_driveSysIdRoutine =
-    new SysIdRoutine(
-        new SysIdRoutine.Config(null, null, null, ModifiedSignalLogger.logState()),
-        new SysIdRoutine.Mechanism(
-            (Measure<Voltage> volts) -> setControl(driveVoltageRequest.withVoltage(volts.in(Volts))),
-            null,
-            this));
+    private SwerveVoltageRequest driveVoltageRequest = new SwerveVoltageRequest(true);
+
+    private SysIdRoutine m_driveSysIdRoutine = new SysIdRoutine(
+            new SysIdRoutine.Config(null, null, null, ModifiedSignalLogger.logState()),
+            new SysIdRoutine.Mechanism(
+                    (Measure<Voltage> volts) -> setControl(driveVoltageRequest.withVoltage(volts.in(Volts))),
+                    null,
+                    this));
 
     private SwerveVoltageRequest steerVoltageRequest = new SwerveVoltageRequest(false);
 
     @Override
     public void periodic() {
         m_field.setRobotPose(m_odometry.getEstimatedPosition());
-        SmartDashboard.putData("Field",m_field);
+        SmartDashboard.putData("Field", m_field);
+
+        if (!hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
+            DriverStation.getAlliance().ifPresent((allianceColor) -> {
+                this.setOperatorPerspectiveForward(
+                        allianceColor == Alliance.Red ? RedAlliancePerspectiveRotation
+                                : BlueAlliancePerspectiveRotation);
+                hasAppliedOperatorPerspective = true;
+            });
+        }
     }
 
-    private SysIdRoutine m_steerSysIdRoutine =
-    new SysIdRoutine(
-        new SysIdRoutine.Config(null, null, null, ModifiedSignalLogger.logState()),
-        new SysIdRoutine.Mechanism(
-            (Measure<Voltage> volts) -> setControl(steerVoltageRequest.withVoltage(volts.in(Volts))),
-            null,
-            this));
+    private SysIdRoutine m_steerSysIdRoutine = new SysIdRoutine(
+            new SysIdRoutine.Config(null, null, null, ModifiedSignalLogger.logState()),
+            new SysIdRoutine.Mechanism(
+                    (Measure<Voltage> volts) -> setControl(steerVoltageRequest.withVoltage(volts.in(Volts))),
+                    null,
+                    this));
 
-    private SysIdRoutine m_slipSysIdRoutine =
-    new SysIdRoutine(
-        new SysIdRoutine.Config(Volts.of(0.25).per(Seconds.of(1)), null, null, ModifiedSignalLogger.logState()),
-        new SysIdRoutine.Mechanism(
-            (Measure<Voltage> volts) -> setControl(driveVoltageRequest.withVoltage(volts.in(Volts))),
-            null,
-            this));
-    
-    public Command runDriveQuasiTest(Direction direction)
-    {
+    private SysIdRoutine m_slipSysIdRoutine = new SysIdRoutine(
+            new SysIdRoutine.Config(Volts.of(0.25).per(Seconds.of(1)), null, null, ModifiedSignalLogger.logState()),
+            new SysIdRoutine.Mechanism(
+                    (Measure<Voltage> volts) -> setControl(driveVoltageRequest.withVoltage(volts.in(Volts))),
+                    null,
+                    this));
+
+    public Command runDriveQuasiTest(Direction direction) {
         return m_driveSysIdRoutine.quasistatic(direction);
     }
 
@@ -149,8 +166,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         return m_driveSysIdRoutine.dynamic(direction);
     }
 
-    public Command runSteerQuasiTest(Direction direction)
-    {
+    public Command runSteerQuasiTest(Direction direction) {
         return m_steerSysIdRoutine.quasistatic(direction);
     }
 
@@ -158,16 +174,16 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         return m_steerSysIdRoutine.dynamic(direction);
     }
 
-    public Command runDriveSlipTest()
-    {
+    public Command runDriveSlipTest() {
         return m_slipSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
     }
 
-    public Pose2d getPose(){
+    public Pose2d getPose() {
         return this.getState().Pose;
     }
 
-    public void zeroGyroscope(){
+    public void zeroGyroscope() {
         m_pigeon2.setYaw(0);
     }
+
 }
