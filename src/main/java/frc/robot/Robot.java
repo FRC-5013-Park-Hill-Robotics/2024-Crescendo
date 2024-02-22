@@ -4,45 +4,54 @@
 
 package frc.robot;
 
+import java.util.Optional;
+
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Limelight;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-BooleanLogEntry myBooleanLog;
-DoubleLogEntry myDoubleLog;
-StringLogEntry myStringLog;
+  BooleanLogEntry myBooleanLog;
+  DoubleLogEntry myDoubleLog;
+  StringLogEntry myStringLog;
+
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
-      DataLogManager.start();
-
+    DataLogManager.start();
 
   }
 
   @Override
   public void robotPeriodic() {
-    CommandScheduler.getInstance().run(); 
+    CommandScheduler.getInstance().run();
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+  }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+  }
 
   @Override
-  public void disabledExit() {}
+  public void disabledExit() {
+  }
 
   @Override
   public void autonomousInit() {
+    checkUpdateAlliance();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     m_robotContainer.getLauncherShoulder().holdCommand().schedule();
     if (m_autonomousCommand != null) {
@@ -52,24 +61,30 @@ StringLogEntry myStringLog;
 
   @Override
   public void autonomousPeriodic() {}
+    
 
   @Override
-  public void autonomousExit() {}
+  public void autonomousExit() {
+  }
 
   @Override
   public void teleopInit() {
+     checkUpdateAlliance();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-     m_robotContainer.getLauncherShoulder().holdCommand().schedule();
+    m_robotContainer.getLauncherShoulder().holdCommand().schedule();
+
+  }
+
+  @Override
+  public void teleopPeriodic() {
    
   }
 
   @Override
-  public void teleopPeriodic() {}
-
-  @Override
-  public void teleopExit() {}
+  public void teleopExit() {
+  }
 
   @Override
   public void testInit() {
@@ -77,11 +92,25 @@ StringLogEntry myStringLog;
   }
 
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+  }
 
   @Override
-  public void testExit() {}
+  public void testExit() {
+  }
 
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+  }
+
+  private void checkUpdateAlliance() {
+
+    Optional<Alliance> alliance = DriverStation.getAlliance();
+    if (DriverStation.isDSAttached() && alliance.isPresent()) {
+      Limelight frontLL = m_robotContainer.getFrontLimelight();
+      Limelight backLL = m_robotContainer.getBackLimelight();
+      frontLL.setAlliance(alliance.get());
+      backLL.setAlliance(alliance.get());
+    }
+  }
 }
