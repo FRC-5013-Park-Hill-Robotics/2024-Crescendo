@@ -43,6 +43,7 @@ public final class LauncherConstants {
         public static final double kV = 0.12212;
         public static final double kA = 0.0046099;
     }
-    public final static double AMP_SETPOINT = 0;
     public final static double RETRACT_SETPOINT = 0;
+    public static final double AMP_ANGLE_RADANS = Math.toRadians(96.5);
+    public static final double DUCK_RADIANS = Math.toRadians(40);
 }

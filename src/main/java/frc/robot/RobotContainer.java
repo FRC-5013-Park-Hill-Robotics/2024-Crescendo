@@ -19,7 +19,9 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.commands.AmpCommand;
 import frc.robot.commands.GamepadDrive;
+import frc.robot.constants.LauncherConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.IntakeRollers;
@@ -103,8 +105,8 @@ public class RobotContainer {
     // driverController.x().whileTrue(m_shoulderId.sysIdDynamic(SysIdRoutine.Direction.kForward));
     // driverController.y().whileTrue(m_shoulderId.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
-    driverController.rightBumper().onTrue(m_intakeWrist.intakeGamePiece().andThen(rumbleSequence()))
-        .onFalse(m_intakeWrist.retractCommand());
+    driverController.rightBumper().whileTrue(m_intakeWrist.intakeGamePiece().andThen(rumbleSequence()))
+        .onFalse(m_intakeWrist.retractCommand().andThen(stopRumbleCommand()));
     driverController.leftBumper().onTrue(m_intakeWrist.intakeGamePieceManualCommand())
         .onFalse(m_intakeWrist.intakeGamePieceManualEndCommand());
 
@@ -120,13 +122,9 @@ public class RobotContainer {
     // Trigger(m_intakeRollers::hasGamePiece).onTrue(m_launcherRollers.startCommand());
 
 
-    // shooter angle increase by 2.5 deg += 5
-    operatorController.povUp().onTrue(m_intakeWrist.incrementAngleCommand(Math.toRadians(1)));
-
-    // shooter angle decrease by 2.5 deg
-    operatorController.povDown().onTrue(m_intakeWrist.incrementAngleCommand(Math.toRadians(-1)));
-
-
+   
+    operatorController.a().whileTrue(new AmpCommand(m_launcherShoulder, m_intakeRollers, m_intakeWrist)).onFalse(m_launcherShoulder.goToSetpointCommand(LauncherConstants.DUCK_RADIANS));
+ 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(0)));
     }
@@ -149,10 +147,17 @@ public class RobotContainer {
     return drivetrain;
   }
 
-  public Command rumbleSequence() {
+  public Command startRumbleCommand (){
     Command rumbleCommand = new InstantCommand(() -> driverController.getHID().setRumble(RumbleType.kBothRumble, 1));
+    return rumbleCommand;
+  }
+
+  public Command stopRumbleCommand () {
     Command stopRumbleCommand = new InstantCommand(() -> driverController.getHID().setRumble(RumbleType.kBothRumble, 0));
-    return rumbleCommand.andThen(new WaitCommand(0.5)).andThen(stopRumbleCommand);
+    return stopRumbleCommand;
+  }
+  public Command rumbleSequence() {
+    return startRumbleCommand().andThen(stopRumbleCommand());
 
   }
 
@@ -163,4 +168,5 @@ public class RobotContainer {
     public Limelight getBackLimelight() {
     return m_LimelightBack;
   }
+
 }

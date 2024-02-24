@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.IntakeConstants;
 //import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.LauncherConstants;
 import frc.robot.trobot5013lib.HeliumEncoderWrapper;
@@ -53,6 +54,10 @@ public class LauncherShoulder extends SubsystemBase {
         setShoulderGoalRadians(getShoulderAngleRadians());
     }
 
+    public boolean atGoal(){
+      return shoulderController.atGoal();
+    }
+
     @Override
     public void periodic() {
       
@@ -71,10 +76,6 @@ public class LauncherShoulder extends SubsystemBase {
       setShoulderGoalRadians(LauncherConstants.RETRACT_SETPOINT);
     }
 
-    public void amp() {
-      setShoulderGoalRadians(LauncherConstants.AMP_SETPOINT);
-    }
-
     public void setShoulderGoalRadians(double radians) {
       shoulderGoalRadians = radians;
     }
@@ -83,13 +84,18 @@ public class LauncherShoulder extends SubsystemBase {
       return (encoder.getAngle().getRadians());
     }
 
+    public void ampAngle(){
+  
+        double goal = LauncherConstants.AMP_ANGLE_RADANS;
+        setShoulderGoalRadians(goal);
+    }
+    public Command ampAngleCommand(){
+        Command result = runOnce(this::ampAngle);
+        result.addRequirements();
+        return result;
+    }
     public Command retractCommand(){
       Command result = run(this::retract).until(shoulderController::atGoal);
-      return result;
-    }
-
-    public Command ampCommand(){
-      Command result = run(this::amp).until(shoulderController::atGoal);
       return result;
     }
 

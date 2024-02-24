@@ -5,8 +5,6 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.TorqueCurrentFOC;
-import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -24,7 +22,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.constants.CANConstants;
 import frc.robot.constants.IntakeConstants;
 
 
@@ -43,9 +40,8 @@ public class IntakeRollers extends SubsystemBase {
     private ArmFeedforward m_intakFeedforward = new ArmFeedforward(0, 0, 0);
     private TimeOfFlight m_timeOfFlight = new TimeOfFlight(IntakeConstants.TIME_OF_FLIGHT_CAN_ID);
     private VelocityVoltage m_VelocityVoltage = new VelocityVoltage(0);
-    //Create Feed Forward controller for velocity control using IntakeConstants.RollerGains
-    //Create Control Request for Motor of tpe VelocityTorqueCurrentFOC
-    //add time of flight sensor for game piece intake/outtake detection
+    private double ampTarget = IntakeConstants.kAmpOut;
+
 
     public IntakeRollers() {
     
@@ -63,11 +59,11 @@ public class IntakeRollers extends SubsystemBase {
     }
 
     public void feedIn() {
-        target = IntakeConstants.RollerGains.kIntakeRotation;     
+        target = IntakeConstants.kIntakeRotation;     
     }
 
     public void feedOut() {
-        target = IntakeConstants.RollerGains.kOuttakeRotation;
+        target = IntakeConstants.kOuttakeRotation;
     }
 
     public void stop() {
@@ -78,16 +74,34 @@ public class IntakeRollers extends SubsystemBase {
         return m_timeOfFlight.getRange() < IntakeConstants.TIME_OF_FLIGHT_RANGE_MM;
     }
 
-       public boolean doesntHaveGamePiece(){
+    public boolean doesntHaveGamePiece(){
         return !hasGamePiece();
     } 
 
+    public void setTarget(double targetSpeed){
+        target = targetSpeed;
+    }
+
+    public void ampOut(){
+        setTarget(this.ampTarget);
+    }
+    public void incrementRollers(double rotationChange) {
+        this.ampTarget += rotationChange;
+    
+      }
+    
+    public Command incrementRollersCommand(double rotationChange){
+        Command result = runOnce(()-> incrementRollers(rotationChange));
+        return result;
+      } 
+    
     @Override
     public void periodic() {
         m_VelocityVoltage.withVelocity(target);
         intakeRollerMotor.setControl(m_VelocityVoltage);
         SmartDashboard.putNumber("ToF", m_timeOfFlight.getRange());
         SmartDashboard.putBoolean("hasGamePiece", this.hasGamePiece());
+        SmartDashboard.putNumber("Intake Roller Speed",ampTarget);
 
     }
 
@@ -111,7 +125,9 @@ public class IntakeRollers extends SubsystemBase {
         return result;
     }
     
-    
+    public Command ampOutCommand(){
+        return runOnce(this::ampOut);
+    }
 
     // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
   private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));

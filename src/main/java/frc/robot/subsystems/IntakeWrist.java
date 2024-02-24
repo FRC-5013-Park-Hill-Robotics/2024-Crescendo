@@ -117,6 +117,10 @@ public class IntakeWrist extends SubsystemBase {
         setWristGoalRadians(goal);
     }
 
+    public boolean atGoal(){
+        return wristController.atGoal();
+    }
+
     public void retract() {
         this.stop = false;
         setWristGoalRadians(IntakeConstants.RETRACT_SETPOINT);
