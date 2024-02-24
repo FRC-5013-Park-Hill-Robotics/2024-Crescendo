@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotContainer;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.trobot5013lib.CANCoderWrapper;
+import frc.robot.trobot5013lib.RevThroughBoreEncoder;
 
 import static edu.wpi.first.units.MutableMeasure.mutable;
 import static edu.wpi.first.units.Units.Radians;
@@ -42,7 +43,7 @@ import static edu.wpi.first.units.Units.Volts;
 public class IntakeWrist extends SubsystemBase {
 
     private final TalonFX intakeWristMotor = new TalonFX(IntakeConstants.INTAKE_WRIST_MOTOR_CAN_ID);
-    private CANCoderWrapper encoder = new CANCoderWrapper(IntakeConstants.INTAKE_ENCODER_CAN_ID, true, IntakeConstants.CANCODER_OFFSET_ROTATIONS);
+    private RevThroughBoreEncoder encoder = new RevThroughBoreEncoder(IntakeConstants.ENCODER_DIO_PORT, true, IntakeConstants.ENCODER_OFFSET_RADIANS);
     public double setpointRadians = 0;
     private ArmFeedforward feedforward = new ArmFeedforward(
             IntakeConstants.RotationGains.kS,
@@ -78,7 +79,7 @@ public class IntakeWrist extends SubsystemBase {
     }
 
     public double getAngle() {
-        double value = encoder.getAbsPositionRadians() ;
+        double value = encoder.getAngle().getRadians() ;
         if (value < 0) {
             value += 2 * Math.PI;
         }
@@ -107,16 +108,29 @@ public class IntakeWrist extends SubsystemBase {
             lastTime = Timer.getFPGATimestamp();
         }
             SmartDashboard.putNumber("Ground Angle" , Math.toDegrees(getGroundRelativeWristPositionRadians()));
-            SmartDashboard.putNumber("Error",wristController.getPositionError());
-            SmartDashboard.putNumber("AbsPosition",Math.toDegrees(encoder.getAbsPositionRadians()));
-            SmartDashboard.putNumber("Shooter Angle", Math.toDegrees(getLauncherShoulder().getShoulderAngleRadians()));
-            SmartDashboard.putNumber("Wrist Cancoder Rotations", encoder.getCanandcoder().getAbsolutePosition().getValueAsDouble() );
-    }
+            SmartDashboard.putNumber("Wrist Position",encoder.getAngle().getDegrees());
+     }
 
     public void deploy() {
         this.stop = false;
         double goal = Math.PI - getLauncherShoulder().getShoulderAngleRadians() - IntakeConstants.DEPLOY_SETPOINT_TO_GROUND;
         setWristGoalRadians(goal);
+    }
+
+    public void amp() {
+        this.stop = false;
+        double goal = Math.PI - getLauncherShoulder().getShoulderAngleRadians() - IntakeConstants.AMP_GROUND_ANGLE;
+        setWristGoalRadians(goal);
+    }
+
+    public Command ampCommand() {
+        Command result = runOnce(this::amp);
+        result.addRequirements(getLauncherShoulder());
+        return result;
+    }
+    
+    public boolean atGoal(){
+        return wristController.atGoal();
     }
 
     public void retract() {
@@ -172,6 +186,16 @@ public class IntakeWrist extends SubsystemBase {
     public Command intakeGamePieceManualEndCommand(){
         return m_intakeRollers.stopC().andThen(retractCommand());
     }
+    public void incrementAngle(double radianChange) {
+        this.wristGoalRadians += radianChange;
+    
+      }
+    
+    public Command incrementAngleCommand(double radianChange){
+        Command result = runOnce(()-> incrementAngle(radianChange));
+        return result;
+      } 
+    /*
     private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
     // Mutable holder for unit-safe linear distance values, persisted to avoid
     // reallocation.
@@ -213,4 +237,5 @@ public class IntakeWrist extends SubsystemBase {
     public Command sysIdDynamic(SysIdRoutine.Direction direction) {
         return m_sysIdRoutine.dynamic(direction);
     }
+     */
 }
