@@ -73,7 +73,7 @@ public class RobotContainer {
 
     // reset the field-centric heading on left bumper press
     driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-    driverController.back().onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyroscope()))
+    driverController.back().onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyroscope()));
  
 
     // driverController.a().whileTrue(m_intakeWrist.deployCommand()).onFalse(m_intakeWrist.stopCommand());
@@ -126,7 +126,7 @@ public class RobotContainer {
     // shooter angle decrease by 2.5 deg
     operatorController.povDown().onTrue(m_intakeWrist.incrementAngleCommand(Math.toRadians(-1)));
 
-    
+
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(0)));
     }
