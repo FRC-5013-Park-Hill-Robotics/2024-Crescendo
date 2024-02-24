@@ -137,10 +137,6 @@ public class RobotContainer {
     operatorController.a().whileTrue(new AmpCommand(m_launcherShoulder, m_intakeRollers, m_intakeWrist));
     operatorController.b().whileTrue(m_launcherShoulder.goToSetpointCommand(LauncherConstants.DUCK_RADIANS));
 
-    driverController.x().onTrue(m_launcherRollers.startCommand());
-    driverController.y().onTrue(m_launcherRollers.stopCommand());
-
-
     operatorController.leftStick().whileTrue(m_climber.climbLeftCommand(operatorController.getLeftY()));
     operatorController.rightStick().whileTrue(m_climber.climbRightCommand(operatorController.getRightY()));
 
