@@ -28,7 +28,7 @@ public class GamepadDrive extends Command {
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
                                                                // driving in open loop
   	private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-  	private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+  	//private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
 	/**
 	 * Constructor method for the GamepadDrive class

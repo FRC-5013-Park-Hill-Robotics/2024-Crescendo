@@ -7,4 +7,5 @@ package frc.robot.constants;
 /** Add your docs here. */
 public final class ControllerConstants {
     public static double DEADBAND = 0.05;
+    public static int DRIVER_PORT_INDEX = 0;
 }

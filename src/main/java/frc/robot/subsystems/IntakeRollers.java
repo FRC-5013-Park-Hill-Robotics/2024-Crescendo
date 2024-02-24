@@ -11,7 +11,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.playingwithfusion.TimeOfFlight;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
+//import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
@@ -26,7 +26,6 @@ import frc.robot.constants.IntakeConstants;
 
 
 import static edu.wpi.first.units.Units.Volts;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
@@ -37,7 +36,7 @@ public class IntakeRollers extends SubsystemBase {
     // TODO Create motor controller of type TalonFx using the can constants for the id
     private TalonFX intakeRollerMotor = new TalonFX(IntakeConstants.INTAKE_ROLLER_ID);
     private double target = 0;
-    private ArmFeedforward m_intakFeedforward = new ArmFeedforward(0, 0, 0);
+    //private ArmFeedforward m_intakFeedforward = new ArmFeedforward(0, 0, 0);
     private TimeOfFlight m_timeOfFlight = new TimeOfFlight(IntakeConstants.TIME_OF_FLIGHT_CAN_ID);
     private VelocityVoltage m_VelocityVoltage = new VelocityVoltage(0);
     private double ampTarget = IntakeConstants.kAmpOut;
