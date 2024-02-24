@@ -122,11 +122,11 @@ public class RobotContainer {
         .onFalse(new InstantCommand(m_intakeRollers::stop));
 
     new Trigger(m_intakeRollers::hasGamePiece)
-      .onTrue(m_LimelightFront.setPipelineCommand(pipeline))
+      .onTrue(m_LimelightFront.setPipelineCommand(this::getSpeakerPipeline))
       .onTrue(m_LimelightBack.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING))
       .onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING))
       .onFalse(m_LimelightBack.setPipelineCommand(LimelightConstants.GAME_PIECE_RECOGNITION));
-    driverController.x().whileTrue(new AllignOnLLTarget(drivetrain, m_LimelightFront, pipeline)).onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING));
+    driverController.x().whileTrue(new AllignOnLLTarget(drivetrain, m_LimelightFront, this::getSpeakerPipeline)).onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING));
 
     //driverController.a().whileTrue(new InstantCommand(() -> m_LimelightFront.setTrust(true)))
     //    .onFalse(new InstantCommand(() -> m_LimelightFront.setTrust(false)));
