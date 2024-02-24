@@ -19,6 +19,12 @@ public class RevThroughBoreEncoder {
         m_dutyCycleEncoder.setDistancePerRotation(360);
     }
 
+    public RevThroughBoreEncoder (int dioChannel, boolean inverted, double offset){
+        this(dioChannel);
+        setInverted(inverted);
+        setOffset(Rotation2d.fromRadians(offset));
+    }
+
     public Rotation2d getOffset() {
         return m_offset;
     }

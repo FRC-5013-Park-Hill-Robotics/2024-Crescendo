@@ -9,8 +9,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 /** Add your docs here. */
 public final class LauncherConstants {
     public final static int LAUNCHER_SHOULDER_MOTOR_CAN_ID = CANConstants.LAUNCHER_SHOULDER_MOTOR_CAN_ID;
-    public final static int LAUNCHER_ENCODER_CAN_ID = CANConstants.LAUNCHER_ENCODER_CAN_ID;
-    public final static double OFFSET_RADIANS = Math.PI /2;
+    public final static int ENCODER_DIO_PORT = 0;
+    public final static double OFFSET_RADIANS = Math.toRadians(144.7);
     public final static int LAUNCHER_TOP_CAN_ID = CANConstants.LAUNCHER_TOP_CAN_ID;
     public final static int LAUNCHER_BOTTOM_CAN_ID = CANConstants.LAUNCHER_BOTTOM_CAN_ID;
     public static final class RotationGains {

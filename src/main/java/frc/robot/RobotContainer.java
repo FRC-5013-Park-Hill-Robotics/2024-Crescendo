@@ -28,7 +28,6 @@ import frc.robot.subsystems.LauncherRollers;
 import frc.robot.subsystems.LauncherShoulder;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.StatusLED;
-import frc.sysID.LauncherShoulderId;
 
 public class RobotContainer {
   private double MaxSpeed = 6; // 6 meters per second desired top speed

@@ -20,11 +20,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 //import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.LauncherConstants;
 import frc.robot.trobot5013lib.HeliumEncoderWrapper;
+import frc.robot.trobot5013lib.RevThroughBoreEncoder;
 
 public class LauncherShoulder extends SubsystemBase {
 
     private final TalonFX launcherShoulderMotor = new TalonFX(LauncherConstants.LAUNCHER_SHOULDER_MOTOR_CAN_ID);
-    private final HeliumEncoderWrapper encoder = new HeliumEncoderWrapper(LauncherConstants.LAUNCHER_ENCODER_CAN_ID);
+    private final RevThroughBoreEncoder encoder = new RevThroughBoreEncoder(LauncherConstants.ENCODER_DIO_PORT, false, LauncherConstants.OFFSET_RADIANS);
     public double setpointRadians = 0;
     private ArmFeedforward feedforward = new ArmFeedforward(
             LauncherConstants.RotationGains.kS,
@@ -62,10 +63,8 @@ public class LauncherShoulder extends SubsystemBase {
         launcherShoulderMotor.setControl(shoulderVoltageOut.withOutput(pidVal + feedforwardVal));
         lastSpeed = shoulderController.getSetpoint().velocity;
         lastTime = Timer.getFPGATimestamp();
-        SmartDashboard.putNumber("Shoulder Absolute" , Math.toDegrees(encoder.getAbsPositionRadians()));
+        SmartDashboard.putNumber("Shoulder Absolute" , encoder.getAngle().getDegrees());
         SmartDashboard.putNumber("Shoulder Ground Relative" , Math.toDegrees(getShoulderAngleRadians()));
-        SmartDashboard.putNumber("Shoulder pid" , pidVal);
-        SmartDashboard.putNumber("Shoulder Goal", Math.toDegrees(shoulderGoalRadians));
     }
 
     public void retract() {
@@ -81,7 +80,7 @@ public class LauncherShoulder extends SubsystemBase {
     }
 
     protected double getShoulderAngleRadians(){
-      return (encoder.getAbsPositionRadians() + Math.PI/2) % (Math.PI * 2);
+      return (encoder.getAngle().getRadians());
     }
 
     public Command retractCommand(){
