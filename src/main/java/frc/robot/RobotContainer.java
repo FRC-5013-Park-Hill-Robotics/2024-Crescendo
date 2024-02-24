@@ -11,6 +11,8 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -19,9 +21,11 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.commands.AllignOnLLTarget;
 import frc.robot.commands.AmpCommand;
 import frc.robot.commands.GamepadDrive;
 import frc.robot.constants.LauncherConstants;
+import frc.robot.constants.LimelightConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.IntakeRollers;
@@ -111,20 +115,27 @@ public class RobotContainer {
         .onFalse(m_intakeWrist.intakeGamePieceManualEndCommand());
 
     driverController.a().onTrue(m_intakeRollers.throwOut());
-    driverController.b().onTrue(m_launcherRollers.startCommand());
-    driverController.x().onTrue(m_launcherRollers.stopCommand());
-    driverController.y().onTrue(new InstantCommand(m_intakeRollers::feedOut))
+    
+    driverController.b().onTrue(new InstantCommand(m_intakeRollers::feedOut))
         .onFalse(new InstantCommand(m_intakeRollers::stop));
 
-    driverController.a().whileTrue(new InstantCommand(() -> m_LimelightFront.setTrust(true)))
-        .onFalse(new InstantCommand(() -> m_LimelightFront.setTrust(false)));
+    int pipeline = (DriverStation.getAlliance().get() == Alliance.Red)?LimelightConstants.APRIL_TAG_RED_SPEAKER:LimelightConstants.APRIL_TAG_BLUE_SPEAKER;
+    new Trigger(m_intakeRollers::hasGamePiece)
+      .onTrue(m_LimelightFront.setPipelineCommand(pipeline))
+      .onTrue(m_LimelightBack.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING))
+      .onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING))
+      .onFalse(m_LimelightBack.setPipelineCommand(LimelightConstants.GAME_PIECE_RECOGNITION));
+    driverController.x().whileTrue(new AllignOnLLTarget(drivetrain, m_LimelightFront, pipeline)).onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING));
+
+    //driverController.a().whileTrue(new InstantCommand(() -> m_LimelightFront.setTrust(true)))
+    //    .onFalse(new InstantCommand(() -> m_LimelightFront.setTrust(false)));
     // new
     // Trigger(m_intakeRollers::hasGamePiece).onTrue(m_launcherRollers.startCommand());
 
-
-   
     operatorController.a().whileTrue(new AmpCommand(m_launcherShoulder, m_intakeRollers, m_intakeWrist));
     operatorController.b().whileTrue(m_launcherShoulder.goToSetpointCommand(LauncherConstants.DUCK_RADIANS));
+    driverController.x().onTrue(m_launcherRollers.startCommand());
+    driverController.y().onTrue(m_launcherRollers.stopCommand());
  
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(0)));
