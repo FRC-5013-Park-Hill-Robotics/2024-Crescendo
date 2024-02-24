@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.AllignOnLLTarget;
 import frc.robot.commands.AmpCommand;
+import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.GamepadDrive;
 import frc.robot.constants.LauncherConstants;
 import frc.robot.constants.LimelightConstants;
@@ -76,6 +77,7 @@ public class RobotContainer {
 
   private void configureBindings() {
     drivetrain.setDefaultCommand(new GamepadDrive(drivetrain, driverController));
+    m_climber.setDefaultCommand(new ClimbCommand(m_climber));
 
     // reset the field-centric heading on left bumper press
     driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
@@ -134,8 +136,14 @@ public class RobotContainer {
 
     operatorController.a().whileTrue(new AmpCommand(m_launcherShoulder, m_intakeRollers, m_intakeWrist));
     operatorController.b().whileTrue(m_launcherShoulder.goToSetpointCommand(LauncherConstants.DUCK_RADIANS));
+
     driverController.x().onTrue(m_launcherRollers.startCommand());
     driverController.y().onTrue(m_launcherRollers.stopCommand());
+
+
+    operatorController.leftStick().whileTrue(m_climber.climbLeftCommand(operatorController.getLeftY()));
+    operatorController.rightStick().whileTrue(m_climber.climbRightCommand(operatorController.getRightY()));
+
  
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(0)));
@@ -180,5 +188,10 @@ public class RobotContainer {
     public Limelight getBackLimelight() {
     return m_LimelightBack;
   }
+
+    public CommandXboxController getOperatorController() {
+      // TODO Auto-generated method stub
+      throw new UnsupportedOperationException("Unimplemented method 'getOperatorController'");
+    }
 
 }
