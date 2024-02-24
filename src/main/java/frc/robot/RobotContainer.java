@@ -121,7 +121,6 @@ public class RobotContainer {
     driverController.b().onTrue(new InstantCommand(m_intakeRollers::feedOut))
         .onFalse(new InstantCommand(m_intakeRollers::stop));
 
-    int pipeline = (DriverStation.getAlliance().get() == Alliance.Red)?LimelightConstants.APRIL_TAG_RED_SPEAKER:LimelightConstants.APRIL_TAG_BLUE_SPEAKER;
     new Trigger(m_intakeRollers::hasGamePiece)
       .onTrue(m_LimelightFront.setPipelineCommand(pipeline))
       .onTrue(m_LimelightBack.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING))
@@ -188,6 +187,11 @@ public class RobotContainer {
     public CommandXboxController getOperatorController() {
       // TODO Auto-generated method stub
       throw new UnsupportedOperationException("Unimplemented method 'getOperatorController'");
+    }
+
+    public int getSpeakerPipeline(){
+      int pipeline = (DriverStation.getAlliance().get() == Alliance.Red)?LimelightConstants.APRIL_TAG_RED_SPEAKER:LimelightConstants.APRIL_TAG_BLUE_SPEAKER;
+      return pipeline;
     }
 
 }
