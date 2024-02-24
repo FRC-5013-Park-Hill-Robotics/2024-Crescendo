@@ -85,7 +85,6 @@ public class LauncherShoulder extends SubsystemBase {
     }
 
     public void ampAngle(){
-  
         double goal = LauncherConstants.AMP_ANGLE_RADANS;
         setShoulderGoalRadians(goal);
     }
@@ -94,6 +93,7 @@ public class LauncherShoulder extends SubsystemBase {
         result.addRequirements();
         return result;
     }
+
     public Command retractCommand(){
       Command result = run(this::retract).until(shoulderController::atGoal);
       return result;
@@ -101,7 +101,7 @@ public class LauncherShoulder extends SubsystemBase {
 
     public Command goToSetpointCommand(double degrees) {
       double radians = Math.toRadians(degrees);
-      Command result = run(() -> setShoulderGoalRadians(radians)).until(shoulderController::atGoal);
+      Command result = runOnce(() -> setShoulderGoalRadians(radians));
       return result;
 
     }

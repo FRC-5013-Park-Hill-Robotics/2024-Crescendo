@@ -117,6 +117,18 @@ public class IntakeWrist extends SubsystemBase {
         setWristGoalRadians(goal);
     }
 
+    public void amp() {
+        this.stop = false;
+        double goal = Math.PI - getLauncherShoulder().getShoulderAngleRadians() - IntakeConstants.AMP_GROUND_ANGLE;
+        setWristGoalRadians(goal);
+    }
+
+    public Command ampCommand() {
+        Command result = runOnce(this::amp);
+        result.addRequirements(getLauncherShoulder());
+        return result;
+    }
+    
     public boolean atGoal(){
         return wristController.atGoal();
     }
