@@ -34,7 +34,8 @@ public class RobotContainer {
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
   /* Setting up bindings for necessary control of the swerve drive platform */
-  private final CommandXboxController joystick = new CommandXboxController(0); // My joystick
+  private final CommandXboxController driverController = new CommandXboxController(0); 
+  private final CommandXboxController operatorController = new CommandXboxController(1); 
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
   private Climber m_climber = new Climber(); // creates the climber instance variable
@@ -68,88 +69,64 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    drivetrain.setDefaultCommand(new GamepadDrive(drivetrain, joystick));
-    // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-    // joystick.b().whileTrue(drivetrain
-    // .applyRequest(() -> point.withModuleDirection(new
-    // Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
+    drivetrain.setDefaultCommand(new GamepadDrive(drivetrain, driverController));
 
     // reset the field-centric heading on left bumper press
-    joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-    joystick.back().onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyroscope()));
-    /*
-     * joystick.a().whileTrue(m_intakeWrist.sysIdQuasistatic(Direction.kForward));
-     * joystick.b().whileTrue(m_intakeWrist.sysIdQuasistatic(Direction.kReverse));
-     * 
-     * joystick.x().whileTrue(m_intakeWrist.sysIdDynamic(Direction.kForward));
-     * joystick.y().whileTrue(m_intakeWrist.sysIdDynamic(Direction.kReverse));
-     */
+    driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+    driverController.back().onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyroscope()))
+ 
 
-    /*
-     * joystick.a().whileTrue(drivetrain.runDriveQuasiTest(SysIdRoutine.Direction.
-     * kForward));
-     * joystick.b().whileTrue(drivetrain.runDriveQuasiTest(SysIdRoutine.Direction.
-     * kReverse));
-     * 
-     * joystick.x().whileTrue(drivetrain.runDriveDynamTest(SysIdRoutine.Direction.
-     * kForward));
-     * joystick.y().whileTrue(drivetrain.runDriveDynamTest(SysIdRoutine.Direction.
-     * kReverse));
-     * 
-     * joystick.povDown().whileTrue(drivetrain.runSteerQuasiTest(SysIdRoutine.
-     * Direction.kForward));
-     * joystick.povRight().whileTrue(drivetrain.runSteerQuasiTest(SysIdRoutine.
-     * Direction.kReverse));
-     * 
-     * joystick.povLeft().whileTrue(drivetrain.runSteerDynamTest(SysIdRoutine.
-     * Direction.kForward));
-     * joystick.povUp().whileTrue(drivetrain.runSteerDynamTest(SysIdRoutine.
-     * Direction.kReverse));
-     */
+    // driverController.a().whileTrue(m_intakeWrist.deployCommand()).onFalse(m_intakeWrist.stopCommand());
+    // driverController.b().whileTrue(m_intakeWrist.retractCommand());
 
-    // joystick.a().whileTrue(m_intakeWrist.deployCommand()).onFalse(m_intakeWrist.stopCommand());
-    // joystick.b().whileTrue(m_intakeWrist.retractCommand());
+    // driverController.a().whileTrue(m_intakeRollers.takeIn()).onFalse(m_intakeRollers.stopC());
+    // driverController.b().whileTrue(m_intakeRollers.throwOut()).onFalse(m_intakeRollers.stopC());
 
-    // joystick.a().whileTrue(m_intakeRollers.takeIn()).onFalse(m_intakeRollers.stopC());
-    // joystick.b().whileTrue(m_intakeRollers.throwOut()).onFalse(m_intakeRollers.stopC());
-
-    // oystick.x().whileTrue(m_intakeRollers.intakeGamepieceCommand()).onFalse(m_intakeRollers.stopC());
+    // driverController.x().whileTrue(m_intakeRollers.intakeGamepieceCommand()).onFalse(m_intakeRollers.stopC());
     // new Trigger(m_intakeRollers::hasGamePiece).onTrue(rumbleSequence());
 
-    // joystick.a().whileTrue(m_launcherShoulder.goToSetpointCommand(45));
-    // joystick.b().whileTrue(m_launcherShoulder.goToSetpointCommand(30));
+    // driverController.a().whileTrue(m_launcherShoulder.goToSetpointCommand(45));
+    // driverController.b().whileTrue(m_launcherShoulder.goToSetpointCommand(30));
 
     // decrease rps by 5
-    joystick.povLeft().onTrue(m_launcherRollers.incrementSpeedCommand(-5));
+    driverController.povLeft().onTrue(m_launcherRollers.incrementSpeedCommand(-5));
 
     // increase rps by 5
-    joystick.povRight().onTrue(m_launcherRollers.incrementSpeedCommand(5));
+    driverController.povRight().onTrue(m_launcherRollers.incrementSpeedCommand(5));
 
     // shooter angle increase by 2.5 deg += 5
-    joystick.povUp().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(1)));
+    driverController.povUp().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(1)));
 
     // shooter angle decrease by 2.5 deg
-    joystick.povDown().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(-1)));
+    driverController.povDown().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(-1)));
 
-    // joystick.x().whileTrue(m_shoulderId.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    // joystick.y().whileTrue(m_shoulderId.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    // driverController.x().whileTrue(m_shoulderId.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    // driverController.y().whileTrue(m_shoulderId.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
-    joystick.rightBumper().onTrue(m_intakeWrist.intakeGamePiece().andThen(rumbleSequence()))
+    driverController.rightBumper().onTrue(m_intakeWrist.intakeGamePiece().andThen(rumbleSequence()))
         .onFalse(m_intakeWrist.retractCommand());
-    joystick.leftBumper().onTrue(m_intakeWrist.intakeGamePieceManualCommand())
+    driverController.leftBumper().onTrue(m_intakeWrist.intakeGamePieceManualCommand())
         .onFalse(m_intakeWrist.intakeGamePieceManualEndCommand());
 
-    joystick.a().onTrue(m_intakeRollers.throwOut());
-    joystick.b().onTrue(m_launcherRollers.startCommand());
-    joystick.x().onTrue(m_launcherRollers.stopCommand());
-    joystick.y().onTrue(new InstantCommand(m_intakeRollers::feedOut))
+    driverController.a().onTrue(m_intakeRollers.throwOut());
+    driverController.b().onTrue(m_launcherRollers.startCommand());
+    driverController.x().onTrue(m_launcherRollers.stopCommand());
+    driverController.y().onTrue(new InstantCommand(m_intakeRollers::feedOut))
         .onFalse(new InstantCommand(m_intakeRollers::stop));
 
-    joystick.a().whileTrue(new InstantCommand(() -> m_LimelightFront.setTrust(true)))
+    driverController.a().whileTrue(new InstantCommand(() -> m_LimelightFront.setTrust(true)))
         .onFalse(new InstantCommand(() -> m_LimelightFront.setTrust(false)));
     // new
     // Trigger(m_intakeRollers::hasGamePiece).onTrue(m_launcherRollers.startCommand());
 
+
+    // shooter angle increase by 2.5 deg += 5
+    operatorController.povUp().onTrue(m_intakeWrist.incrementAngleCommand(Math.toRadians(1)));
+
+    // shooter angle decrease by 2.5 deg
+    operatorController.povDown().onTrue(m_intakeWrist.incrementAngleCommand(Math.toRadians(-1)));
+
+    
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(0)));
     }
@@ -173,8 +150,8 @@ public class RobotContainer {
   }
 
   public Command rumbleSequence() {
-    Command rumbleCommand = new InstantCommand(() -> joystick.getHID().setRumble(RumbleType.kBothRumble, 1));
-    Command stopRumbleCommand = new InstantCommand(() -> joystick.getHID().setRumble(RumbleType.kBothRumble, 0));
+    Command rumbleCommand = new InstantCommand(() -> driverController.getHID().setRumble(RumbleType.kBothRumble, 1));
+    Command stopRumbleCommand = new InstantCommand(() -> driverController.getHID().setRumble(RumbleType.kBothRumble, 0));
     return rumbleCommand.andThen(new WaitCommand(0.5)).andThen(stopRumbleCommand);
 
   }

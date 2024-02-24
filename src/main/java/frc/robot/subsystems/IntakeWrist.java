@@ -170,7 +170,15 @@ public class IntakeWrist extends SubsystemBase {
     public Command intakeGamePieceManualEndCommand(){
         return m_intakeRollers.stopC().andThen(retractCommand());
     }
-
+    public void incrementAngle(double radianChange) {
+        this.wristGoalRadians += radianChange;
+    
+      }
+    
+    public Command incrementAngleCommand(double radianChange){
+        Command result = runOnce(()-> incrementAngle(radianChange));
+        return result;
+      } 
     /*
     private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
     // Mutable holder for unit-safe linear distance values, persisted to avoid
