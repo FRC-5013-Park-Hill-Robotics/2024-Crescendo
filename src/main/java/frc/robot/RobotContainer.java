@@ -91,8 +91,8 @@ public class RobotContainer {
     driverController.povDown().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(-1)));
 
     driverController.rightBumper()
-        .whileTrue(m_intakeWrist.intakeGamePiece().andThen(rumbleSequence()))
-        .onFalse(m_intakeWrist.retractCommand().andThen(stopRumbleCommand()));
+        .whileTrue(m_intakeWrist.intakeGamePiece().andThen(rumbleSequence(driverController, 0.5)))
+        .onFalse(m_intakeWrist.retractCommand().andThen(stopRumbleCommand(driverController)));
     driverController.leftBumper()
         .onTrue(m_intakeWrist.intakeGamePieceManualCommand())
         .onFalse(m_intakeWrist.intakeGamePieceManualEndCommand());
@@ -150,20 +150,22 @@ public class RobotContainer {
     return drivetrain;
   }
 
-  public Command startRumbleCommand() {
-    Command rumbleCommand = new InstantCommand(() -> driverController.getHID().setRumble(RumbleType.kBothRumble, 1));
+  public void setRumble(CommandXboxController controller, boolean rumble){
+     controller.getHID().setRumble(RumbleType.kBothRumble, rumble?1:0);
+  }
+
+  public Command startRumbleCommand(CommandXboxController controller) {
+    Command rumbleCommand = new InstantCommand(() -> setRumble(controller, true));
     return rumbleCommand;
   }
 
-  public Command stopRumbleCommand() {
-    Command stopRumbleCommand = new InstantCommand(
-        () -> driverController.getHID().setRumble(RumbleType.kBothRumble, 0));
-    return stopRumbleCommand;
+  public Command stopRumbleCommand(CommandXboxController controller) {
+    Command rumbleCommand = new InstantCommand(() -> setRumble(controller, false));
+    return rumbleCommand;
   }
 
-  public Command rumbleSequence() {
-    return startRumbleCommand().andThen(stopRumbleCommand());
-
+  public Command rumbleSequence(CommandXboxController controller, double timeout) {
+    return startRumbleCommand(controller).withTimeout(timeout).andThen(stopRumbleCommand(controller));
   }
 
   public Limelight getFrontLimelight() {
