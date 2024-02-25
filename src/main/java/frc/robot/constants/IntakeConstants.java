@@ -40,7 +40,7 @@ public final class IntakeConstants {
     public static final double kIntakeRotation = 50;
     public static final double kOuttakeRotation = -50;
     public static final double kAmpOut = -22;
-    public static final double AMP_GROUND_ANGLE  =  Math.toRadians(74.12);
+    public static final double AMP_ANGLE  =  Math.toRadians(9.38);
     public final static double DEPLOY_SETPOINT_TO_GROUND = Math.toRadians(-18);
     public final static double RETRACT_SETPOINT = 0;
     public static final int TIME_OF_FLIGHT_CAN_ID = 1;
