@@ -41,8 +41,8 @@ public class RobotContainer {
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
   /* Setting up bindings for necessary control of the swerve drive platform */
-  private final CommandXboxController driverController = new CommandXboxController(0); 
-  private final CommandXboxController operatorController = new CommandXboxController(1); 
+  private final CommandXboxController driverController = new CommandXboxController(0);
+  private final CommandXboxController operatorController = new CommandXboxController(1);
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
   private Climber m_climber = new Climber(); // creates the climber instance variable
@@ -76,49 +76,58 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
+    //Default Commands
     drivetrain.setDefaultCommand(new GamepadDrive(drivetrain, driverController));
     m_climber.setDefaultCommand(new ClimbCommand(m_climber));
 
+    //Driver Controls
     // reset the field-centric heading on left bumper press
-    driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
     driverController.back().onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyroscope()));
 
- 
+    //Calibration controls for the launcher
     driverController.povLeft().onTrue(m_launcherRollers.incrementSpeedCommand(-5));
     driverController.povRight().onTrue(m_launcherRollers.incrementSpeedCommand(5));
     driverController.povUp().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(1)));
     driverController.povDown().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(-1)));
 
-
-    driverController.rightBumper().whileTrue(m_intakeWrist.intakeGamePiece().andThen(rumbleSequence()))
+    driverController.rightBumper()
+        .whileTrue(m_intakeWrist.intakeGamePiece().andThen(rumbleSequence()))
         .onFalse(m_intakeWrist.retractCommand().andThen(stopRumbleCommand()));
-    driverController.leftBumper().onTrue(m_intakeWrist.intakeGamePieceManualCommand())
+    driverController.leftBumper()
+        .onTrue(m_intakeWrist.intakeGamePieceManualCommand())
         .onFalse(m_intakeWrist.intakeGamePieceManualEndCommand());
 
     driverController.y().onTrue(m_intakeRollers.throwOut());
-    
+
     driverController.b().onTrue(m_launcherRollers.startCommand());
     driverController.x().onTrue(m_launcherRollers.stopCommand());
+    driverController.a()
+        .whileTrue(new AllignOnLLTarget(drivetrain, m_LimelightFront, this::getSpeakerPipeline))
+        .onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING));
 
-    new Trigger(m_intakeRollers::hasGamePiece)
-      .onTrue(m_LimelightFront.setPipelineCommand(this::getSpeakerPipeline))
-      .onTrue(m_LimelightBack.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING))
-      .onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING))
-      .onFalse(m_LimelightBack.setPipelineCommand(LimelightConstants.GAME_PIECE_RECOGNITION));
-    driverController.a().whileTrue(new AllignOnLLTarget(drivetrain, m_LimelightFront, this::getSpeakerPipeline)).onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING));
-
-    //driverController.a().whileTrue(new InstantCommand(() -> m_LimelightFront.setTrust(true)))
-    //    .onFalse(new InstantCommand(() -> m_LimelightFront.setTrust(false)));
-    // new
-    // Trigger(m_intakeRollers::hasGamePiece).onTrue(m_launcherRollers.startCommand());
-
+    //operator controls
     operatorController.a().whileTrue(new AmpCommand(m_launcherShoulder, m_intakeRollers, m_intakeWrist));
     operatorController.b().whileTrue(m_launcherShoulder.goToSetpointCommand(LauncherConstants.DUCK_RADIANS));
 
     operatorController.leftStick().whileTrue(m_climber.climbLeftCommand(operatorController.getLeftY()));
     operatorController.rightStick().whileTrue(m_climber.climbRightCommand(operatorController.getRightY()));
 
- 
+    //other events
+    new Trigger(m_intakeRollers::hasGamePiece)
+        .onTrue(m_LimelightFront.setPipelineCommand(this::getSpeakerPipeline)
+          .alongWith(m_LimelightBack.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING)))
+        .onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING)
+          .alongWith(m_LimelightBack.setPipelineCommand(LimelightConstants.GAME_PIECE_RECOGNITION)));
+
+
+    // driverController.a().whileTrue(new InstantCommand(() ->
+    // m_LimelightFront.setTrust(true)))
+    // .onFalse(new InstantCommand(() -> m_LimelightFront.setTrust(false)));
+    // new
+    // Trigger(m_intakeRollers::hasGamePiece).onTrue(m_launcherRollers.startCommand());
+
+
+
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(0)));
     }
@@ -141,15 +150,17 @@ public class RobotContainer {
     return drivetrain;
   }
 
-  public Command startRumbleCommand (){
+  public Command startRumbleCommand() {
     Command rumbleCommand = new InstantCommand(() -> driverController.getHID().setRumble(RumbleType.kBothRumble, 1));
     return rumbleCommand;
   }
 
-  public Command stopRumbleCommand () {
-    Command stopRumbleCommand = new InstantCommand(() -> driverController.getHID().setRumble(RumbleType.kBothRumble, 0));
+  public Command stopRumbleCommand() {
+    Command stopRumbleCommand = new InstantCommand(
+        () -> driverController.getHID().setRumble(RumbleType.kBothRumble, 0));
     return stopRumbleCommand;
   }
+
   public Command rumbleSequence() {
     return startRumbleCommand().andThen(stopRumbleCommand());
 
@@ -159,22 +170,23 @@ public class RobotContainer {
     return m_LimelightFront;
   }
 
-    public Limelight getBackLimelight() {
+  public Limelight getBackLimelight() {
     return m_LimelightBack;
   }
 
-    public CommandXboxController getOperatorController() {
-      return operatorController;
-    }
+  public CommandXboxController getOperatorController() {
+    return operatorController;
+  }
 
-    public int getSpeakerPipeline(){
-      int pipeline = (DriverStation.getAlliance().get() == Alliance.Red)?LimelightConstants.APRIL_TAG_RED_SPEAKER:LimelightConstants.APRIL_TAG_BLUE_SPEAKER;
-      return pipeline;
-    }
+  public int getSpeakerPipeline() {
+    int pipeline = (DriverStation.getAlliance().get() == Alliance.Red) ? LimelightConstants.APRIL_TAG_RED_SPEAKER
+        : LimelightConstants.APRIL_TAG_BLUE_SPEAKER;
+    return pipeline;
+  }
 
-    public Command ampCommand(){
-      return m_launcherShoulder.ampAngleCommand()
-        .andThen(m_intakeWrist.ampCommand())
-        .andThen(m_intakeRollers.ampOutCommand());
-    }
+  public Command ampCommand() {
+    Command movementCommand =  m_launcherShoulder.ampAngleCommand().alongWith(m_intakeWrist.ampCommand());
+    Command ejectCommand = m_intakeRollers.ampOutCommand();
+    return movementCommand.andThen(ejectCommand);
+  }
 }
