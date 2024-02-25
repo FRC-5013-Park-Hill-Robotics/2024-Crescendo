@@ -8,6 +8,7 @@ import frc.robot.constants.CANConstants;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -40,14 +41,14 @@ public class Climber extends SubsystemBase {
     */
 
     TalonFXConfiguration leftConfig = new TalonFXConfiguration();
-    leftClimberMotor.setNeutralMode(NeutralModeValue.Brake);
-    leftClimberMotor.set(0);
-    leftClimberMotor.setInverted(true);
+    leftConfig.MotorOutput.withNeutralMode(NeutralModeValue.Brake);
+    leftConfig.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
     leftClimberMotor.getConfigurator().apply(leftConfig);
+    leftClimberMotor.set(0);
 
     TalonFXConfiguration rightConfig = new TalonFXConfiguration();
-    rightClimberMotor.setNeutralMode(NeutralModeValue.Brake);
-    rightClimberMotor.set(0);
+    rightConfig.MotorOutput.withNeutralMode(NeutralModeValue.Brake);
+    rightConfig.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive);
     rightClimberMotor.setInverted(true);
     rightClimberMotor.getConfigurator().apply(rightConfig);
     //m_leftVoltage.withSlot(0);
