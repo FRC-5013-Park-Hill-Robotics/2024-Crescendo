@@ -125,7 +125,7 @@ public class IntakeRollers extends SubsystemBase {
     }
     
     public Command ampOutCommand(){
-        return runOnce(this::ampOut);
+        return run(this::ampOut).until(this::doesntHaveGamePiece);
     }
 
     // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.

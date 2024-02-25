@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotContainer;
 import frc.robot.constants.IntakeConstants;
+import frc.robot.constants.LauncherConstants;
 import frc.robot.trobot5013lib.CANCoderWrapper;
 import frc.robot.trobot5013lib.RevThroughBoreEncoder;
 
@@ -124,7 +125,7 @@ public class IntakeWrist extends SubsystemBase {
     }
 
     public Command ampCommand() {
-        Command result = runOnce(this::amp);
+        Command result = run(this::amp).until(this::atAmp);
         result.addRequirements(getLauncherShoulder());
         return result;
     }
@@ -195,6 +196,11 @@ public class IntakeWrist extends SubsystemBase {
         Command result = runOnce(()-> incrementAngle(radianChange));
         return result;
       } 
+
+    public boolean atAmp(){
+      return getAngle() >= IntakeConstants.AMP_GROUND_ANGLE - IntakeConstants.RotationGains.kPositionTolerance.getRadians() &&
+      getAngle() <= IntakeConstants.AMP_GROUND_ANGLE + IntakeConstants.RotationGains.kPositionTolerance.getRadians();
+    }
     /*
     private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
     // Mutable holder for unit-safe linear distance values, persisted to avoid
