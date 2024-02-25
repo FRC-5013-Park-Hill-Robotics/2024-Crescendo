@@ -104,7 +104,6 @@ public class Robot extends TimedRobot {
   }
 
   private void checkUpdateAlliance() {
-
     Optional<Alliance> alliance = DriverStation.getAlliance();
     if (DriverStation.isDSAttached() && alliance.isPresent()) {
       Limelight frontLL = m_robotContainer.getFrontLimelight();
@@ -112,5 +111,6 @@ public class Robot extends TimedRobot {
       frontLL.setAlliance(alliance.get());
       backLL.setAlliance(alliance.get());
     }
+    m_robotContainer.getDrivetrain().zeroGyroscope(); 
   }
 }
