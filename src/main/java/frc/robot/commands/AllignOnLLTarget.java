@@ -5,6 +5,9 @@
 package frc.robot.commands;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+
+import java.util.function.Supplier;
+
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -18,9 +21,9 @@ import frc.robot.subsystems.Limelight;
 public class AllignOnLLTarget extends Command {
   private Limelight m_Limelight;
   private CommandSwerveDrivetrain m_Drivetrain;
-  private int m_pipeline;
+  private Supplier<Integer> m_pipeline;
   private PIDController thetaController = new PIDController(ThetaGains.kP, ThetaGains.kI, ThetaGains.kD);
-  public AllignOnLLTarget(CommandSwerveDrivetrain drivetrain, Limelight Limelight, int pipeline) {
+  public AllignOnLLTarget(CommandSwerveDrivetrain drivetrain, Limelight Limelight, Supplier<Integer> pipeline) {
     addRequirements(drivetrain);
     m_Drivetrain = drivetrain;
     m_Limelight = Limelight;
@@ -35,7 +38,7 @@ public class AllignOnLLTarget extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_Limelight.setPipeline(m_pipeline);
+    m_Limelight.setPipeline(m_pipeline.get());
     thetaController.reset();
     thetaController.setTolerance(LimelightConstants.ALLIGNMENT_TOLLERANCE_RADIANS);
   }
