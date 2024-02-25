@@ -17,10 +17,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.IntakeConstants;
-//import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.LauncherConstants;
-import frc.robot.trobot5013lib.HeliumEncoderWrapper;
 import frc.robot.trobot5013lib.RevThroughBoreEncoder;
 
 public class LauncherShoulder extends SubsystemBase {
@@ -41,7 +38,7 @@ public class LauncherShoulder extends SubsystemBase {
         LauncherConstants.RotationGains.kD,
          shoulderConstraints);
     private final VoltageOut shoulderVoltageOut = new VoltageOut(0);
-    private double shoulderGoalRadians = 0;
+    private double shoulderGoalRadians = LauncherConstants.START_ANGLE_RADIANS;
     private double lastSpeed = 0;
     private double lastTime = 0;
 
@@ -89,18 +86,20 @@ public class LauncherShoulder extends SubsystemBase {
         setShoulderGoalRadians(goal);
     }
     public Command ampAngleCommand(){
-        Command result = runOnce(this::ampAngle);
-        result.addRequirements();
+        Command result = run(this::ampAngle).until(this::atAmp);
         return result;
     }
 
+    public boolean atAmp(){
+      return getShoulderAngleRadians() >= LauncherConstants.AMP_ANGLE_RADANS - LauncherConstants.RotationGains.kPositionTolerance.getRadians() &&
+      getShoulderAngleRadians() <= LauncherConstants.AMP_ANGLE_RADANS + LauncherConstants.RotationGains.kPositionTolerance.getRadians();
+    }
     public Command retractCommand(){
       Command result = run(this::retract).until(shoulderController::atGoal);
       return result;
     }
 
-    public Command goToSetpointCommand(double degrees) {
-      double radians = Math.toRadians(degrees);
+    public Command goToSetpointCommand(double radians) {
       Command result = runOnce(() -> setShoulderGoalRadians(radians));
       return result;
 
@@ -117,6 +116,6 @@ public class LauncherShoulder extends SubsystemBase {
     } 
 
     public Command holdCommand(){
-      return runOnce(() -> setShoulderGoalRadians(Math.toRadians(45)));
+      return runOnce(() -> setShoulderGoalRadians(LauncherConstants.START_ANGLE_RADIANS));
     }
 }
