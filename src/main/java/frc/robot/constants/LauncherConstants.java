@@ -10,7 +10,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public final class LauncherConstants {
     public final static int LAUNCHER_SHOULDER_MOTOR_CAN_ID = CANConstants.LAUNCHER_SHOULDER_MOTOR_CAN_ID;
     public final static int ENCODER_DIO_PORT = 0;
-    public final static double OFFSET_RADIANS = Math.toRadians(144.7);
+    public final static double OFFSET_RADIANS = Math.toRadians(257);
     public final static int LAUNCHER_TOP_CAN_ID = CANConstants.LAUNCHER_TOP_CAN_ID;
     public final static int LAUNCHER_BOTTOM_CAN_ID = CANConstants.LAUNCHER_BOTTOM_CAN_ID;
     public static final class RotationGains {
@@ -45,5 +45,6 @@ public final class LauncherConstants {
     }
     public final static double RETRACT_SETPOINT = 0;
     public static final double AMP_ANGLE_RADANS = Math.toRadians(96.5);
-    public static final double DUCK_RADIANS = Math.toRadians(40);
+    public static final double DUCK_RADIANS = Math.toRadians(50);
+    public static final double START_ANGLE_RADIANS = Math.toRadians(60);
 }

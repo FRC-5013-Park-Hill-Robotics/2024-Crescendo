@@ -4,33 +4,17 @@
 
 package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.CommandSwerveDrivetrain;
-import frc.robot.RobotContainer;
 import frc.robot.constants.CANConstants;
-import frc.robot.constants.ClimberConstants;
-import frc.robot.constants.ClimberConstants;
 
-import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.ControlRequest;
-import com.ctre.phoenix6.controls.VelocityVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class Climber extends SubsystemBase {
   private final TalonFX leftClimberMotor = new TalonFX(CANConstants.CLIMBER_LEFT_CAN_ID);
   private final TalonFX rightClimberMotor = new TalonFX(CANConstants.CLIMBER_RIGHT_CAN_ID);
-  private ProfiledPIDController climberController = new ProfiledPIDController(ClimberConstants.kP, ClimberConstants.kI, ClimberConstants.kD, null);
-  private VoltageOut voltage = new VoltageOut(0, false, false, false, false);
-  private CommandXboxController operatorController = RobotContainer.getInstance().getOperatorController();
 
   //private VelocityVoltage m_BottomVoltage = new VelocityVoltage(0);
   //private VelocityVoltage m_topVoltage = new VelocityVoltage(0);

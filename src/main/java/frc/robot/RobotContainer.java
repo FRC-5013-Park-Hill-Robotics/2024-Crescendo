@@ -91,51 +91,30 @@ public class RobotContainer {
     // reset the field-centric heading on left bumper press
     driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
     driverController.back().onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyroscope()));
+
  
-
-    // driverController.a().whileTrue(m_intakeWrist.deployCommand()).onFalse(m_intakeWrist.stopCommand());
-    // driverController.b().whileTrue(m_intakeWrist.retractCommand());
-
-    // driverController.a().whileTrue(m_intakeRollers.takeIn()).onFalse(m_intakeRollers.stopC());
-    // driverController.b().whileTrue(m_intakeRollers.throwOut()).onFalse(m_intakeRollers.stopC());
-
-    // driverController.x().whileTrue(m_intakeRollers.intakeGamepieceCommand()).onFalse(m_intakeRollers.stopC());
-    // new Trigger(m_intakeRollers::hasGamePiece).onTrue(rumbleSequence());
-
-    // driverController.a().whileTrue(m_launcherShoulder.goToSetpointCommand(45));
-    // driverController.b().whileTrue(m_launcherShoulder.goToSetpointCommand(30));
-
-    // decrease rps by 5
     driverController.povLeft().onTrue(m_launcherRollers.incrementSpeedCommand(-5));
-
-    // increase rps by 5
     driverController.povRight().onTrue(m_launcherRollers.incrementSpeedCommand(5));
-
-    // shooter angle increase by 2.5 deg += 5
     driverController.povUp().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(1)));
-
-    // shooter angle decrease by 2.5 deg
     driverController.povDown().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(-1)));
 
-    // driverController.x().whileTrue(m_shoulderId.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    // driverController.y().whileTrue(m_shoulderId.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     driverController.rightBumper().whileTrue(m_intakeWrist.intakeGamePiece().andThen(rumbleSequence()))
         .onFalse(m_intakeWrist.retractCommand().andThen(stopRumbleCommand()));
     driverController.leftBumper().onTrue(m_intakeWrist.intakeGamePieceManualCommand())
         .onFalse(m_intakeWrist.intakeGamePieceManualEndCommand());
 
-    driverController.a().onTrue(m_intakeRollers.throwOut());
+    driverController.y().onTrue(m_intakeRollers.throwOut());
     
-    driverController.b().onTrue(new InstantCommand(m_intakeRollers::feedOut))
-        .onFalse(new InstantCommand(m_intakeRollers::stop));
+    driverController.b().onTrue(m_launcherRollers.startCommand());
+    driverController.x().onTrue(m_launcherRollers.stopCommand());
 
     new Trigger(m_intakeRollers::hasGamePiece)
       .onTrue(m_LimelightFront.setPipelineCommand(this::getSpeakerPipeline))
       .onTrue(m_LimelightBack.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING))
       .onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING))
       .onFalse(m_LimelightBack.setPipelineCommand(LimelightConstants.GAME_PIECE_RECOGNITION));
-    driverController.x().whileTrue(new AllignOnLLTarget(drivetrain, m_LimelightFront, this::getSpeakerPipeline)).onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING));
+    driverController.a().whileTrue(new AllignOnLLTarget(drivetrain, m_LimelightFront, this::getSpeakerPipeline)).onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING));
 
     //driverController.a().whileTrue(new InstantCommand(() -> m_LimelightFront.setTrust(true)))
     //    .onFalse(new InstantCommand(() -> m_LimelightFront.setTrust(false)));
@@ -194,8 +173,7 @@ public class RobotContainer {
   }
 
     public CommandXboxController getOperatorController() {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'getOperatorController'");
+      return operatorController;
     }
 
     public int getSpeakerPipeline(){
@@ -203,4 +181,9 @@ public class RobotContainer {
       return pipeline;
     }
 
+    public Command ampCommand(){
+      return m_launcherShoulder.ampAngleCommand()
+        .andThen(m_intakeWrist.ampCommand())
+        .andThen(m_intakeRollers.ampOutCommand());
+    }
 }
