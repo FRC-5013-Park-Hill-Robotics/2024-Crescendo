@@ -1,0 +1,31 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.2211290254423093,
+      "y": 4.009191274196502
+    },
+    "rotation": 119.68723298005014
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "C321"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "1-4"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
