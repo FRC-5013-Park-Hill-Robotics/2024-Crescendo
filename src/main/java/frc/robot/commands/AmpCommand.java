@@ -30,11 +30,9 @@ public class AmpCommand extends Command {
   @Override
   public void execute() {
     launcher.ampAngle();
-    if (launcher.atGoal()){
-      intake.amp();
-      if (intake.atGoal() && launcher.atGoal()){
-        intakeRollers.ampOut();
-      }
+    intake.amp();
+    if (intake.atGoal() && launcher.atGoal()){
+      intakeRollers.ampOut();
     }
   }
 
