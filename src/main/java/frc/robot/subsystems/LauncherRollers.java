@@ -114,12 +114,12 @@ public class LauncherRollers extends SubsystemBase {
   } 
 
   public Command startCommand(){
-    Command result = run(this::start);
+    Command result = runOnce(this::start);
     return result;
   }
 
   public Command stopCommand(){
-    Command result = run(this::stopLauncher);
+    Command result = runOnce(this::stopLauncher);
     return result;
   }
 
