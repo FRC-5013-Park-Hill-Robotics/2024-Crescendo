@@ -43,9 +43,9 @@ public class AutoAdjustAngle extends Command {
     double requiredDegreeAngle = LAUNCHER_TY_ANGLE_INTERPOLATOR.getInterpolatedValue(ty);
     double requiredShooterSpeed = LAUNCHER_TY_SHOOTER_SPEED_INTERPOLATOR.getInterpolatedValue(ty);
 
-    launcherShoulder.goToSetpointCommand(Math.toRadians(requiredDegreeAngle));
+    launcherShoulder.setShoulderGoalRadians(Math.toRadians(requiredDegreeAngle));
     goalSet = true;
-    launcherRollers.setSpeedCommand(requiredShooterSpeed);
+    launcherRollers.setSpeed(requiredShooterSpeed);
 
   }
 
