@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.AllignOnLLTarget;
 import frc.robot.commands.AmpCommand;
+import frc.robot.commands.AutoAdjustAngle;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.GamepadDrive;
 import frc.robot.constants.LauncherConstants;
@@ -84,11 +85,6 @@ public class RobotContainer {
     // reset the field-centric heading on left bumper press
     driverController.back().onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyroscope()));
 
-    //Calibration controls for the launcher
-    driverController.povLeft().onTrue(m_launcherRollers.incrementSpeedCommand(-5));
-    driverController.povRight().onTrue(m_launcherRollers.incrementSpeedCommand(5));
-    driverController.povUp().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(1)));
-    driverController.povDown().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(-1)));
 
     driverController.rightBumper()
         .whileTrue(m_intakeWrist.intakeGamePiece().andThen(rumbleSequence(driverController, 0.5)))
@@ -98,19 +94,31 @@ public class RobotContainer {
         .onFalse(m_intakeWrist.intakeGamePieceManualEndCommand());
 
     driverController.y().onTrue(m_intakeRollers.throwOut());
-
-    driverController.b().onTrue(m_launcherRollers.startCommand());
-    driverController.x().onTrue(m_launcherRollers.stopCommand());
+    
     driverController.a()
-        .whileTrue(new AllignOnLLTarget(drivetrain, m_LimelightFront, this::getSpeakerPipeline))
+        .whileTrue(new AllignOnLLTarget(drivetrain, m_LimelightFront, this::getSpeakerPipeline)
+        .alongWith(new AutoAdjustAngle(m_launcherRollers, m_launcherShoulder)
+        //.andThen(m_intakeRollers.throwOut())
+        ))
         .onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING));
 
     //operator controls
     operatorController.a().whileTrue(new AmpCommand(m_launcherShoulder, m_intakeRollers, m_intakeWrist));
     operatorController.b().whileTrue(m_launcherShoulder.goToSetpointCommand(LauncherConstants.DUCK_RADIANS));
+    operatorController.x().whileTrue(m_launcherShoulder.goToSetpointCommand(LauncherConstants.SPEAKER_ANGLE_RADIANS));
+    operatorController.y().whileTrue(m_launcherShoulder.goToSetpointCommand(LauncherConstants.PODIUM_ANGLE_RADIANS));
 
     operatorController.leftStick().whileTrue(m_climber.climbLeftCommand(operatorController.getLeftY()));
     operatorController.rightStick().whileTrue(m_climber.climbRightCommand(operatorController.getRightY()));
+
+    operatorController.leftBumper().onTrue(m_launcherRollers.startCommand());
+    operatorController.rightBumper().onTrue(m_launcherRollers.stopCommand());
+
+    //Calibration controls for the launcher
+    operatorController.povLeft().onTrue(m_launcherRollers.incrementSpeedCommand(-5));
+    operatorController.povRight().onTrue(m_launcherRollers.incrementSpeedCommand(5));
+    operatorController.povUp().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(1)));
+    operatorController.povDown().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(-1)));
 
     //other events
     new Trigger(m_intakeRollers::hasGamePiece)

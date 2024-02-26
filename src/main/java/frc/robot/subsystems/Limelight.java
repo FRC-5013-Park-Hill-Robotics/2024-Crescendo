@@ -75,6 +75,12 @@ public class Limelight extends SubsystemBase {
     SmartDashboard.putNumber("LimelightY", y);
     SmartDashboard.putNumber("LimelightArea", area);
 
+    SmartDashboard.putNumber(name + ":tx", x);
+    SmartDashboard.putNumber(name + ":ty", y);
+    SmartDashboard.putNumber(name + ":area", area);
+
+    
+
 
     if (aprilTagViable ) {
       CommandSwerveDrivetrain drivetrain = RobotContainer.getInstance().getDrivetrain();

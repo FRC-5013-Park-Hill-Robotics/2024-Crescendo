@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.LauncherConstants;
 import frc.robot.trobot5013lib.RevThroughBoreEncoder;
+import frc.robot.trobot5013lib.TrobotUtil;
 
 public class LauncherShoulder extends SubsystemBase {
 
@@ -52,7 +53,7 @@ public class LauncherShoulder extends SubsystemBase {
     }
 
     public boolean atGoal(){
-      return shoulderController.atGoal();
+      return TrobotUtil.withinTolerance(getShoulderAngleRadians(), shoulderGoalRadians, LauncherConstants.RotationGains.kPositionTolerance.getRadians());
     }
 
     @Override
@@ -67,7 +68,8 @@ public class LauncherShoulder extends SubsystemBase {
         lastTime = Timer.getFPGATimestamp();
         SmartDashboard.putNumber("Shoulder Absolute" , encoder.getAngle().getDegrees());
         SmartDashboard.putNumber("Shoulder Ground Relative" , Math.toDegrees(getShoulderAngleRadians()));
-    }
+        SmartDashboard.putBoolean("Launcher at goal", atGoal());
+      }
 
     public void retract() {
       setShoulderGoalRadians(LauncherConstants.RETRACT_SETPOINT);

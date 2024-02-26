@@ -5,6 +5,7 @@
 package frc.robot.constants;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.trobot5013lib.LinearInterpolator;
 
 /** Add your docs here. */
 public final class LauncherConstants {
@@ -43,8 +44,40 @@ public final class LauncherConstants {
         public static final double kV = 0.12212;
         public static final double kA = 0.0046099;
     }
+    public static final class TargetConstants{
+        //ty is the first number, angle in degrees is the second
+		public static final double[][] TY_ANGLE_ARRAY = {
+            //subwoofer angle is 63 with a speed of 55
+				
+
+				{15,53},
+				{5,47},
+				{-1,41},
+				{-4.71, 38.5},
+				{-6.8,35},
+				{-8.6,34},
+				{-10,32}
+			};
+        //ty is the first number, shooter speed in rps is the second
+		public static final double[][] TY_SHOOTER_SPEED_ARRAY = {
+			{15,55},
+			{5,55},
+			{-1,55},
+			{-4.71,55},
+			{-6.8,55},
+			{-8.6,55},
+			{-10,60},
+		};
+				
+
+		public static final LinearInterpolator LAUNCHER_TY_ANGLE_INTERPOLATOR = new LinearInterpolator(TY_ANGLE_ARRAY);
+		public static final LinearInterpolator LAUNCHER_TY_SHOOTER_SPEED_INTERPOLATOR = new LinearInterpolator(TY_SHOOTER_SPEED_ARRAY);
+    }
     public final static double RETRACT_SETPOINT = 0;
     public static final double AMP_ANGLE_RADANS = Math.toRadians(96.5);
-    public static final double DUCK_RADIANS = Math.toRadians(50);
+    public static final double DUCK_RADIANS = Math.toRadians(31);
     public static final double START_ANGLE_RADIANS = Math.toRadians(60);
+
+    public static final double SPEAKER_ANGLE_RADIANS = Math.toRadians(63);
+    public static final double PODIUM_ANGLE_RADIANS = Math.toRadians(42);
 }

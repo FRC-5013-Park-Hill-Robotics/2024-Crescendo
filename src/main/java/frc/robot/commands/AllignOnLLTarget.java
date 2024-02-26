@@ -11,18 +11,21 @@ import java.util.function.Supplier;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.DrivetrainConstants;
 import frc.robot.constants.LimelightConstants;
 import frc.robot.CommandSwerveDrivetrain;
 import frc.robot.constants.ThetaGains;
 import frc.robot.subsystems.Limelight;
+import frc.robot.trobot5013lib.TrobotUtil;
 
 public class AllignOnLLTarget extends Command {
   private Limelight m_Limelight;
   private CommandSwerveDrivetrain m_Drivetrain;
   private Supplier<Integer> m_pipeline;
   private PIDController thetaController = new PIDController(ThetaGains.kP, ThetaGains.kI, ThetaGains.kD);
+  private boolean targeting = false;
   public AllignOnLLTarget(CommandSwerveDrivetrain drivetrain, Limelight Limelight, Supplier<Integer> pipeline) {
     addRequirements(drivetrain);
     m_Drivetrain = drivetrain;
@@ -39,6 +42,7 @@ public class AllignOnLLTarget extends Command {
   @Override
   public void initialize() {
     m_Limelight.setPipeline(m_pipeline.get());
+    targeting = false;
     thetaController.reset();
     thetaController.setTolerance(LimelightConstants.ALLIGNMENT_TOLLERANCE_RADIANS);
   }
@@ -46,6 +50,7 @@ public class AllignOnLLTarget extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    SmartDashboard.putBoolean("AllignOnLLTarget running", true);
     double thetaOutput = 0;
     double xOutput = 0;
     double yOutput = 0;
@@ -54,13 +59,13 @@ public class AllignOnLLTarget extends Command {
 			double horizontal_angle = -m_Limelight.getHorizontalAngleOfErrorDegrees() ;
 			double setpoint = Math.toRadians(horizontal_angle)+ m_Drivetrain.getPose().getRotation().getRadians();
       thetaController.setSetpoint(setpoint);
-
+      targeting = true;
 			if (!thetaController.atSetpoint() ){
 				thetaOutput = thetaController.calculate(m_Drivetrain.getPose().getRotation().getRadians(), setpoint);
-			} else {
-
-      }
-		} else {
+			} 
+      SmartDashboard.putNumber("targeting error", horizontal_angle);
+		} 
+    else {
 			System.out.println("NO TARGET");
 		}
     m_Drivetrain.setControl(drive.withVelocityX(xOutput).withVelocityY(yOutput).withRotationalRate(thetaOutput));
@@ -69,12 +74,13 @@ public class AllignOnLLTarget extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    SmartDashboard.putBoolean("AllignOnLLTarget running", false);
     m_Drivetrain.setControl(drive.withVelocityX(0).withVelocityY(0).withRotationalRate(0));
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return targeting && TrobotUtil.withinTolerance(m_Limelight.getHorizontalAngleOfErrorDegrees(), 0,3);
   }
 }

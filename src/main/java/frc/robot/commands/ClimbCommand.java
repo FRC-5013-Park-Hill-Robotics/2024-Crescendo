@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.CommandSwerveDrivetrain;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Climber;
+import frc.robot.trobot5013lib.TrobotUtil;
 
 public class ClimbCommand extends Command {
   Climber climber;
@@ -34,8 +35,8 @@ public class ClimbCommand extends Command {
     TalonFX leftMotor = climber.getLeftMotor();
     TalonFX rightMotor = climber.getRightMotor();
 
-    leftMotor.set(leftStickInput);
-    rightMotor.set(rightStickInput);
+    leftMotor.set(TrobotUtil.modifyAxis(leftStickInput, .05));
+    rightMotor.set(TrobotUtil.modifyAxis(rightStickInput, .05));
 
   }
 

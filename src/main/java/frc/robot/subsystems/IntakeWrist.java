@@ -113,6 +113,7 @@ public class IntakeWrist extends SubsystemBase {
             lastSpeed = wristController.getSetpoint().velocity;
             lastTime = Timer.getFPGATimestamp();
         }
+        SmartDashboard.putBoolean("Intake at goal", atGoal());
         SmartDashboard.putNumber("Ground Angle", Math.toDegrees(getGroundRelativeWristPositionRadians()));
         SmartDashboard.putNumber("Wrist Position", encoder.getAngle().getDegrees());
     }
@@ -135,7 +136,7 @@ public class IntakeWrist extends SubsystemBase {
     }
 
     public boolean atGoal() {
-        return wristController.atGoal();
+        return TrobotUtil.withinTolerance(getAngle(), wristGoalRadians, IntakeConstants.RotationGains.kPositionTolerance.getRadians());
     }
 
     public void retract() {

@@ -14,11 +14,11 @@ public final class IntakeConstants {
     public static final class RotationGains {
         public static final Rotation2d kPositionTolerance= Rotation2d.fromDegrees(2.5);
         //public static final double kP = 3.5;
-        public static final double kP = 2.55013;
-        public static final double kI = 0;
-        public static final double kD = 0.55;
+        public static final double kP = 3.5013;
+        public static final double kI = 0.0000000000000005013;
+        public static final double kD = 0.605013;
         public static final double kF = 0;
-        public static final double kS = 0.5;
+        public static final double kS = 0.5013;
         public static final double kG = 0.7;
         public static final double kV = 0.15954;
         public static final double kA = 0.037683;

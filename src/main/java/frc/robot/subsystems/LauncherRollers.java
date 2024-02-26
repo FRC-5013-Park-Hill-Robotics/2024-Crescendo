@@ -62,9 +62,11 @@ public class LauncherRollers extends SubsystemBase {
       topConfig.Slot0.kV = LauncherConstants.RollerGains.kV;
       topConfig.Slot0.kA = LauncherConstants.RollerGains.kA;
       topConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-      topMotor.set(0);
+      bottomMotor.set(0);
       topMotor.getConfigurator().apply(bottomConfig);
       m_topVoltage.withSlot(0);
+
+      this.start();
   }
 
 
@@ -99,6 +101,15 @@ public class LauncherRollers extends SubsystemBase {
 
   public Command incrementSpeedCommand(double rpsChange){
     Command result = runOnce(()-> incrementSpeed(rpsChange));
+    return result;
+  } 
+
+  public void setSpeed(double rps) {
+    this.goalSpeedRPS = rps;
+  }
+
+  public Command setSpeedCommand(double rps){
+    Command result = runOnce(()-> setSpeed(rps));
     return result;
   } 
 
