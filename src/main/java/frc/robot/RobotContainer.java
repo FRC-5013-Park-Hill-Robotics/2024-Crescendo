@@ -74,6 +74,7 @@ public class RobotContainer {
     super();
     instance = this;
     configureBindings();
+    m_LimelightBack.setPipelineObjectDecection();
   }
 
   private void configureBindings() {
@@ -94,9 +95,12 @@ public class RobotContainer {
         .onFalse(m_intakeWrist.intakeGamePieceManualEndCommand());
 
     driverController.y().onTrue(m_intakeRollers.throwOut());
+
+    driverController.x()
+        .whileTrue(new AllignOnLLTarget(drivetrain, m_LimelightBack, this::gamepiecePipeline, this::getGamepieceSkew));
     
     driverController.a()
-        .whileTrue(new AllignOnLLTarget(drivetrain, m_LimelightFront, this::getSpeakerPipeline)
+        .whileTrue(new AllignOnLLTarget(drivetrain, m_LimelightFront, this::getSpeakerPipeline, this::getSpeakerSkew)
         .alongWith(new AutoAdjustAngle(m_launcherRollers, m_launcherShoulder)
         //.andThen(m_intakeRollers.throwOut())
         ))
@@ -122,10 +126,10 @@ public class RobotContainer {
 
     //other events
     new Trigger(m_intakeRollers::hasGamePiece)
-        .onTrue(m_LimelightFront.setPipelineCommand(this::getSpeakerPipeline)
-          .alongWith(m_LimelightBack.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING)))
-        .onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING)
-          .alongWith(m_LimelightBack.setPipelineCommand(LimelightConstants.GAME_PIECE_RECOGNITION)));
+        .onTrue(m_LimelightFront.setPipelineCommand(this::getSpeakerPipeline))
+        //  .alongWith(m_LimelightBack.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING)))
+        .onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING));
+       //   .alongWith(m_LimelightBack.setPipelineCommand(LimelightConstants.GAME_PIECE_RECOGNITION)));
 
 
     // driverController.a().whileTrue(new InstantCommand(() ->
@@ -198,5 +202,25 @@ public class RobotContainer {
     Command movementCommand =  m_launcherShoulder.ampAngleCommand().alongWith(m_intakeWrist.ampCommand());
     Command ejectCommand = m_intakeRollers.ampOutCommand();
     return movementCommand.andThen(ejectCommand);
+  }
+
+  public Double getSpeakerSkew(){
+    Alliance alliance = DriverStation.getAlliance().get();
+    Double skew = -1.5;
+    if (alliance == Alliance.Red) {
+      return skew;
+    }
+    else {
+      return -skew;
+    }
+  }
+
+  public Double getGamepieceSkew(){
+    Double skew = 0.0;
+    return skew;
+  }
+
+  public int gamepiecePipeline(){
+    return LimelightConstants.GAME_PIECE_RECOGNITION;
   }
 }

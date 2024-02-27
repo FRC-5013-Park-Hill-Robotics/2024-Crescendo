@@ -41,6 +41,7 @@ public class Limelight extends SubsystemBase {
   private Pose2d botpose;
   private String name;
   private final DoubleArrayPublisher limelightPub;
+  private boolean aprilTagPipeline = false;
   public Limelight(String name, boolean aprilTagViable) {
     /**
      * tx - Horizontal Offset
@@ -80,9 +81,9 @@ public class Limelight extends SubsystemBase {
     SmartDashboard.putNumber(name + ":area", area);
 
     
+    
 
-
-    if (aprilTagViable ) {
+    if (aprilTagViable && getPipeline() == 0) {
       CommandSwerveDrivetrain drivetrain = RobotContainer.getInstance().getDrivetrain();
       Double targetDistance = LimelightHelpers.getTargetPose3d_CameraSpace(name).getTranslation().getDistance(new Translation3d());
       // Tune this for your robot around how much variance you see in the pose at a given distance
@@ -136,12 +137,12 @@ public class Limelight extends SubsystemBase {
   }
 
   public void setPipelineAprilTag(){
-    aprilTagViable = true;
+    aprilTagPipeline = true;
     setPipeline(LimelightConstants.APRIL_TAG_TARGETING);
   }
 
   public void setPipelineObjectDecection(){
-    aprilTagViable = false;
+    aprilTagPipeline = false;
     setPipeline(LimelightConstants.GAME_PIECE_RECOGNITION);
   }
 
@@ -171,6 +172,10 @@ public class Limelight extends SubsystemBase {
   }
   public void setPipeline(int pipeline){
     table.getEntry("pipeline").setNumber(pipeline);
+  }
+
+  public long getPipeline(){
+    return table.getEntry("pipeline").getInteger(0);
   }
   public Command setPipelineCommand(int pipeline){
     Command result = runOnce(()->setPipeline(pipeline));

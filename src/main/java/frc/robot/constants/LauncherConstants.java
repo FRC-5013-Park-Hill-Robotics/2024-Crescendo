@@ -54,14 +54,15 @@ public final class LauncherConstants {
 				{5,47},
 				{-1,41},
 				{-4.71, 38.5},
+                {-6,37},
 				{-6.8,35},
 				{-8.6,34},
 				{-10,32}
 			};
         //ty is the first number, shooter speed in rps is the second
 		public static final double[][] TY_SHOOTER_SPEED_ARRAY = {
-			{15,55},
-			{5,55},
+			{15,50},
+			{5,50},
 			{-1,55},
 			{-4.71,55},
 			{-6.8,55},
@@ -79,5 +80,5 @@ public final class LauncherConstants {
     public static final double START_ANGLE_RADIANS = Math.toRadians(60);
 
     public static final double SPEAKER_ANGLE_RADIANS = Math.toRadians(63);
-    public static final double PODIUM_ANGLE_RADIANS = Math.toRadians(42);
+    public static final double PODIUM_ANGLE_RADIANS = Math.toRadians(43);
 }

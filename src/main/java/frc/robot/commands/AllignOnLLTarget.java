@@ -26,11 +26,13 @@ public class AllignOnLLTarget extends Command {
   private Supplier<Integer> m_pipeline;
   private PIDController thetaController = new PIDController(ThetaGains.kP, ThetaGains.kI, ThetaGains.kD);
   private boolean targeting = false;
-  public AllignOnLLTarget(CommandSwerveDrivetrain drivetrain, Limelight Limelight, Supplier<Integer> pipeline) {
+  private Supplier<Double> m_skew ; 
+  public AllignOnLLTarget(CommandSwerveDrivetrain drivetrain, Limelight Limelight, Supplier<Integer> pipeline, Supplier<Double> skewDegrees) {
     addRequirements(drivetrain);
     m_Drivetrain = drivetrain;
     m_Limelight = Limelight;
     m_pipeline = pipeline;
+    m_skew = skewDegrees;
   }
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -57,7 +59,7 @@ public class AllignOnLLTarget extends Command {
 		if (m_Limelight.hasTarget()){
 			double vertical_angle = m_Limelight.getVerticalAngleOfErrorDegrees();
 			double horizontal_angle = -m_Limelight.getHorizontalAngleOfErrorDegrees() ;
-			double setpoint = Math.toRadians(horizontal_angle)+ m_Drivetrain.getPose().getRotation().getRadians();
+			double setpoint = Math.toRadians(horizontal_angle)+ m_Drivetrain.getPose().getRotation().getRadians() + Math.toRadians(m_skew.get());
       thetaController.setSetpoint(setpoint);
       targeting = true;
 			if (!thetaController.atSetpoint() ){
