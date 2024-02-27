@@ -179,11 +179,17 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     }
 
     public Pose2d getPose() {
-        return m_odometry.getEstimatedPosition();
+        return this.getState().Pose;
     }
 
     public void zeroGyroscope() {
-        m_pigeon2.setYaw(0);
+        Alliance alliance = DriverStation.getAlliance().get();
+        if (alliance == Alliance.Red){
+            m_pigeon2.setYaw(180);
+        }
+        else {
+            m_pigeon2.setYaw(0);
+        }
     }
 
 }
