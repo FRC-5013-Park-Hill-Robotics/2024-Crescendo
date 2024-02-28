@@ -15,7 +15,7 @@ public final class LauncherConstants {
     public final static int LAUNCHER_TOP_CAN_ID = CANConstants.LAUNCHER_TOP_CAN_ID;
     public final static int LAUNCHER_BOTTOM_CAN_ID = CANConstants.LAUNCHER_BOTTOM_CAN_ID;
     public static final class RotationGains {
-        public static final Rotation2d kPositionTolerance= Rotation2d.fromDegrees(2.5);
+        public static final Rotation2d kPositionTolerance= Rotation2d.fromDegrees(1);
         public static final double kP = 7.5013;
         public static final double kI = 0;
         public static final double kD = 0;

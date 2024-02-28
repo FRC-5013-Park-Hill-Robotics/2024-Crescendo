@@ -6,6 +6,8 @@ package frc.robot;
 
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -14,6 +16,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -26,6 +30,7 @@ import frc.robot.commands.AmpCommand;
 import frc.robot.commands.AutoAdjustAngle;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.GamepadDrive;
+import frc.robot.commands.IntakeCommandFactory;
 import frc.robot.constants.LauncherConstants;
 import frc.robot.constants.LimelightConstants;
 import frc.robot.generated.TunerConstants;
@@ -38,6 +43,8 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.StatusLED;
 
 public class RobotContainer {
+  private SendableChooser<Command> autoChooser;
+
   private double MaxSpeed = 6; // 6 meters per second desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
@@ -74,7 +81,12 @@ public class RobotContainer {
     super();
     instance = this;
     configureBindings();
+    configureAutonomousCommands();
     m_LimelightBack.setPipelineObjectDecection();
+
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+    //SmartDashboard.putStringArray("Auto List", AutoBuilder.getAllAutoNames().toArray(new String[0]));
   }
 
   private void configureBindings() {
@@ -94,17 +106,21 @@ public class RobotContainer {
         .onTrue(m_intakeWrist.intakeGamePieceManualCommand())
         .onFalse(m_intakeWrist.intakeGamePieceManualEndCommand());
 
-    driverController.y().onTrue(m_intakeRollers.throwOut());
+    driverController.y().onTrue(m_intakeRollers.throwOutManual()).onFalse(m_intakeRollers.stopC());
 
     driverController.x()
         .whileTrue(new AllignOnLLTarget(drivetrain, m_LimelightBack, this::gamepiecePipeline, this::getGamepieceSkew));
     
     driverController.a()
+        .whileTrue(alignAndAdjustToSpeakerCommand())
+        .onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING));
+
+        /*
         .whileTrue(new AllignOnLLTarget(drivetrain, m_LimelightFront, this::getSpeakerPipeline, this::getSpeakerSkew)
         .alongWith(new AutoAdjustAngle(m_launcherRollers, m_launcherShoulder)
         //.andThen(m_intakeRollers.throwOut())
-        ))
-        .onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING));
+        )
+        */        
 
     //operator controls
     operatorController.a().whileTrue(new AmpCommand(m_launcherShoulder, m_intakeRollers, m_intakeWrist));
@@ -146,8 +162,18 @@ public class RobotContainer {
     drivetrain.registerTelemetry(logger::telemeterize);
   }
 
+  public void configureAutonomousCommands() {
+    NamedCommands.registerCommand("Align to Gamepiece", alignToGamepieceCommand());
+    NamedCommands.registerCommand("Intake Sequence", intakeSequenceCommand());
+    NamedCommands.registerCommand("Duck", duckCommand());
+    NamedCommands.registerCommand("Align and Adjust to Speaker", alignAndAdjustToSpeakerCommand());
+    NamedCommands.registerCommand("Intake Rollout", intakeRolloutCommand());
+    //NamedCommands.registerCommand("Shoot", );
+  }
+
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    /* First put the drivetrain into auto run mode, then run the auto */
+    return autoChooser.getSelected();
   }
 
   public static RobotContainer getInstance() {
@@ -198,11 +224,36 @@ public class RobotContainer {
     return pipeline;
   }
 
+  //Commands for Robot
   public Command ampCommand() {
     Command movementCommand =  m_launcherShoulder.ampAngleCommand().alongWith(m_intakeWrist.ampCommand());
     Command ejectCommand = m_intakeRollers.ampOutCommand();
     return movementCommand.andThen(ejectCommand);
   }
+
+  public Command alignAndAdjustToSpeakerCommand() {
+    Command align = new AllignOnLLTarget(drivetrain, m_LimelightFront, this::getSpeakerPipeline, this::getSpeakerSkew);
+    Command adjust = new AutoAdjustAngle(m_launcherRollers, m_launcherShoulder);
+    return align.alongWith(adjust);
+  }
+
+  public Command intakeSequenceCommand() {
+    return new IntakeCommandFactory(m_intakeRollers,m_intakeWrist,m_launcherShoulder).intakeSequenceCommand();
+  }
+
+  public Command duckCommand() {
+    return m_launcherShoulder.goToSetpointCommand(LauncherConstants.DUCK_RADIANS);
+  }
+
+  public Command alignToGamepieceCommand() {
+    return new AllignOnLLTarget(drivetrain, m_LimelightBack, this::gamepiecePipeline, this::getGamepieceSkew);
+  }
+
+  public Command intakeRolloutCommand() {
+    return m_intakeRollers.throwOut();
+  }
+
+  //
 
   public Double getSpeakerSkew(){
     Alliance alliance = DriverStation.getAlliance().get();

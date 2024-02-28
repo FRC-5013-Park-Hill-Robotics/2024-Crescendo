@@ -119,6 +119,11 @@ public class IntakeRollers extends SubsystemBase {
         return result;
     } 
 
+    public Command throwOutManual(){
+        Command result = run(this::feedOut);
+        return result;
+    } 
+
     public Command stopC(){
         Command result = runOnce(this::stop);
         return result;
