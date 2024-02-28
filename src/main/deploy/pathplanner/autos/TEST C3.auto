@@ -5,7 +5,7 @@
       "x": 0.765872873427322,
       "y": 4.2147908267194
     },
-    "rotation": 0
+    "rotation": 116.94868037694876
   },
   "command": {
     "type": "sequential",
@@ -15,12 +15,6 @@
           "type": "path",
           "data": {
             "pathName": "C3"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "321"
           }
         }
       ]
