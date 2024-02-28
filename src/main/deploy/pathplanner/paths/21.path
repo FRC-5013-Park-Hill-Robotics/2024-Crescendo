@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.40647338437534,
-        "y": 4.2245892283992355
+        "x": 2.87,
+        "y": 5.5410316277334815
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.40647338437534,
-        "y": 4.154589228399235
+        "x": 2.8334343512343736,
+        "y": 6.349301619125184
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.8862374607866097,
-        "y": 5.663881457633045
+        "x": 2.8729106808862968,
+        "y": 7.011498720506339
       },
       "prevControl": {
-        "x": 2.8462571210856704,
-        "y": 5.917090275738993
+        "x": 2.8655596101227796,
+        "y": 6.368778004459924
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,16 +30,16 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": -90.0,
+      "waypointRelativePos": 0.7,
+      "rotationDegrees": -78.36636600105955,
       "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "DeployandRunIntake",
-      "waypointRelativePos": 0,
+      "name": "IntakeSeq1",
+      "waypointRelativePos": 0.55,
       "command": {
         "type": "parallel",
         "data": {
@@ -48,23 +48,6 @@
               "type": "named",
               "data": {
                 "name": "Intake Sequence"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Shoot",
-      "waypointRelativePos": 0,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Intake Roller Out"
               }
             }
           ]
@@ -80,13 +63,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 179.33765055262785,
+    "rotation": -155.29545079322946,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": 148.5457857398707,
+    "rotation": 178.16102089356437,
     "velocity": 0
   },
   "useDefaultConstraints": true

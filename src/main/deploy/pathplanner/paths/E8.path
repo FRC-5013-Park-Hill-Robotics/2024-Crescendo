@@ -38,7 +38,7 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "DeployRunRetract",
+      "name": "IntakeSeq1",
       "waypointRelativePos": 0.75,
       "command": {
         "type": "sequential",
@@ -48,17 +48,24 @@
       }
     },
     {
-      "name": "Retract",
-      "waypointRelativePos": 1.0,
+      "name": "Shoot",
+      "waypointRelativePos": 0,
       "command": {
         "type": "parallel",
         "data": {
-          "commands": []
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake Roller Out"
+              }
+            }
+          ]
         }
       }
     },
     {
-      "name": "Shoot",
+      "name": "New Event Marker",
       "waypointRelativePos": 0,
       "command": {
         "type": "parallel",

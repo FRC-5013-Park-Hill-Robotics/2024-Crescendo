@@ -123,7 +123,7 @@ public class RobotContainer {
         */        
 
     //operator controls
-    operatorController.a().whileTrue(new AmpCommand(m_launcherShoulder, m_intakeRollers, m_intakeWrist));
+    operatorController.a().whileTrue(new AmpCommand(m_launcherShoulder, m_intakeRollers, m_intakeWrist)).onFalse(m_intakeRollers.ampOutCommand().andThen(m_intakeWrist.retractCommand()));
     operatorController.b().whileTrue(m_launcherShoulder.goToSetpointCommand(LauncherConstants.DUCK_RADIANS));
     operatorController.x().whileTrue(m_launcherShoulder.goToSetpointCommand(LauncherConstants.SPEAKER_ANGLE_RADIANS));
     operatorController.y().whileTrue(m_launcherShoulder.goToSetpointCommand(LauncherConstants.PODIUM_ANGLE_RADIANS));
@@ -167,8 +167,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("Intake Sequence", intakeSequenceCommand());
     NamedCommands.registerCommand("Duck", duckCommand());
     NamedCommands.registerCommand("Align and Adjust to Speaker", alignAndAdjustToSpeakerCommand());
-    NamedCommands.registerCommand("Intake Rollout", intakeRolloutCommand());
-    //NamedCommands.registerCommand("Shoot", );
+    NamedCommands.registerCommand("Intake Roller Out", intakeRollerOutCommand());
+    NamedCommands.registerCommand("Adjust to Subwoofer", adjustToSubwooferCommand());
   }
 
   public Command getAutonomousCommand() {
@@ -249,8 +249,12 @@ public class RobotContainer {
     return new AllignOnLLTarget(drivetrain, m_LimelightBack, this::gamepiecePipeline, this::getGamepieceSkew);
   }
 
-  public Command intakeRolloutCommand() {
+  public Command intakeRollerOutCommand() {
     return m_intakeRollers.throwOut();
+  }
+
+  public Command adjustToSubwooferCommand() {
+    return m_launcherShoulder.goToSetpointCommand(LauncherConstants.SPEAKER_ANGLE_RADIANS);
   }
 
   //

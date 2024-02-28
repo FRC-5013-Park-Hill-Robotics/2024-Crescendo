@@ -75,7 +75,7 @@ public final class LauncherConstants {
 		public static final LinearInterpolator LAUNCHER_TY_SHOOTER_SPEED_INTERPOLATOR = new LinearInterpolator(TY_SHOOTER_SPEED_ARRAY);
     }
     public final static double RETRACT_SETPOINT = 0;
-    public static final double AMP_ANGLE_RADANS = Math.toRadians(96.5);
+    public static final double AMP_ANGLE_RADANS = Math.toRadians(98);//Math.toRadians(96.5);
     public static final double DUCK_RADIANS = Math.toRadians(31);
     public static final double START_ANGLE_RADIANS = Math.toRadians(60);
 

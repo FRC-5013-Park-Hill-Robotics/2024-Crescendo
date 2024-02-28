@@ -84,6 +84,7 @@ public class IntakeRollers extends SubsystemBase {
     public void ampOut(){
         setTarget(this.ampTarget);
     }
+
     public void incrementRollers(double rotationChange) {
         this.ampTarget += rotationChange;
     
@@ -130,7 +131,7 @@ public class IntakeRollers extends SubsystemBase {
     }
     
     public Command ampOutCommand(){
-        return run(this::ampOut).until(this::doesntHaveGamePiece);
+        return run(this::ampOut).withTimeout(0.2).andThen(stopC());
     }
 
     // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.765872873427322,
-        "y": 4.2147908267194
+        "x": 0.7621099939708783,
+        "y": 4.4600922416554205
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8067682888612528,
-        "y": 4.184608888698296
+        "x": 1.7359292607078698,
+        "y": 4.216637424971173
       },
       "isLocked": false,
       "linkedName": null
@@ -32,32 +32,59 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "DeployRunIntake",
-      "waypointRelativePos": 0.55,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": []
-        }
-      }
-    },
-    {
-      "name": "RetractShoot",
-      "waypointRelativePos": 1.0,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": []
-        }
-      }
-    },
-    {
       "name": "Shoot",
       "waypointRelativePos": 0,
       "command": {
         "type": "parallel",
         "data": {
-          "commands": []
+          "commands": [
+            {
+              "type": "wait",
+              "data": {
+                "waitTime": 1.5
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake Roller Out"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "IntakeSeq",
+      "waypointRelativePos": 0.55,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake Sequence"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "StartAngle",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Adjust to Subwoofer"
+              }
+            }
+          ]
         }
       }
     }

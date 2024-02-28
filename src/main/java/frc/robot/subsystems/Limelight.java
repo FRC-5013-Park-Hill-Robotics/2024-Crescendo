@@ -102,12 +102,14 @@ public class Limelight extends SubsystemBase {
           if (drivetrain.getState().Pose.getTranslation().getDistance(botpose.getTranslation()) < 0.5
               || trust
               || result.targets_Fiducials.length > 1) {
-             /*drivetrain.addVisionMeasurement(
+                /*
+             drivetrain.addVisionMeasurement(
                 botpose,
                 Timer.getFPGATimestamp()
                     - (result.latency_capture / 1000.0)
-                    - (result.latency_pipeline / 1000.0),
-                VecBuilder.fill(confidence, confidence, .01));*/
+                    - (result.latency_pipeline / 1000.0)
+                VecBuilder.fill(confidence, confidence, .01));
+                 */
                 
           } else {
             distanceError++;
