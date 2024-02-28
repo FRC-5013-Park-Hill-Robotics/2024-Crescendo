@@ -112,5 +112,6 @@ public class Robot extends TimedRobot {
       frontLL.setAlliance(alliance.get());
       backLL.setAlliance(alliance.get());
     }
+    m_robotContainer.getDrivetrain().zeroGyroscope();
   }
 }
