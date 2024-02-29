@@ -19,7 +19,7 @@ public class AmpCommand extends Command {
     this.intake = intake;
     this.intakeRollers = intakeRollers;
     this.launcher = launcher;
-    addRequirements(intake, intakeRollers, launcher);
+    addRequirements(intake, launcher);
   }
 
   // Called when the command is initially scheduled.
@@ -31,21 +31,21 @@ public class AmpCommand extends Command {
   public void execute() {
     launcher.ampAngle();
     intake.amp();
-    if (intake.atGoal() && launcher.atGoal()){
+   /*  if (intake.atGoal() && launcher.atGoal()){
       intakeRollers.ampOut();
-    }
+    }*/
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.retract();
-    intakeRollers.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return intakeRollers.doesntHaveGamePiece();
+
+    return intake.atAmp() && launcher.atAmp();
   }
+
 }

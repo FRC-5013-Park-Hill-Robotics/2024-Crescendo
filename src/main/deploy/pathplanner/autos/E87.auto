@@ -18,9 +18,33 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Align and Adjust to Speaker"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Roller Out"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "8-7"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Align and Adjust to Speaker"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Roller Out"
           }
         }
       ]

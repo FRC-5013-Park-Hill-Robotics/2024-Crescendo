@@ -80,17 +80,31 @@
       "command": {
         "type": "parallel",
         "data": {
-          "commands": []
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake Roller Out"
+              }
+            }
+          ]
         }
       }
     },
     {
-      "name": "DeployandRunIntake",
+      "name": "IntakeSeq1",
       "waypointRelativePos": 1.85,
       "command": {
-        "type": "sequential",
+        "type": "parallel",
         "data": {
-          "commands": []
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake Sequence"
+              }
+            }
+          ]
         }
       }
     },
@@ -100,7 +114,14 @@
       "command": {
         "type": "parallel",
         "data": {
-          "commands": []
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake Roller Out"
+              }
+            }
+          ]
         }
       }
     }

@@ -116,6 +116,7 @@ public class IntakeWrist extends SubsystemBase {
         SmartDashboard.putBoolean("Intake at goal", atGoal());
         SmartDashboard.putNumber("Ground Angle", Math.toDegrees(getGroundRelativeWristPositionRadians()));
         SmartDashboard.putNumber("Wrist Position", encoder.getAngle().getDegrees());
+        SmartDashboard.putNumber("Wrist  goal", Math.toDegrees(wristGoalRadians));
     }
 
     public void deploy() {
