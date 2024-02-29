@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -28,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.AllignOnLLTarget;
 import frc.robot.commands.AmpCommand;
 import frc.robot.commands.AutoAdjustAngle;
+import frc.robot.commands.CommandFactory;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.GamepadDrive;
 import frc.robot.commands.IntakeCommandFactory;
@@ -65,6 +67,9 @@ public class RobotContainer {
                                                                                // variable
   private Limelight m_LimelightBack = new Limelight("limelight-back", true); // creates the limelight back instance
                                                                              // variable
+
+  private IntakeCommandFactory m_IntakeCommandFactory = new IntakeCommandFactory(this);
+  private CommandFactory m_CommandFactory = new CommandFactory(this);
 
   private StatusLED m_statusLED = new StatusLED(); // creates the status led instance variable
 
@@ -112,7 +117,7 @@ public class RobotContainer {
         .whileTrue(new AllignOnLLTarget(drivetrain, m_LimelightBack, this::gamepiecePipeline, this::getGamepieceSkew));
     
     driverController.a()
-        .whileTrue(alignAndAdjustToSpeakerCommand())
+        .whileTrue(m_CommandFactory.alignAndAdjustToSpeakerCommand())
         .onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING));
 
         /*
@@ -163,12 +168,12 @@ public class RobotContainer {
   }
 
   public void configureAutonomousCommands() {
-    NamedCommands.registerCommand("Align to Gamepiece", alignToGamepieceCommand());
-    NamedCommands.registerCommand("Intake Sequence", intakeSequenceCommand());
-    NamedCommands.registerCommand("Duck", duckCommand());
-    NamedCommands.registerCommand("Align and Adjust to Speaker", alignAndAdjustToSpeakerCommand());
-    NamedCommands.registerCommand("Intake Roller Out", intakeRollerOutCommand());
-    NamedCommands.registerCommand("Adjust to Subwoofer", adjustToSubwooferCommand());
+    NamedCommands.registerCommand("Align to Gamepiece", m_CommandFactory.alignToGamepieceCommand());
+    NamedCommands.registerCommand("Intake Sequence", m_IntakeCommandFactory.intakeSequenceCommand());
+    NamedCommands.registerCommand("Duck", m_CommandFactory.duckCommand());
+    NamedCommands.registerCommand("Align and Adjust to Speaker", m_CommandFactory.alignAndAdjustToSpeakerCommand());
+    NamedCommands.registerCommand("Intake Roller Out", m_CommandFactory.intakeRollerOutCommand());
+    NamedCommands.registerCommand("Adjust to Subwoofer", m_CommandFactory.adjustToSubwooferCommand());
   }
 
   public Command getAutonomousCommand() {
@@ -178,14 +183,6 @@ public class RobotContainer {
 
   public static RobotContainer getInstance() {
     return instance;
-  }
-
-  public LauncherShoulder getLauncherShoulder() {
-    return m_launcherShoulder;
-  }
-
-  public CommandSwerveDrivetrain getDrivetrain() {
-    return drivetrain;
   }
 
   public void setRumble(CommandXboxController controller, boolean rumble){
@@ -206,6 +203,9 @@ public class RobotContainer {
     return startRumbleCommand(controller).withTimeout(timeout).andThen(stopRumbleCommand(controller));
   }
 
+  //------------------------------
+  //  Return Fuctions
+  //------------------------------
   public Limelight getFrontLimelight() {
     return m_LimelightFront;
   }
@@ -214,50 +214,38 @@ public class RobotContainer {
     return m_LimelightBack;
   }
 
+  public CommandSwerveDrivetrain getDrivetrain() {
+    return drivetrain;
+  }
+
+  public IntakeWrist getIntakeWrist(){
+    return m_intakeWrist;
+  }
+
+  public IntakeRollers getIntakeRollers(){
+    return m_intakeRollers;
+  }
+
+  public LauncherRollers getLauncherRollers(){
+    return m_launcherRollers;
+  }
+
+  public LauncherShoulder getLauncherShoulder(){
+    return m_launcherShoulder;
+  }
+
   public CommandXboxController getOperatorController() {
     return operatorController;
   }
 
+  //------------------------------
+  //  Math Return Fuctions
+  //------------------------------
   public int getSpeakerPipeline() {
     int pipeline = (DriverStation.getAlliance().get() == Alliance.Red) ? LimelightConstants.APRIL_TAG_RED_SPEAKER
         : LimelightConstants.APRIL_TAG_BLUE_SPEAKER;
     return pipeline;
   }
-
-  //Commands for Robot
-  public Command ampCommand() {
-    Command movementCommand =  m_launcherShoulder.ampAngleCommand().alongWith(m_intakeWrist.ampCommand());
-    Command ejectCommand = m_intakeRollers.ampOutCommand();
-    return movementCommand.andThen(ejectCommand);
-  }
-
-  public Command alignAndAdjustToSpeakerCommand() {
-    Command align = new AllignOnLLTarget(drivetrain, m_LimelightFront, this::getSpeakerPipeline, this::getSpeakerSkew);
-    Command adjust = new AutoAdjustAngle(m_launcherRollers, m_launcherShoulder);
-    return align.alongWith(adjust);
-  }
-
-  public Command intakeSequenceCommand() {
-    return new IntakeCommandFactory(m_intakeRollers,m_intakeWrist,m_launcherShoulder).intakeSequenceCommand();
-  }
-
-  public Command duckCommand() {
-    return m_launcherShoulder.goToSetpointCommand(LauncherConstants.DUCK_RADIANS);
-  }
-
-  public Command alignToGamepieceCommand() {
-    return new AllignOnLLTarget(drivetrain, m_LimelightBack, this::gamepiecePipeline, this::getGamepieceSkew);
-  }
-
-  public Command intakeRollerOutCommand() {
-    return m_intakeRollers.throwOut();
-  }
-
-  public Command adjustToSubwooferCommand() {
-    return m_launcherShoulder.goToSetpointCommand(LauncherConstants.SPEAKER_ANGLE_RADIANS);
-  }
-
-  //
 
   public Double getSpeakerSkew(){
     Alliance alliance = DriverStation.getAlliance().get();
@@ -278,4 +266,14 @@ public class RobotContainer {
   public int gamepiecePipeline(){
     return LimelightConstants.GAME_PIECE_RECOGNITION;
   }
+
+  //------------------------------
+  //  Commands for Robot
+  //------------------------------
+  public Command ampCommand() {
+    Command movementCommand =  m_launcherShoulder.ampAngleCommand().alongWith(m_intakeWrist.ampCommand());
+    Command ejectCommand = m_intakeRollers.ampOutCommand();
+    return movementCommand.andThen(ejectCommand);
+  }
+
 }
