@@ -59,5 +59,4 @@ public class IntakeCommandFactory {
             .alongWith(startRollersCommand())
             .until(m_rollers::hasGamePiece).andThen(stopRollersCommand().alongWith(retractCommand()));
     }
-
 }

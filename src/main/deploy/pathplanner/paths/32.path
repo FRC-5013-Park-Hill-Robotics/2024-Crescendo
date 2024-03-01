@@ -3,24 +3,24 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.40647338437534,
-        "y": 4.2245892283992355
+        "x": 2.45,
+        "y": 4.22
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.40647338437534,
-        "y": 4.154589228399235
+        "x": 2.45,
+        "y": 4.1499999999999995
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.8862374607866097,
+        "x": 2.89,
         "y": 5.663881457633045
       },
       "prevControl": {
-        "x": 2.8462571210856704,
+        "x": 2.850019660299061,
         "y": 5.917090275738993
       },
       "nextControl": null,
@@ -35,43 +35,20 @@
       "rotateFast": false
     }
   ],
-  "constraintZones": [],
-  "eventMarkers": [
+  "constraintZones": [
     {
-      "name": "DeployandRunIntake",
-      "waypointRelativePos": 0,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Intake Sequence"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Shoot",
-      "waypointRelativePos": 0,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Intake Roller Out"
-              }
-            }
-          ]
-        }
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 3.0,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
       }
     }
   ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 5.79,
     "maxAcceleration": 3.0,

@@ -29,7 +29,7 @@ public class AmpCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    launcher.ampAngle();
+   // launcher.ampAngle();
     intake.amp();
    /*  if (intake.atGoal() && launcher.atGoal()){
       intakeRollers.ampOut();
@@ -45,7 +45,7 @@ public class AmpCommand extends Command {
   @Override
   public boolean isFinished() {
 
-    return intake.atAmp() && launcher.atAmp();
+    return intake.atAmp();
   }
 
 }

@@ -84,7 +84,7 @@ public class Limelight extends SubsystemBase {
     //SmartDashboard.putBoolean(name + ":", aprilTagViable);
 
 
-    if (aprilTagViable && getPipeline() == 0) {
+    if (aprilTagViable && getPipeline() == LimelightConstants.APRIL_TAG_TARGETING) {
       CommandSwerveDrivetrain drivetrain = RobotContainer.getInstance().getDrivetrain();
       Double targetDistance = LimelightHelpers.getTargetPose3d_CameraSpace(name).getTranslation().getDistance(new Translation3d());
       // Tune this for your robot around how much variance you see in the pose at a given distance

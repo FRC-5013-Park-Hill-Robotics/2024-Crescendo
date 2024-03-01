@@ -66,6 +66,7 @@ public class LauncherShoulder extends SubsystemBase {
         launcherShoulderMotor.setControl(shoulderVoltageOut.withOutput(pidVal + feedforwardVal));
         lastSpeed = shoulderController.getSetpoint().velocity;
         lastTime = Timer.getFPGATimestamp();
+        SmartDashboard.putNumber("Launcher Goal", Math.toDegrees(shoulderGoalRadians));
         SmartDashboard.putNumber("Shoulder Absolute" , encoder.getAngle().getDegrees());
         SmartDashboard.putNumber("Shoulder Ground Relative" , Math.toDegrees(getShoulderAngleRadians()));
         SmartDashboard.putBoolean("Launcher at goal", atGoal());
@@ -104,7 +105,11 @@ public class LauncherShoulder extends SubsystemBase {
     public Command goToSetpointCommand(double radians) {
       Command result = runOnce(() -> setShoulderGoalRadians(radians));
       return result;
+    }
 
+    public Command goToSetpointUntilCompleteCommand(double radians) {
+      Command result = run(() -> setShoulderGoalRadians(radians)).until(this::atGoal);
+      return result;
     }
 
     public void incrementAngle(double radianChange) {
