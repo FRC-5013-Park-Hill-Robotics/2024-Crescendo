@@ -63,6 +63,10 @@ public class CommandFactory {
         return m_shoulder.goToSetpointUntilCompleteCommand(Math.toRadians(46.5));
     }
 
+    public Command startingShotCommand() {
+        return m_shoulder.goToSetpointUntilCompleteCommand(Math.toRadians(55));
+    }
+
     public Command shoulderToSetpoint() {
         return m_shoulder.goToSetpointCommand(Math.toRadians(0));
     }

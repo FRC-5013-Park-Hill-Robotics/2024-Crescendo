@@ -79,6 +79,6 @@ public final class LauncherConstants {
     public static final double DUCK_RADIANS = Math.toRadians(31);
     public static final double START_ANGLE_RADIANS = Math.toRadians(60);
 
-    public static final double SPEAKER_ANGLE_RADIANS = Math.toRadians(63);
+    public static final double SPEAKER_ANGLE_RADIANS = Math.toRadians(61);
     public static final double PODIUM_ANGLE_RADIANS = Math.toRadians(43);
 }

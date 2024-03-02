@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7621099939708783,
-      "y": 4.4600922416554205
+      "x": 0.7523718013035084,
+      "y": 4.51852139765964
     },
     "rotation": 121.09048712581416
   },
@@ -24,6 +24,12 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.35
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "Intake Down"
@@ -32,7 +38,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "C3"
+            "pathName": "C3start"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "C3end"
           }
         },
         {
@@ -44,7 +56,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.2
+            "waitTime": 0.35
           }
         },
         {
@@ -72,6 +84,12 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.35
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "Intake Up"
@@ -80,7 +98,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.2
+            "waitTime": 0.35
           }
         },
         {
@@ -116,7 +134,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.2
+            "waitTime": 0.35
           }
         },
         {

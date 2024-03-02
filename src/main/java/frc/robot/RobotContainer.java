@@ -176,8 +176,10 @@ public class RobotContainer {
     NamedCommands.registerCommand("Adjust to Subwoofer", m_CommandFactory.adjustToSubwooferCommand());
     NamedCommands.registerCommand("CloseAlign", m_CommandFactory.note2Command());
 
+    NamedCommands.registerCommand("StartingShotAdjust", m_CommandFactory.startingShotCommand());
+
     NamedCommands.registerCommand("Intake Down", m_intakeWrist.intakeGamePieceManualCommand().withTimeout(0.5));
-    NamedCommands.registerCommand("Intake Up", m_intakeWrist.intakeGamePieceManualEndCommand().until(m_intakeWrist::atGoal));
+    NamedCommands.registerCommand("Intake Up", m_intakeWrist.intakeGamePieceManualEndCommand().withTimeout(0.5));
   }
 
   public Command getAutonomousCommand() {

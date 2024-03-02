@@ -15,12 +15,12 @@ public final class IntakeConstants {
         public static final Rotation2d kPositionTolerance= Rotation2d.fromDegrees(2.5);
         //public static final double kP = 3.5;
         //public static final double kP = 3.75013;
-        public static final double kP = 3.05013;
+        public static final double kP = 3.55013;
         public static final double kI = 0.0;
         public static final double kD = 0.6505013;
         public static final double kF = 0;
-        public static final double kS = 0.5013;
-        public static final double kG = 0.7;
+        public static final double kS = 0.3005013;
+        public static final double kG = 0.672;
         public static final double kV = 0.12212;
         public static final double kA = 0.037683;
         public static final double kMaxSpeed =  Math.PI; //theoretical free speed of intake is 133.3333 radians per second we want to limit to 2pi
