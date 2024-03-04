@@ -71,7 +71,7 @@ public class LauncherShoulder extends SubsystemBase {
         State setpoint = shoulderController.getSetpoint();
         double acceleration = (shoulderController.getSetpoint().velocity - lastSpeed) / (Timer.getFPGATimestamp() - lastTime);
         double feedforwardVal = feedforward.calculate(setpoint.position,shoulderController.getSetpoint().velocity, acceleration);
-        double feedforwardValhigh = feedforwardHigh.calculate(setpoint.position,shoulderController.getSetpoint().velocity, acceleration);
+        double feedforwardValhigh = feedforwardHigh.calculate(Math.PI/2 - setpoint.position,shoulderController.getSetpoint().velocity, acceleration);
         double combinedFF = MathUtil.interpolate(feedforwardVal,feedforwardValhigh, setpoint.position/Math.PI);
         launcherShoulderMotor.setControl(shoulderVoltageOut.withOutput(pidVal + combinedFF));
         lastSpeed = shoulderController.getSetpoint().velocity;
