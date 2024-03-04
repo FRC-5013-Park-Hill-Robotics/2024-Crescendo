@@ -22,6 +22,7 @@ public final class LauncherConstants {
         public static final double kF = 0;
         public static final double kS = 0.6;
         public static final double kG = 0.3;
+        public static final double kGHhigh = 0.3;
         public static final double kV = 0.2;
         public static final double kA = 0.1;
         public static final double kMaxSpeed = 1.6 ; //theoretial free speed of the arm is 1.8868
