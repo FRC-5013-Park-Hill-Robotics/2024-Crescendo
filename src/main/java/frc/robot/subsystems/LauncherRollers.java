@@ -62,7 +62,7 @@ public class LauncherRollers extends SubsystemBase {
       topConfig.Slot0.kV = LauncherConstants.RollerGains.kV;
       topConfig.Slot0.kA = LauncherConstants.RollerGains.kA;
       topConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-      bottomMotor.set(0);
+      topMotor.set(0);
       topMotor.getConfigurator().apply(bottomConfig);
       m_topVoltage.withSlot(0);
 

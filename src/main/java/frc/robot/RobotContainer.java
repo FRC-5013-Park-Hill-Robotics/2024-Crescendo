@@ -65,7 +65,7 @@ public class RobotContainer {
 
   private Limelight m_LimelightFront = new Limelight("limelight-front", true); // creates the limelight front instance
                                                                                // variable
-  private Limelight m_LimelightBack = new Limelight("limelight-back", true); // creates the limelight back instance
+  private Limelight m_LimelightBack = new Limelight("limelight-back", false); // creates the limelight back instance
                                                                              // variable
 
   private IntakeCommandFactory m_IntakeCommandFactory = new IntakeCommandFactory(this);
@@ -174,6 +174,12 @@ public class RobotContainer {
     NamedCommands.registerCommand("Align and Adjust to Speaker", m_CommandFactory.alignAndAdjustToSpeakerCommand());
     NamedCommands.registerCommand("Intake Roller Out", m_CommandFactory.intakeRollerOutCommand());
     NamedCommands.registerCommand("Adjust to Subwoofer", m_CommandFactory.adjustToSubwooferCommand());
+    NamedCommands.registerCommand("CloseAlign", m_CommandFactory.note2Command());
+
+    NamedCommands.registerCommand("StartingShotAdjust", m_CommandFactory.startingShotCommand());
+
+    NamedCommands.registerCommand("Intake Down", m_intakeWrist.intakeGamePieceManualCommand().withTimeout(0.5));
+    NamedCommands.registerCommand("Intake Up", m_intakeWrist.intakeGamePieceManualEndCommand().withTimeout(0.5));
   }
 
   public Command getAutonomousCommand() {

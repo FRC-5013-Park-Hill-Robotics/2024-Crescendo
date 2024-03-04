@@ -127,7 +127,7 @@ public class IntakeWrist extends SubsystemBase {
     }
 
     public void amp() {
-        setWristGoalRadians(IntakeConstants.AMP_ANGLE);
+        setWristGoalRadians(getGroundRelativeWristPositionRadians(IntakeConstants.AMP_ANGLE_GROUND));
     }
 
     public Command ampCommand() {
@@ -206,7 +206,7 @@ public class IntakeWrist extends SubsystemBase {
     }
 
     public boolean atAmp() {
-        return TrobotUtil.withinTolerance(getAngle(), IntakeConstants.AMP_ANGLE,
+        return TrobotUtil.withinTolerance(getAngle(), IntakeConstants.AMP_ANGLE_GROUND,
                 IntakeConstants.RotationGains.kPositionTolerance.getRadians());
     }
     /*

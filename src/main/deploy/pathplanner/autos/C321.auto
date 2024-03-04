@@ -2,31 +2,79 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.765872873427322,
-      "y": 4.2147908267194
+      "x": 0.7523718013035084,
+      "y": 4.51852139765964
     },
-    "rotation": 0
+    "rotation": 121.09048712581416
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "path",
-          "data": {
-            "pathName": "C3"
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "Align and Adjust to Speaker"
+            "name": "Adjust to Subwoofer"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Intake Roller Out"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.35
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Down"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "C3start"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "C3end"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Up"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.35
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CloseAlign"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Roller Out"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Down"
           }
         },
         {
@@ -36,15 +84,39 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.35
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "Align and Adjust to Speaker"
+            "name": "Intake Up"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.35
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CloseAlign"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Intake Roller Out"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Down"
           }
         },
         {
@@ -56,7 +128,19 @@
         {
           "type": "named",
           "data": {
-            "name": "Align and Adjust to Speaker"
+            "name": "Intake Up"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.35
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CloseAlign"
           }
         },
         {

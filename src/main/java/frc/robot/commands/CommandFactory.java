@@ -26,6 +26,7 @@ public class CommandFactory {
     private IntakeWrist m_intake_wrist;
     private LauncherShoulder m_shoulder;
     private Supplier<Integer> m_gamepiece_pipeline;
+    private Supplier<Integer> m_speaker_pipeline;
     private Supplier<Double> m_speaker_skew;
 
     public CommandFactory(RobotContainer robotContainer) {
@@ -37,6 +38,7 @@ public class CommandFactory {
         m_intake_wrist = robotContainer.getIntakeWrist();
         m_shoulder = robotContainer.getLauncherShoulder();
         m_gamepiece_pipeline = robotContainer::gamepiecePipeline;
+        m_speaker_pipeline = robotContainer::getSpeakerPipeline;
         m_speaker_skew = robotContainer::getSpeakerSkew;
     }
     public Command alignToGamepieceCommand() {
@@ -46,7 +48,7 @@ public class CommandFactory {
         return m_shoulder.goToSetpointCommand(LauncherConstants.DUCK_RADIANS);
     }
     public Command alignAndAdjustToSpeakerCommand() {
-        Command align = new AllignOnLLTarget(m_drivetrain, m_limelight_front, m_gamepiece_pipeline, m_speaker_skew);
+        Command align = new AllignOnLLTarget(m_drivetrain, m_limelight_front, m_speaker_pipeline, m_speaker_skew);
         Command adjust = new AutoAdjustAngle(m_launcher_rollers, m_shoulder);
         return align.alongWith(adjust);
     }
@@ -54,6 +56,18 @@ public class CommandFactory {
         return m_intake_rollers.throwOut();
     }
     public Command adjustToSubwooferCommand() {
-        return m_shoulder.goToSetpointCommand(LauncherConstants.SPEAKER_ANGLE_RADIANS);
-     }
+        return m_shoulder.goToSetpointUntilCompleteCommand(LauncherConstants.SPEAKER_ANGLE_RADIANS);
+    }
+
+    public Command note2Command() {
+        return m_shoulder.goToSetpointUntilCompleteCommand(Math.toRadians(46.5));
+    }
+
+    public Command startingShotCommand() {
+        return m_shoulder.goToSetpointUntilCompleteCommand(Math.toRadians(55));
+    }
+
+    public Command shoulderToSetpoint() {
+        return m_shoulder.goToSetpointCommand(Math.toRadians(0));
+    }
 }
