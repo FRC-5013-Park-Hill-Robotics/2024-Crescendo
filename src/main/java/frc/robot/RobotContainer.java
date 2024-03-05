@@ -33,6 +33,7 @@ import frc.robot.commands.CommandFactory;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.GamepadDrive;
 import frc.robot.commands.IntakeCommandFactory;
+import frc.robot.constants.AutoConstants;
 import frc.robot.constants.LauncherConstants;
 import frc.robot.constants.LimelightConstants;
 import frc.robot.generated.TunerConstants;
@@ -174,10 +175,13 @@ public class RobotContainer {
     NamedCommands.registerCommand("Duck", m_CommandFactory.duckCommand());
     NamedCommands.registerCommand("Align and Adjust to Speaker", m_CommandFactory.alignAndAdjustToSpeakerCommand());
     NamedCommands.registerCommand("Intake Roller Out", m_CommandFactory.intakeRollerOutCommand());
-    NamedCommands.registerCommand("Adjust to Subwoofer", m_CommandFactory.adjustToSubwooferCommand());
-    NamedCommands.registerCommand("CloseAlign", m_CommandFactory.note2Command());
-
-    NamedCommands.registerCommand("StartingShotAdjust", m_CommandFactory.startingShotCommand());
+    
+    NamedCommands.registerCommand("Adjust to Subwoofer", m_CommandFactory.presetAngleAdjust(AutoConstants.SUBWOOFER));
+    NamedCommands.registerCommand("Adjust to Subwoofer Side", m_CommandFactory.presetAngleAdjust(AutoConstants.SUBWOOFER_SIDE));
+    NamedCommands.registerCommand("CloseAllign 2", m_CommandFactory.presetAngleAdjust(AutoConstants.TWO));
+    NamedCommands.registerCommand("Shooter Allign 1", m_CommandFactory.presetAngleAdjust(AutoConstants.ONE));
+    NamedCommands.registerCommand("Shooter Allign 2", m_CommandFactory.presetAngleAdjust(AutoConstants.TWO));
+    NamedCommands.registerCommand("Shooter Allign 3", m_CommandFactory.presetAngleAdjust(AutoConstants.THREE));
 
     NamedCommands.registerCommand("Intake Down", m_intakeWrist.intakeGamePieceManualCommand().andThen(new WaitCommand(0.75)));
     NamedCommands.registerCommand("Intake Up", m_intakeWrist.intakeGamePieceManualEndCommand().andThen(new WaitCommand(0.75)));
