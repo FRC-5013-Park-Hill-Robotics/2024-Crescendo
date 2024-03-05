@@ -48,7 +48,7 @@ public class Climber extends SubsystemBase {
 
     TalonFXConfiguration rightConfig = new TalonFXConfiguration();
     rightConfig.MotorOutput.withNeutralMode(NeutralModeValue.Brake);
-    rightConfig.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
+    rightConfig.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive);
     rightClimberMotor.getConfigurator().apply(rightConfig);
     rightClimberMotor.set(0);
     //m_leftVoltage.withSlot(0);

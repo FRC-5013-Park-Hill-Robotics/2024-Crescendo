@@ -168,6 +168,7 @@ public class RobotContainer {
   }
 
   public void configureAutonomousCommands() {
+    WaitCommand wait5 = new WaitCommand(0.5);
     NamedCommands.registerCommand("Align to Gamepiece", m_CommandFactory.alignToGamepieceCommand());
     NamedCommands.registerCommand("Intake Sequence", m_IntakeCommandFactory.intakeSequenceCommand());
     NamedCommands.registerCommand("Duck", m_CommandFactory.duckCommand());
@@ -178,8 +179,8 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("StartingShotAdjust", m_CommandFactory.startingShotCommand());
 
-    NamedCommands.registerCommand("Intake Down", m_intakeWrist.intakeGamePieceManualCommand().withTimeout(0.5));
-    NamedCommands.registerCommand("Intake Up", m_intakeWrist.intakeGamePieceManualEndCommand().withTimeout(0.5));
+    NamedCommands.registerCommand("Intake Down", m_intakeWrist.intakeGamePieceManualCommand().andThen(new WaitCommand(0.75)));
+    NamedCommands.registerCommand("Intake Up", m_intakeWrist.intakeGamePieceManualEndCommand().andThen(new WaitCommand(0.75)));
   }
 
   public Command getAutonomousCommand() {
