@@ -55,19 +55,9 @@ public class CommandFactory {
     public Command intakeRollerOutCommand() {
         return m_intake_rollers.throwOut();
     }
-    public Command adjustToSubwooferCommand() {
-        return m_shoulder.goToSetpointUntilCompleteCommand(LauncherConstants.SPEAKER_ANGLE_RADIANS);
+    
+    public Command presetAngleAdjust(double setpoint) {
+        return m_shoulder.goToSetpointUntilCompleteCommand(setpoint);
     }
 
-    public Command note2Command() {
-        return m_shoulder.goToSetpointUntilCompleteCommand(Math.toRadians(46.5));
-    }
-
-    public Command startingShotCommand() {
-        return m_shoulder.goToSetpointUntilCompleteCommand(Math.toRadians(55));
-    }
-
-    public Command shoulderToSetpoint() {
-        return m_shoulder.goToSetpointCommand(Math.toRadians(0));
-    }
 }
