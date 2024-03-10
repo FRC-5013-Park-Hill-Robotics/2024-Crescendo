@@ -108,9 +108,9 @@ public class Robot extends TimedRobot {
     Optional<Alliance> alliance = DriverStation.getAlliance();
     if (DriverStation.isDSAttached() && alliance.isPresent()) {
       Limelight frontLL = m_robotContainer.getFrontLimelight();
-      Limelight backLL = m_robotContainer.getBackLimelight();
+     // Limelight backLL = m_robotContainer.getBackLimelight();
       frontLL.setAlliance(alliance.get());
-      backLL.setAlliance(alliance.get());
+      //backLL.setAlliance(alliance.get());
     }
 
     //zero gyroscope might break orientation?

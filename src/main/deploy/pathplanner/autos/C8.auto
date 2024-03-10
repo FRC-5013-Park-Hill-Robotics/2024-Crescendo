@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.75,
-      "y": 4.52
+      "x": 0.7523718013035084,
+      "y": 4.5087832049922705
     },
-    "rotation": 121.09
+    "rotation": 119.18080605249983
   },
   "command": {
     "type": "sequential",
@@ -24,12 +24,6 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.35
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Intake Down"
@@ -38,13 +32,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "C3start"
+            "pathName": "C8start"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "C3end"
+            "pathName": "C8end"
           }
         },
         {

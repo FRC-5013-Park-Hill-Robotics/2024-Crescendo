@@ -31,12 +31,26 @@ public class ClimbCommand extends Command {
     CommandXboxController operatorController = RobotContainer.getInstance().getOperatorController();
     double leftStickInput = operatorController.getLeftY();
     double rightStickInput = operatorController.getRightY();
+    double leftOut = leftStickInput;
+    double rightOut =  rightStickInput;
 
     TalonFX leftMotor = climber.getLeftMotor();
     TalonFX rightMotor = climber.getRightMotor();
-
-    leftMotor.set(TrobotUtil.modifyAxis(leftStickInput, .05));
-    rightMotor.set(TrobotUtil.modifyAxis(rightStickInput, .05));
+//negative is up, deal with it
+    if (leftStickInput > 0 && leftMotor.getPosition().getValueAsDouble() >= 0){
+      leftOut = 0;
+    } else  if (leftMotor.getPosition().getValueAsDouble() > 2){
+      leftOut = leftStickInput/2;
+    }
+    
+    if (rightStickInput > 0 &&  rightMotor.getPosition().getValueAsDouble()>= 0){
+      rightOut = 0;
+    } else  if (leftMotor.getPosition().getValueAsDouble() > 2){
+      rightOut = rightStickInput/2;
+    }
+    
+    leftMotor.set(TrobotUtil.modifyAxis(leftOut, 0.1));
+    rightMotor.set(TrobotUtil.modifyAxis(rightOut, 0.1));
 
   }
 

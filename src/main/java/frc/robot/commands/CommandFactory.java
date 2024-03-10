@@ -32,7 +32,7 @@ public class CommandFactory {
     public CommandFactory(RobotContainer robotContainer) {
         m_drivetrain = robotContainer.getDrivetrain();
         m_limelight_front = robotContainer.getFrontLimelight();
-        m_limelight_back = robotContainer.getBackLimelight();
+        //m_limelight_back = robotContainer.getBackLimelight();
         m_launcher_rollers = robotContainer.getLauncherRollers();
         m_intake_rollers = robotContainer.getIntakeRollers();
         m_intake_wrist = robotContainer.getIntakeWrist();
@@ -53,7 +53,7 @@ public class CommandFactory {
         return align.alongWith(adjust);
     }
     public Command intakeRollerOutCommand() {
-        return m_intake_rollers.throwOut();
+        return m_intake_rollers.throwOutManual().withTimeout(0.3);
     }
     
     public Command presetAngleAdjust(double setpoint) {
