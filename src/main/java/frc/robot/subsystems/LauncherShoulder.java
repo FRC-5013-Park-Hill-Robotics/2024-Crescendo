@@ -80,6 +80,14 @@ public class LauncherShoulder extends SubsystemBase {
         SmartDashboard.putNumber("Shoulder Absolute" , encoder.getAngle().getDegrees());
         SmartDashboard.putNumber("Shoulder Ground Relative" , Math.toDegrees(getShoulderAngleRadians()));
         SmartDashboard.putBoolean("Launcher at goal", atGoal());
+
+        if(shoulderGoalRadians > LauncherConstants.SHOULDER_ANGLE_MAX){
+          shoulderGoalRadians = LauncherConstants.SHOULDER_ANGLE_MAX;
+        }
+        if(shoulderGoalRadians < LauncherConstants.SHOULDER_ANGLE_MIN){
+          shoulderGoalRadians = LauncherConstants.SHOULDER_ANGLE_MIN;
+        }
+    
       }
 
     public void retract() {
