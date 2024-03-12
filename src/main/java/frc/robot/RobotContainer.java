@@ -66,7 +66,7 @@ public class RobotContainer {
 
   private Limelight m_LimelightFront = new Limelight("limelight-front", true); // creates the limelight front instance
                                                                                // variable
-  private Limelight m_LimelightBack = new Limelight("limelight-back", false); // creates the limelight back instance
+  //private Limelight m_LimelightBack = new Limelight("limelight-back", false); // creates the limelight back instance
                                                                              // variable
 
   private IntakeCommandFactory m_IntakeCommandFactory = new IntakeCommandFactory(this);
@@ -88,7 +88,7 @@ public class RobotContainer {
     instance = this;
     configureBindings();
     configureAutonomousCommands();
-    m_LimelightBack.setPipelineObjectDecection();
+    //m_LimelightBack.setPipelineObjectDecection();
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -114,9 +114,10 @@ public class RobotContainer {
 
     driverController.y().onTrue(m_intakeRollers.throwOutManual()).onFalse(m_intakeRollers.stopC());
 
+    /*
     driverController.x()
         .whileTrue(new AllignOnLLTarget(drivetrain, m_LimelightBack, this::gamepiecePipeline, this::getGamepieceSkew));
-    
+     */
     driverController.a()
         .whileTrue(m_CommandFactory.alignAndAdjustToSpeakerCommand())
         .onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING));
@@ -169,6 +170,7 @@ public class RobotContainer {
   }
 
   public void configureAutonomousCommands() {
+    WaitCommand wait5 = new WaitCommand(0.5);
     NamedCommands.registerCommand("Align to Gamepiece", m_CommandFactory.alignToGamepieceCommand());
     NamedCommands.registerCommand("Intake Sequence", m_IntakeCommandFactory.intakeSequenceCommand());
     NamedCommands.registerCommand("Duck", m_CommandFactory.duckCommand());
@@ -182,8 +184,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("Shooter Allign 2", m_CommandFactory.presetAngleAdjust(AutoConstants.TWO));
     NamedCommands.registerCommand("Shooter Allign 3", m_CommandFactory.presetAngleAdjust(AutoConstants.THREE));
 
-    NamedCommands.registerCommand("Intake Down", m_intakeWrist.intakeGamePieceManualCommand().withTimeout(0.5));
-    NamedCommands.registerCommand("Intake Up", m_intakeWrist.intakeGamePieceManualEndCommand().withTimeout(0.5));
+    NamedCommands.registerCommand("Intake Down", m_intakeWrist.intakeGamePieceManualCommand().andThen(new WaitCommand(0.75)));
+    NamedCommands.registerCommand("Intake Up", m_intakeWrist.intakeGamePieceManualEndCommand().andThen(new WaitCommand(0.75)));
   }
 
   public Command getAutonomousCommand() {
@@ -220,9 +222,11 @@ public class RobotContainer {
     return m_LimelightFront;
   }
 
+  /*
   public Limelight getBackLimelight() {
     return m_LimelightBack;
   }
+   */
 
   public CommandSwerveDrivetrain getDrivetrain() {
     return drivetrain;
