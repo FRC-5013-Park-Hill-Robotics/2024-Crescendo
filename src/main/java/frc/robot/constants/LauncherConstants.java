@@ -82,4 +82,8 @@ public final class LauncherConstants {
 
     public static final double SPEAKER_ANGLE_RADIANS = Math.toRadians(61);
     public static final double PODIUM_ANGLE_RADIANS = Math.toRadians(43);
+
+    public static final double SHOULDER_ANGLE_MAX = Math.toRadians(65);
+    public static final double SHOULDER_ANGLE_MIN = Math.toRadians(30);
+
 }

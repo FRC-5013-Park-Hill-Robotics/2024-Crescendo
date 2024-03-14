@@ -67,20 +67,38 @@ public class LauncherShoulder extends SubsystemBase {
     @Override
     public void periodic() {
       
+        if(shoulderGoalRadians > LauncherConstants.SHOULDER_ANGLE_MAX){
+          shoulderGoalRadians = LauncherConstants.SHOULDER_ANGLE_MAX;
+        }
+        if(shoulderGoalRadians < LauncherConstants.SHOULDER_ANGLE_MIN){
+          shoulderGoalRadians = LauncherConstants.SHOULDER_ANGLE_MIN;
+        }
+
         double pidVal = shoulderController.calculate(getShoulderAngleRadians(), shoulderGoalRadians);
         State setpoint = shoulderController.getSetpoint();
         double acceleration = (shoulderController.getSetpoint().velocity - lastSpeed) / (Timer.getFPGATimestamp() - lastTime);
         double feedforwardVal = feedforward.calculate(setpoint.position,shoulderController.getSetpoint().velocity, acceleration);
         double feedforwardValhigh = feedforwardHigh.calculate(Math.PI/2 - setpoint.position,shoulderController.getSetpoint().velocity, acceleration);
         double combinedFF = MathUtil.interpolate(feedforwardVal,feedforwardValhigh, setpoint.position/Math.PI);
-        //launcherShoulderMotor.setControl(shoulderVoltageOut.withOutput(pidVal + combinedFF));
-        launcherShoulderMotor.setControl(shoulderVoltageOut.withOutput(pidVal + feedforwardVal));
+
+        double output = 0;
+        if(pidVal + combinedFF > 0 && LauncherConstants.SHOULDER_ANGLE_MAX < getShoulderAngleRadians()){
+          output = 0;
+        } 
+        else if (pidVal + combinedFF < 0 && LauncherConstants.SHOULDER_ANGLE_MIN > getShoulderAngleRadians()){
+          output = 0;
+        } else{
+          output = pidVal + combinedFF;
+        }
+        launcherShoulderMotor.setControl(shoulderVoltageOut.withOutput(output));
+      
         lastSpeed = shoulderController.getSetpoint().velocity;
         lastTime = Timer.getFPGATimestamp();
         SmartDashboard.putNumber("Launcher Goal", Math.toDegrees(shoulderGoalRadians));
         SmartDashboard.putNumber("Shoulder Absolute" , encoder.getAngle().getDegrees());
         SmartDashboard.putNumber("Shoulder Ground Relative" , Math.toDegrees(getShoulderAngleRadians()));
         SmartDashboard.putBoolean("Launcher at goal", atGoal());
+    
       }
 
     public void retract() {
