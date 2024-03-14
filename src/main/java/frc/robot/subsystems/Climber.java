@@ -10,6 +10,8 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.ReverseLimitSourceValue;
+import com.ctre.phoenix6.signals.ReverseLimitTypeValue;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -43,12 +45,22 @@ public class Climber extends SubsystemBase {
     TalonFXConfiguration leftConfig = new TalonFXConfiguration();
     leftConfig.MotorOutput.withNeutralMode(NeutralModeValue.Brake);
     leftConfig.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
+    leftConfig.Feedback.FeedbackRotorOffset = 0;
+    //leftConfig.HardwareLimitSwitch.ReverseLimitEnable = true;
+    //leftConfig.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin;
+    //leftConfig.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue.NormallyOpen;
     leftClimberMotor.getConfigurator().apply(leftConfig);
     leftClimberMotor.set(0);
 
+
     TalonFXConfiguration rightConfig = new TalonFXConfiguration();
     rightConfig.MotorOutput.withNeutralMode(NeutralModeValue.Brake);
-    rightConfig.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
+    rightConfig.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive);
+    rightConfig.Feedback.FeedbackRotorOffset = 0;
+    //leftConfig.HardwareLimitSwitch.ReverseLimitEna
+    //rightConfig.HardwareLimitSwitch.ReverseLimitEnable = true;
+    //rightConfig.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin;
+    //rightConfig.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue.NormallyOpen;
     rightClimberMotor.getConfigurator().apply(rightConfig);
     rightClimberMotor.set(0);
     //m_leftVoltage.withSlot(0);

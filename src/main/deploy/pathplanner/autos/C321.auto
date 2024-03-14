@@ -24,12 +24,6 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.35
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Intake Down"
@@ -62,7 +56,7 @@
         {
           "type": "named",
           "data": {
-            "name": "CloseAlign"
+            "name": "CloseAllign 2"
           }
         },
         {
@@ -86,7 +80,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.35
+            "waitTime": 0.5
           }
         },
         {
@@ -96,15 +90,15 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 0.35
+            "name": "CloseAllign 2"
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "CloseAlign"
+            "waitTime": 0.35
           }
         },
         {
@@ -126,21 +120,27 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "Intake Up"
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 0.35
+            "name": "CloseAllign 2"
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "CloseAlign"
+            "waitTime": 0.35
           }
         },
         {

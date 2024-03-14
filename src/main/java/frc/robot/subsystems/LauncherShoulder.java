@@ -80,6 +80,7 @@ public class LauncherShoulder extends SubsystemBase {
         double feedforwardVal = feedforward.calculate(setpoint.position,shoulderController.getSetpoint().velocity, acceleration);
         double feedforwardValhigh = feedforwardHigh.calculate(Math.PI/2 - setpoint.position,shoulderController.getSetpoint().velocity, acceleration);
         double combinedFF = MathUtil.interpolate(feedforwardVal,feedforwardValhigh, setpoint.position/Math.PI);
+
         double output = 0;
         if(pidVal + combinedFF > 0 && LauncherConstants.SHOULDER_ANGLE_MAX < getShoulderAngleRadians()){
           output = 0;
@@ -90,6 +91,7 @@ public class LauncherShoulder extends SubsystemBase {
           output = pidVal + combinedFF;
         }
         launcherShoulderMotor.setControl(shoulderVoltageOut.withOutput(output));
+      
         lastSpeed = shoulderController.getSetpoint().velocity;
         lastTime = Timer.getFPGATimestamp();
         SmartDashboard.putNumber("Launcher Goal", Math.toDegrees(shoulderGoalRadians));
