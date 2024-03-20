@@ -142,10 +142,16 @@ public class RobotContainer {
     operatorController.rightBumper().onTrue(m_launcherRollers.stopCommand());
 
     //Calibration controls for the launcher
-    operatorController.povLeft().onTrue(m_launcherRollers.incrementSpeedCommand(-5));
-    operatorController.povRight().onTrue(m_launcherRollers.incrementSpeedCommand(5));
-    operatorController.povUp().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(1)));
-    operatorController.povDown().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(-1)));
+    //operatorController.povLeft().onTrue(m_launcherRollers.incrementSpeedCommand(-5));
+    //operatorController.povRight().onTrue(m_launcherRollers.incrementSpeedCommand(5));
+    //operatorController.povUp().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(1)));
+    //operatorController.povDown().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(-1)));
+
+    operatorController.povLeft().whileTrue(drivetrain.runDriveQuasiTest(Direction.kForward));
+    operatorController.povRight().whileTrue(drivetrain.runDriveQuasiTest(Direction.kReverse));
+
+    operatorController.povUp().whileTrue(drivetrain.runDriveDynamTest(Direction.kForward));
+    operatorController.povDown().whileTrue(drivetrain.runDriveDynamTest(Direction.kReverse));
 
     //other events
     new Trigger(m_intakeRollers::hasGamePiece)
