@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3386144840268221,
-      "y": 7.1078702443630295
+      "x": 0.7718481866382481,
+      "y": 6.563541857807322
     },
-    "rotation": 0
+    "rotation": -119.11302945791414
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "A1"
+            "pathName": "X1start"
           }
         },
         {
@@ -34,16 +34,10 @@
           "data": {
             "pathName": "36"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "654"
-          }
         }
       ]
     }
   },
-  "folder": "WIP-MISC.",
+  "folder": "Short-Mid",
   "choreoAuto": false
 }

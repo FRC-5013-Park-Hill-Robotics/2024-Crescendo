@@ -42,12 +42,6 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "C3end"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Intake Up"
@@ -152,6 +146,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "Short",
   "choreoAuto": false
 }

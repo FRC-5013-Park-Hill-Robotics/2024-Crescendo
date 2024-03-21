@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7621099939708783,
-      "y": 4.4600922416554205
+      "x": 0.765872873427322,
+      "y": 6.579185680732721
     },
-    "rotation": 116.94868037694876
+    "rotation": -119.29136217098429
   },
   "command": {
     "type": "sequential",
@@ -14,24 +14,24 @@
         {
           "type": "path",
           "data": {
-            "pathName": "C3start"
+            "pathName": "X4"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Align and Adjust to Speaker"
+            "pathName": "45"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Intake Roller Out"
+            "pathName": "56"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "4Mid",
   "choreoAuto": false
 }

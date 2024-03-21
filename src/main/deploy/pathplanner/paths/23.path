@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 2.410669293610502,
-        "y": 4.111991050457951
+        "x": 2.5930483029797227,
+        "y": 4.264569568100175
       },
       "prevControl": {
-        "x": 1.5131702810340615,
-        "y": 4.0826196858118236
+        "x": 1.695549290403282,
+        "y": 4.235198203454047
       },
       "nextControl": null,
       "isLocked": false,
@@ -43,9 +43,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "ShortConnections",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": -178.69282955450538,
     "velocity": 0
   },
   "useDefaultConstraints": true
