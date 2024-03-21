@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7523718013035084,
-        "y": 6.612232821144172
+        "x": 8.064656987990183,
+        "y": 0.7783411631223989
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5411654073604713,
-        "y": 6.953069564502119
+        "x": 8.182142446574696,
+        "y": 1.9238243843214
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "8"
     },
     {
       "anchor": {
-        "x": 2.4662937107606133,
-        "y": 6.990384785778517
+        "x": 8.505227457682107,
+        "y": 4.111991050457951
       },
       "prevControl": {
-        "x": 1.4662937107606133,
-        "y": 6.990384785778517
+        "x": 8.549284504651299,
+        "y": 3.2749071580432974
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "A1end"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -39,14 +39,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -152.5255683737229,
-    "rotateFast": true
+    "rotation": 133.0,
+    "rotateFast": false
   },
   "reversed": false,
-  "folder": "APath",
+  "folder": "TrollConnections",
   "previewStartingState": {
-    "rotation": -119.7448812969422,
-    "velocity": 0
+    "rotation": 133.0,
+    "velocity": 3.0
   },
   "useDefaultConstraints": true
 }

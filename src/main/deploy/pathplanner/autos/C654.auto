@@ -3,9 +3,9 @@
   "startingPose": {
     "position": {
       "x": 0.765872873427322,
-      "y": 4.53787583782681
+      "y": 4.508504473180682
     },
-    "rotation": 121.60750224624894
+    "rotation": 119.74488129694224
   },
   "command": {
     "type": "sequential",
@@ -14,18 +14,24 @@
         {
           "type": "path",
           "data": {
-            "pathName": "D8"
+            "pathName": "C6"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "8-4"
+            "pathName": "65"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "54"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "4Mid",
   "choreoAuto": false
 }

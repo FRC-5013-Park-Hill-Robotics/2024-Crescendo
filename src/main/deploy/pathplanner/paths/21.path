@@ -55,7 +55,7 @@
     "rotateFast": true
   },
   "reversed": false,
-  "folder": null,
+  "folder": "ShortConnections",
   "previewStartingState": {
     "rotation": -178.29308838303854,
     "velocity": 0

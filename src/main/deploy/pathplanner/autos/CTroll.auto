@@ -3,9 +3,9 @@
   "startingPose": {
     "position": {
       "x": 0.765872873427322,
-      "y": 6.579185680732721
+      "y": 4.53787583782681
     },
-    "rotation": -120.52970589993419
+    "rotation": 121.60750224624894
   },
   "command": {
     "type": "sequential",
@@ -14,13 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "X4"
+            "pathName": "D8"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "48"
+            "pathName": "84"
           }
         }
       ]

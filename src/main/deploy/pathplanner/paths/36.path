@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.410669293610502,
-        "y": 4.111991050457951
+        "x": 2.5930483029797227,
+        "y": 4.264569568100175
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.100896362794515,
-        "y": 5.771473152964195
+        "x": 3.2832753721637356,
+        "y": 5.924051670606419
       },
       "isLocked": false,
       "linkedName": "23end"
@@ -49,7 +49,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "ShortToOut",
   "previewStartingState": {
     "rotation": 180.0,
     "velocity": 0

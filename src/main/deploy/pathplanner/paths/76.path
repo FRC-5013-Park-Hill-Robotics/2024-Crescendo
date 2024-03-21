@@ -3,57 +3,52 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.5309019562582962,
-        "y": 1.1601689035220655
+        "x": 3.5414668324864382,
+        "y": 2.4084519009825143
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3826715309960145,
-        "y": 1.1161118565528736
+        "x": 4.525407548131734,
+        "y": 3.6714205807660276
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "87end"
     },
     {
       "anchor": {
-        "x": 4.411593510127988,
-        "y": 1.0702190992932976
+        "x": 8.314313587482273,
+        "y": 4.038562638842631
       },
       "prevControl": {
-        "x": 2.897132520562001,
-        "y": 1.0931654779230855
+        "x": 6.170203968314914,
+        "y": 4.111991050457951
       },
       "nextControl": {
-        "x": 5.926054499693974,
-        "y": 1.0472727206635097
+        "x": 8.584148383440798,
+        "y": 4.029321721172819
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.270256540513081,
-        "y": 1.0133120802914237
+        "x": 3.5414668324864382,
+        "y": 2.4084519009825143
       },
       "prevControl": {
-        "x": 7.447858330421491,
-        "y": 1.0133120802914237
+        "x": 5.039406429438977,
+        "y": 4.435076061565361
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "8"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 1,
-      "rotationDegrees": 100.0,
+      "rotationDegrees": 180.0,
       "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 2.0,
-      "rotationDegrees": 133.0,
-      "rotateFast": true
     }
   ],
   "constraintZones": [],
@@ -65,15 +60,15 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 3.0,
-    "rotation": 133.0,
+    "velocity": 0,
+    "rotation": 136.87021809574847,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "MidConnections",
   "previewStartingState": {
-    "rotation": 60.2551187030578,
-    "velocity": 0
+    "rotation": 137.69290887205113,
+    "velocity": 3.0
   },
   "useDefaultConstraints": true
 }

@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3386144840268221,
-      "y": 7.1078702443630295
+      "x": 1.2798717547345657,
+      "y": 5.698044741348875
     },
-    "rotation": 0
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -14,36 +14,24 @@
         {
           "type": "path",
           "data": {
-            "pathName": "A1"
+            "pathName": "B4"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "12"
+            "pathName": "45"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "23"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "36"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "654"
+            "pathName": "56"
           }
         }
       ]
     }
   },
-  "folder": "WIP-MISC.",
+  "folder": "4Mid",
   "choreoAuto": false
 }

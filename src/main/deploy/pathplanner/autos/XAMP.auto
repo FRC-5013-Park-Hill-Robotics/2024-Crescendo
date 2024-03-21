@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.765872873427322,
-      "y": 6.579185680732721
+      "x": 0.7718481866382481,
+      "y": 6.563541857807322
     },
-    "rotation": -120.52970589993419
+    "rotation": -116.6398172671067
   },
   "command": {
     "type": "sequential",
@@ -14,18 +14,18 @@
         {
           "type": "path",
           "data": {
-            "pathName": "X4"
+            "pathName": "XAMP"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "48"
+            "pathName": "AMP1"
           }
         }
       ]
     }
   },
-  "folder": "Troll",
+  "folder": "WIP-MISC.",
   "choreoAuto": false
 }
