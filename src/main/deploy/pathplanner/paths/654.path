@@ -107,7 +107,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "MidConnections",
   "previewStartingState": {
     "rotation": 180.0,
     "velocity": 0

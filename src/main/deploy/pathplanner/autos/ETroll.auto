@@ -14,18 +14,18 @@
         {
           "type": "path",
           "data": {
-            "pathName": "E-8"
+            "pathName": "E8"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "8-4"
+            "pathName": "84"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Troll",
   "choreoAuto": false
 }

@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.765872873427322,
-      "y": 6.579185680732721
+      "x": 1.2798717547345657,
+      "y": 5.698044741348875
     },
-    "rotation": -120.52970589993419
+    "rotation": 178.45184230102205
   },
   "command": {
     "type": "sequential",
@@ -14,18 +14,18 @@
         {
           "type": "path",
           "data": {
-            "pathName": "X4"
+            "pathName": "B4"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "48"
+            "pathName": "45"
           }
         }
       ]
     }
   },
-  "folder": "Troll",
+  "folder": "2-3Mid",
   "choreoAuto": false
 }

@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.300350652649357,
-      "y": 3.01
+      "x": 0.5309019562582962,
+      "y": 1.1601689035220655
     },
-    "rotation": 114.61780438059193
+    "rotation": 151.2940474565989
   },
   "command": {
     "type": "sequential",
@@ -32,7 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "8-7"
+            "pathName": "87"
           }
         },
         {
@@ -50,6 +50,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "2-3Mid",
   "choreoAuto": false
 }

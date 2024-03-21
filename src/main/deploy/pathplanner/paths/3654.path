@@ -123,7 +123,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "ShortToOut",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 5.7
