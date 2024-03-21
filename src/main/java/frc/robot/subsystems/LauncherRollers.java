@@ -77,6 +77,7 @@ public class LauncherRollers extends SubsystemBase {
 
   @Override
   public void periodic() {
+    
       if(goalSpeedRPS == 0){
         bottomMotor.setVoltage(0);
         topMotor.setVoltage(0);
@@ -88,6 +89,7 @@ public class LauncherRollers extends SubsystemBase {
       }
         SmartDashboard.putNumber("Shooter Speed", bottomMotor.getVelocity().getValueAsDouble()) ; 
         SmartDashboard.putNumber("shooter goal", goalSpeedRPS)    ;
+        
   }
 
   public void start() {

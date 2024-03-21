@@ -9,22 +9,18 @@ import frc.robot.trobot5013lib.LinearInterpolator;
 
 /** Add your docs here. */
 public final class LauncherConstants {
-    public final static int LAUNCHER_SHOULDER_MOTOR_CAN_ID = CANConstants.LAUNCHER_SHOULDER_MOTOR_CAN_ID;
-    public final static int ENCODER_DIO_PORT = 0;
-    public final static double OFFSET_RADIANS = Math.toRadians(257);
+    public final static int LEFT_LAUNCHER_SHOULDER_MOTOR_CAN_ID = CANConstants.LEFT_LAUNCHER_SHOULDER_MOTOR_CAN_ID;
+    public final static int RIGHT_LAUNCHER_SHOULDER_MOTOR_CAN_ID = CANConstants.RIGHT_LAUNCHER_SHOULDER_MOTOR_CAN_ID;    public final static int ENCODER_DIO_PORT = 0;
+    public final static double OFFSET_RADIANS = Math.toRadians(21);
     public final static int LAUNCHER_TOP_CAN_ID = CANConstants.LAUNCHER_TOP_CAN_ID;
     public final static int LAUNCHER_BOTTOM_CAN_ID = CANConstants.LAUNCHER_BOTTOM_CAN_ID;
     public static final class RotationGains {
         public static final Rotation2d kPositionTolerance= Rotation2d.fromDegrees(1);
-        public static final double kP = 7.5013;
+        public static final double kP = 4.5;
         public static final double kI = 0;
         public static final double kD = 0;
         public static final double kF = 0;
-        public static final double kS = 0.6;
-        public static final double kG = 0.3;
-        public static final double kGHhigh = 0.3;
-        public static final double kV = 0.2;
-        public static final double kA = 0.1;
+        public static final double kS = 0;
         public static final double kMaxSpeed = 1.6 ; //theoretial free speed of the arm is 1.8868
         public static final double kMaxAcceleration = kMaxSpeed * 3;
     }

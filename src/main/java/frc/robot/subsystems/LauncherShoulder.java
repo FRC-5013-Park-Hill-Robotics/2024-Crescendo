@@ -4,7 +4,9 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -17,6 +19,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.DrivetrainConstants;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.LauncherConstants;
 import frc.robot.trobot5013lib.RevThroughBoreEncoder;
@@ -24,21 +27,12 @@ import frc.robot.trobot5013lib.TrobotUtil;
 
 public class LauncherShoulder extends SubsystemBase {
 
-    private final TalonFX launcherShoulderMotor = new TalonFX(LauncherConstants.LAUNCHER_SHOULDER_MOTOR_CAN_ID);
+    private final TalonFX leftLauncherShoulderMotor = new TalonFX(LauncherConstants.LEFT_LAUNCHER_SHOULDER_MOTOR_CAN_ID);
+    private final TalonFX rightLauncherShoulderMotor = new TalonFX(LauncherConstants.RIGHT_LAUNCHER_SHOULDER_MOTOR_CAN_ID);
+    private final Follower rightFollow = new Follower(LauncherConstants.LEFT_LAUNCHER_SHOULDER_MOTOR_CAN_ID, true);
     private final RevThroughBoreEncoder encoder = new RevThroughBoreEncoder(LauncherConstants.ENCODER_DIO_PORT, false, LauncherConstants.OFFSET_RADIANS);
     public double setpointRadians = 0;
-    private ArmFeedforward feedforward = new ArmFeedforward(
-            LauncherConstants.RotationGains.kS,
-            LauncherConstants.RotationGains.kG,
-            LauncherConstants.RotationGains.kV, 
-            LauncherConstants.RotationGains.kA);
-    //Because of the use of gas shocks the arm is not as simple as a normal feed forward, so we are making a ff for the higher angle
-    //we will then interpolate between that and the lower angle
-    private ArmFeedforward feedforwardHigh = new ArmFeedforward(
-            LauncherConstants.RotationGains.kS,
-            LauncherConstants.RotationGains.kGHhigh,
-            LauncherConstants.RotationGains.kV,
-            LauncherConstants.RotationGains.kA);
+
     private Constraints shoulderConstraints = new Constraints(LauncherConstants.RotationGains.kMaxSpeed,
             LauncherConstants.RotationGains.kMaxAcceleration);
     private ProfiledPIDController shoulderController = new ProfiledPIDController(
@@ -53,11 +47,17 @@ public class LauncherShoulder extends SubsystemBase {
 
     /** Creates a new IntakeShoulder. */
     public LauncherShoulder() {
-        launcherShoulderMotor.getConfigurator().apply(new TalonFXConfiguration());
-        launcherShoulderMotor.setInverted(false);
-        shoulderController.setTolerance(LauncherConstants.RotationGains.kPositionTolerance.getRadians());
-        shoulderController.enableContinuousInput(0,2*Math.PI);
-        setShoulderGoalRadians(getShoulderAngleRadians());
+      CurrentLimitsConfigs currentConfig = new CurrentLimitsConfigs();
+      currentConfig.withSupplyCurrentLimit(2);
+      currentConfig.withSupplyCurrentThreshold(0.2);
+      currentConfig.withSupplyCurrentLimitEnable(true);
+      leftLauncherShoulderMotor.getConfigurator().apply(currentConfig);
+      leftLauncherShoulderMotor.setInverted(true);
+      shoulderController.setTolerance(LauncherConstants.RotationGains.kPositionTolerance.getRadians());
+      shoulderController.enableContinuousInput(0,2*Math.PI);
+      rightLauncherShoulderMotor.getConfigurator().apply(currentConfig);
+      rightLauncherShoulderMotor.setControl(rightFollow);
+      setShoulderGoalRadians(getShoulderAngleRadians());
     }
 
     public boolean atGoal(){
@@ -67,37 +67,35 @@ public class LauncherShoulder extends SubsystemBase {
     @Override
     public void periodic() {
       
-        if(shoulderGoalRadians > LauncherConstants.SHOULDER_ANGLE_MAX){
-          shoulderGoalRadians = LauncherConstants.SHOULDER_ANGLE_MAX;
-        }
-        if(shoulderGoalRadians < LauncherConstants.SHOULDER_ANGLE_MIN){
-          shoulderGoalRadians = LauncherConstants.SHOULDER_ANGLE_MIN;
-        }
+        // if(shoulderGoalRadians > LauncherConstants.SHOULDER_ANGLE_MAX){
+        //   shoulderGoalRadians = LauncherConstants.SHOULDER_ANGLE_MAX;
+        // }
+        // if(shoulderGoalRadians < LauncherConstants.SHOULDER_ANGLE_MIN){
+        //   shoulderGoalRadians = LauncherConstants.SHOULDER_ANGLE_MIN;
+        // }
 
-        double pidVal = shoulderController.calculate(getShoulderAngleRadians(), shoulderGoalRadians);
-        State setpoint = shoulderController.getSetpoint();
-        double acceleration = (shoulderController.getSetpoint().velocity - lastSpeed) / (Timer.getFPGATimestamp() - lastTime);
-        double feedforwardVal = feedforward.calculate(setpoint.position,shoulderController.getSetpoint().velocity, acceleration);
-        double feedforwardValhigh = feedforwardHigh.calculate(Math.PI/2 - setpoint.position,shoulderController.getSetpoint().velocity, acceleration);
-        double combinedFF = MathUtil.interpolate(feedforwardVal,feedforwardValhigh, setpoint.position/Math.PI);
-
-        double output = 0;
-        if(pidVal + combinedFF > 0 && LauncherConstants.SHOULDER_ANGLE_MAX < getShoulderAngleRadians()){
-          output = 0;
-        } 
-        else if (pidVal + combinedFF < 0 && LauncherConstants.SHOULDER_ANGLE_MIN > getShoulderAngleRadians()){
-          output = 0;
-        } else{
-          output = pidVal + combinedFF;
-        }
-        launcherShoulderMotor.setControl(shoulderVoltageOut.withOutput(output));
+        // double pidVal = shoulderController.calculate(getShoulderAngleRadians(), shoulderGoalRadians);
+        // State setpoint = shoulderController.getSetpoint();
+        // double acceleration = (shoulderController.getSetpoint().velocity - lastSpeed) / (Timer.getFPGATimestamp() - lastTime);
+     
+        // double output = 0;
+        // if(pidVal  > 0 && LauncherConstants.SHOULDER_ANGLE_MAX < getShoulderAngleRadians()){
+        //   output = 0;
+        // } 
+        // else if (pidVal < 0 && LauncherConstants.SHOULDER_ANGLE_MIN > getShoulderAngleRadians()){
+        //   output = 0;
+        // } else{
+        //   output = pidVal;
+        // }
+        // leftLauncherShoulderMotor.setControl(shoulderVoltageOut.withOutput(output));
       
-        lastSpeed = shoulderController.getSetpoint().velocity;
-        lastTime = Timer.getFPGATimestamp();
-        SmartDashboard.putNumber("Launcher Goal", Math.toDegrees(shoulderGoalRadians));
-        SmartDashboard.putNumber("Shoulder Absolute" , encoder.getAngle().getDegrees());
-        SmartDashboard.putNumber("Shoulder Ground Relative" , Math.toDegrees(getShoulderAngleRadians()));
-        SmartDashboard.putBoolean("Launcher at goal", atGoal());
+        // lastSpeed = shoulderController.getSetpoint().velocity;
+        // lastTime = Timer.getFPGATimestamp();
+        // SmartDashboard.putNumber("Launcher Output", output);
+        //  SmartDashboard.putNumber("Launcher Pid Value", pidVal);
+        // SmartDashboard.putNumber("Launcher Goal", Math.toDegrees(shoulderGoalRadians));
+        // SmartDashboard.putNumber("Launcher Absolute" , encoder.getAngle().getDegrees());
+        // SmartDashboard.putBoolean("Launcher at goal", atGoal());
     
       }
 
