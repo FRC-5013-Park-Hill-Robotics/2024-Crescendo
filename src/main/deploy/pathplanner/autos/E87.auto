@@ -1,0 +1,55 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.300350652649357,
+      "y": 3.01
+    },
+    "rotation": 114.61780438059193
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "E8"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Align and Adjust to Speaker"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Roller Out"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "8-7"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Align and Adjust to Speaker"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Roller Out"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

@@ -65,6 +65,8 @@ public class LauncherRollers extends SubsystemBase {
       topMotor.set(0);
       topMotor.getConfigurator().apply(bottomConfig);
       m_topVoltage.withSlot(0);
+
+      this.start();
   }
 
 
@@ -75,6 +77,7 @@ public class LauncherRollers extends SubsystemBase {
 
   @Override
   public void periodic() {
+    
       if(goalSpeedRPS == 0){
         bottomMotor.setVoltage(0);
         topMotor.setVoltage(0);
@@ -86,6 +89,7 @@ public class LauncherRollers extends SubsystemBase {
       }
         SmartDashboard.putNumber("Shooter Speed", bottomMotor.getVelocity().getValueAsDouble()) ; 
         SmartDashboard.putNumber("shooter goal", goalSpeedRPS)    ;
+        
   }
 
   public void start() {
@@ -102,13 +106,22 @@ public class LauncherRollers extends SubsystemBase {
     return result;
   } 
 
+  public void setSpeed(double rps) {
+    this.goalSpeedRPS = rps;
+  }
+
+  public Command setSpeedCommand(double rps){
+    Command result = runOnce(()-> setSpeed(rps));
+    return result;
+  } 
+
   public Command startCommand(){
-    Command result = run(this::start);
+    Command result = runOnce(this::start);
     return result;
   }
 
   public Command stopCommand(){
-    Command result = run(this::stopLauncher);
+    Command result = runOnce(this::stopLauncher);
     return result;
   }
 

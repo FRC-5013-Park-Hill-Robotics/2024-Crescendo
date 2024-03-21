@@ -34,6 +34,7 @@ import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.LauncherConstants;
 import frc.robot.trobot5013lib.CANCoderWrapper;
 import frc.robot.trobot5013lib.RevThroughBoreEncoder;
+import frc.robot.trobot5013lib.TrobotUtil;
 
 import static edu.wpi.first.units.MutableMeasure.mutable;
 import static edu.wpi.first.units.Units.Radians;
@@ -44,20 +45,21 @@ import static edu.wpi.first.units.Units.Volts;
 public class IntakeWrist extends SubsystemBase {
 
     private final TalonFX intakeWristMotor = new TalonFX(IntakeConstants.INTAKE_WRIST_MOTOR_CAN_ID);
-    private RevThroughBoreEncoder encoder = new RevThroughBoreEncoder(IntakeConstants.ENCODER_DIO_PORT, true, IntakeConstants.ENCODER_OFFSET_RADIANS);
+    private RevThroughBoreEncoder encoder = new RevThroughBoreEncoder(IntakeConstants.ENCODER_DIO_PORT, true,
+            IntakeConstants.ENCODER_OFFSET_RADIANS);
     public double setpointRadians = 0;
     private ArmFeedforward feedforward = new ArmFeedforward(
             IntakeConstants.RotationGains.kS,
             IntakeConstants.RotationGains.kG,
-            IntakeConstants.RotationGains.kV, 
+            IntakeConstants.RotationGains.kV,
             IntakeConstants.RotationGains.kA);
     private Constraints wristConstraints = new Constraints(IntakeConstants.RotationGains.kMaxSpeed,
             IntakeConstants.RotationGains.kMaxAcceleration);
     private ProfiledPIDController wristController = new ProfiledPIDController(
-        IntakeConstants.RotationGains.kP,
-        IntakeConstants.RotationGains.kI,
-        IntakeConstants.RotationGains.kD,
-         wristConstraints);
+            IntakeConstants.RotationGains.kP,
+            IntakeConstants.RotationGains.kI,
+            IntakeConstants.RotationGains.kD,
+            wristConstraints);
     private final VoltageOut wristVoltageOut = new VoltageOut(0);
     private double wristGoalRadians = 0;
     private double lastSpeed = 0;
@@ -76,23 +78,23 @@ public class IntakeWrist extends SubsystemBase {
         config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         intakeWristMotor.getConfigurator().apply(config);
         wristController.setTolerance(IntakeConstants.RotationGains.kPositionTolerance.getRadians(), 0.01);
-        wristController.enableContinuousInput(0,2*Math.PI);
+        wristController.enableContinuousInput(0, 2 * Math.PI);
     }
 
     public double getAngle() {
-        double value = encoder.getAngle().getRadians() ;
+        double value = encoder.getAngle().getRadians();
         if (value < 0) {
             value += 2 * Math.PI;
         }
         return value;
     }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("IntakeAngle", Math.toDegrees(getAngle()));
         if (this.stop == true) {
             intakeWristMotor.setControl(wristVoltageOut.withOutput(0));
-        } 
-        else {
+        } else {
             if (wristGoalRadians != wristController.getGoal().position) {
                 wristController.setGoal(wristGoalRadians);
             }
@@ -100,28 +102,32 @@ public class IntakeWrist extends SubsystemBase {
             SmartDashboard.putNumber("pidValue", pidVal);
             State setpoint = wristController.getSetpoint();
             double groundRelativeSetpointRadians = getGroundRelativeWristPositionRadians(setpoint.position);
-            double acceleration = (wristController.getSetpoint().velocity - lastSpeed) / (Timer.getFPGATimestamp() - lastTime);
-            double feedforwardVal = feedforward.calculate(getGroundRelativeWristPositionRadians(),wristController.getSetpoint().velocity, acceleration);
-            SmartDashboard.putNumber("feedforwardVal",feedforwardVal);
-        
-            intakeWristMotor.setControl(wristVoltageOut.withOutput(MathUtil.clamp(pidVal + feedforwardVal,-12.0,12.0)));
+            double acceleration = (wristController.getSetpoint().velocity - lastSpeed)
+                    / (Timer.getFPGATimestamp() - lastTime);
+            double feedforwardVal = feedforward.calculate(getGroundRelativeWristPositionRadians(),
+                    wristController.getSetpoint().velocity, acceleration);
+            SmartDashboard.putNumber("feedforwardVal", feedforwardVal);
+
+            intakeWristMotor
+                    .setControl(wristVoltageOut.withOutput(MathUtil.clamp(pidVal + feedforwardVal, -12.0, 12.0)));
             lastSpeed = wristController.getSetpoint().velocity;
             lastTime = Timer.getFPGATimestamp();
         }
-            SmartDashboard.putNumber("Ground Angle" , Math.toDegrees(getGroundRelativeWristPositionRadians()));
-            SmartDashboard.putNumber("Wrist Position",encoder.getAngle().getDegrees());
-     }
+        SmartDashboard.putBoolean("Intake at goal", atGoal());
+        SmartDashboard.putNumber("Ground Angle", Math.toDegrees(getGroundRelativeWristPositionRadians()));
+        SmartDashboard.putNumber("Wrist Position", encoder.getAngle().getDegrees());
+        SmartDashboard.putNumber("Wrist  goal", Math.toDegrees(wristGoalRadians));
+    }
 
     public void deploy() {
         this.stop = false;
-        double goal = Math.PI - getLauncherShoulder().getShoulderAngleRadians() - IntakeConstants.DEPLOY_SETPOINT_TO_GROUND;
+        double goal = Math.PI - getLauncherShoulder().getShoulderAngleRadians()
+                - IntakeConstants.DEPLOY_SETPOINT_TO_GROUND;
         setWristGoalRadians(goal);
     }
 
     public void amp() {
-        this.stop = false;
-        double goal = Math.PI - getLauncherShoulder().getShoulderAngleRadians() - IntakeConstants.AMP_GROUND_ANGLE;
-        setWristGoalRadians(goal);
+        setWristGoalRadians(getGroundRelativeWristPositionRadians(IntakeConstants.AMP_ANGLE_GROUND));
     }
 
     public Command ampCommand() {
@@ -129,9 +135,9 @@ public class IntakeWrist extends SubsystemBase {
         result.addRequirements(getLauncherShoulder());
         return result;
     }
-    
-    public boolean atGoal(){
-        return wristController.atGoal();
+
+    public boolean atGoal() {
+        return TrobotUtil.withinTolerance(getAngle(), wristGoalRadians, IntakeConstants.RotationGains.kPositionTolerance.getRadians());
     }
 
     public void retract() {
@@ -155,17 +161,17 @@ public class IntakeWrist extends SubsystemBase {
         return Math.PI - getLauncherShoulder().getShoulderAngleRadians() - launcherRelativeAngleRadians;
     }
 
-    public double getGroundRelativeWristPositionRadians(){
-        return getGroundRelativeWristPositionRadians (getAngle()) ;
+    public double getGroundRelativeWristPositionRadians() {
+        return getGroundRelativeWristPositionRadians(getAngle());
     }
 
-    public Command deployCommand(){
+    public Command deployCommand() {
         Command result = runOnce(this::deploy);
         result.addRequirements(getLauncherShoulder());
         return result;
     }
 
-    public Command retractCommand(){
+    public Command retractCommand() {
         Command result = runOnce(this::retract);
         result.addRequirements(getLauncherShoulder());
         return result;
@@ -176,72 +182,79 @@ public class IntakeWrist extends SubsystemBase {
         return result;
     }
 
-    public Command intakeGamePiece(){
-        return deployCommand().andThen(m_intakeRollers.intakeGamepieceCommand()).until(m_intakeRollers::hasGamePiece).andThen(retractCommand());
+    public Command intakeGamePiece() {
+        return deployCommand().andThen(m_intakeRollers.intakeGamepieceCommand()).until(m_intakeRollers::hasGamePiece)
+                .andThen(retractCommand());
     }
 
-    public Command intakeGamePieceManualCommand(){
+    public Command intakeGamePieceManualCommand() {
         return deployCommand().andThen(m_intakeRollers.takeIn());
     }
 
-    public Command intakeGamePieceManualEndCommand(){
+    public Command intakeGamePieceManualEndCommand() {
         return m_intakeRollers.stopC().andThen(retractCommand());
     }
+
     public void incrementAngle(double radianChange) {
         this.wristGoalRadians += radianChange;
-    
-      }
-    
-    public Command incrementAngleCommand(double radianChange){
-        Command result = runOnce(()-> incrementAngle(radianChange));
-        return result;
-      } 
 
-    public boolean atAmp(){
-      return getAngle() >= IntakeConstants.AMP_GROUND_ANGLE - IntakeConstants.RotationGains.kPositionTolerance.getRadians() &&
-      getAngle() <= IntakeConstants.AMP_GROUND_ANGLE + IntakeConstants.RotationGains.kPositionTolerance.getRadians();
+    }
+
+    public Command incrementAngleCommand(double radianChange) {
+        Command result = runOnce(() -> incrementAngle(radianChange));
+        return result;
+    }
+
+    public boolean atAmp() {
+        return TrobotUtil.withinTolerance(getAngle(), IntakeConstants.AMP_ANGLE_GROUND,
+                IntakeConstants.RotationGains.kPositionTolerance.getRadians());
     }
     /*
-    private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
-    // Mutable holder for unit-safe linear distance values, persisted to avoid
-    // reallocation.
-    private final MutableMeasure<Angle> m_rotation = mutable(Radians.of(0));
-    // Mutable holder for unit-safe linear velocity values, persisted to avoid
-    // reallocation.
-    private final MutableMeasure<Velocity<Angle>> m_velocity = mutable(RadiansPerSecond.of(0));
-    private final  VoltageOut m_voltageOut = new VoltageOut(0);
-    private final SysIdRoutine m_sysIdRoutine = new SysIdRoutine(
-            new SysIdRoutine.Config( Volts.of(0.75).per(Seconds.of(1)), Volts.of(4), null,null),
-            new SysIdRoutine.Mechanism(
-                    // Tell SysId how to plumb the driving voltage to the motors.
-                    (Measure<Voltage> volts) -> {
-                        intakeWristMotor.setControl(m_voltageOut.withOutput(volts.in(Volts)));
-                    },
-                    // Tell SysId how to record a frame of data for each motor on the mechanism
-                    // being
-                    // characterized.
-                    log -> {
-                        // Record a frame for the wrist motor. 
-                        log.motor("wrist")
-                                .voltage(
-                                        m_appliedVoltage.mut_replace(intakeWristMotor.get() * RobotController.getBatteryVoltage()
-                                                , Volts))
-                                .angularPosition(m_rotation.mut_replace(getGroundRelativeWristPositionRadians(), Radians))
-                                .angularVelocity(
-                                        m_velocity.mut_replace(encoder.getVelocityRadians(), RadiansPerSecond));
-
-                    },
-                    // Tell SysId to make generated commands require this subsystem, suffix test
-                    // state in
-                    // WPILog with this subsystem's name ("IntakeWrist")
-                    this));
-
-    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-        return m_sysIdRoutine.quasistatic(direction);
-    }
-
-    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-        return m_sysIdRoutine.dynamic(direction);
-    }
+     * private final MutableMeasure<Voltage> m_appliedVoltage =
+     * mutable(Volts.of(0));
+     * // Mutable holder for unit-safe linear distance values, persisted to avoid
+     * // reallocation.
+     * private final MutableMeasure<Angle> m_rotation = mutable(Radians.of(0));
+     * // Mutable holder for unit-safe linear velocity values, persisted to avoid
+     * // reallocation.
+     * private final MutableMeasure<Velocity<Angle>> m_velocity =
+     * mutable(RadiansPerSecond.of(0));
+     * private final VoltageOut m_voltageOut = new VoltageOut(0);
+     * private final SysIdRoutine m_sysIdRoutine = new SysIdRoutine(
+     * new SysIdRoutine.Config( Volts.of(0.75).per(Seconds.of(1)), Volts.of(4),
+     * null,null),
+     * new SysIdRoutine.Mechanism(
+     * // Tell SysId how to plumb the driving voltage to the motors.
+     * (Measure<Voltage> volts) -> {
+     * intakeWristMotor.setControl(m_voltageOut.withOutput(volts.in(Volts)));
+     * },
+     * // Tell SysId how to record a frame of data for each motor on the mechanism
+     * // being
+     * // characterized.
+     * log -> {
+     * // Record a frame for the wrist motor.
+     * log.motor("wrist")
+     * .voltage(
+     * m_appliedVoltage.mut_replace(intakeWristMotor.get() *
+     * RobotController.getBatteryVoltage()
+     * , Volts))
+     * .angularPosition(m_rotation.mut_replace(getGroundRelativeWristPositionRadians
+     * (), Radians))
+     * .angularVelocity(
+     * m_velocity.mut_replace(encoder.getVelocityRadians(), RadiansPerSecond));
+     * 
+     * },
+     * // Tell SysId to make generated commands require this subsystem, suffix test
+     * // state in
+     * // WPILog with this subsystem's name ("IntakeWrist")
+     * this));
+     * 
+     * public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+     * return m_sysIdRoutine.quasistatic(direction);
+     * }
+     * 
+     * public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+     * return m_sysIdRoutine.dynamic(direction);
+     * }
      */
 }

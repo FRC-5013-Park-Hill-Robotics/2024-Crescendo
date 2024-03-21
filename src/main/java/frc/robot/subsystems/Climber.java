@@ -8,7 +8,10 @@ import frc.robot.constants.CANConstants;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.ReverseLimitSourceValue;
+import com.ctre.phoenix6.signals.ReverseLimitTypeValue;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -16,52 +19,25 @@ public class Climber extends SubsystemBase {
   private final TalonFX leftClimberMotor = new TalonFX(CANConstants.CLIMBER_LEFT_CAN_ID);
   private final TalonFX rightClimberMotor = new TalonFX(CANConstants.CLIMBER_RIGHT_CAN_ID);
 
-  //private VelocityVoltage m_BottomVoltage = new VelocityVoltage(0);
-  //private VelocityVoltage m_topVoltage = new VelocityVoltage(0);
-    // TODO
-    //Create TalonFX motors for 
-    //Create PID controller using pigeon to help avoid side load guessing .48 for P that would produce 2.4 v differnce at 5 degrees DONE
-    //Create Control Request for Motor of tpe VoltageOut DONE
 
   /** Creates a new Climber. */
   public Climber() {
 
-    //TODO: change inversions to correct values
-
-    //limit switch?
-    /* 
-    HardwareLimitSwitchConfigs limitSwitchConfigs = new HardwareLimitSwitchConfigs();
-    leftClimberMotor.getForwardLimit();
-		leftClimberMotor.getReverseLimit();
-
-    leftClimberMotor.getForwardLimit();
-		leftClimberMotor.getReverseLimit();
-
-    */
-
     TalonFXConfiguration leftConfig = new TalonFXConfiguration();
-    leftClimberMotor.setNeutralMode(NeutralModeValue.Brake);
-    leftClimberMotor.set(0);
-    leftClimberMotor.setInverted(true);
+    leftConfig.MotorOutput.withNeutralMode(NeutralModeValue.Brake);
+    leftConfig.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
+    leftConfig.Feedback.FeedbackRotorOffset = 0;
     leftClimberMotor.getConfigurator().apply(leftConfig);
+    leftClimberMotor.set(0);
+
 
     TalonFXConfiguration rightConfig = new TalonFXConfiguration();
-    rightClimberMotor.setNeutralMode(NeutralModeValue.Brake);
-    rightClimberMotor.set(0);
-    rightClimberMotor.setInverted(true);
+    rightConfig.MotorOutput.withNeutralMode(NeutralModeValue.Brake);
+    rightConfig.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive);
+    rightConfig.Feedback.FeedbackRotorOffset = 0;
     rightClimberMotor.getConfigurator().apply(rightConfig);
-    //m_leftVoltage.withSlot(0);
-
-
-        //Clear motor configs - config facgtory default
-
-        //set motor configs, 
-            //PID slot 0, //not sure how to do this
-            //inversion.
-            //idle mode brake.
-            //limit switch //not sure how to do this
-
-
+    rightClimberMotor.set(0);
+ 
   }
 
   public TalonFX getLeftMotor() {

@@ -41,6 +41,7 @@ public class Limelight extends SubsystemBase {
   private Pose2d botpose;
   private String name;
   private final DoubleArrayPublisher limelightPub;
+  private boolean aprilTagPipeline = false;
   public Limelight(String name, boolean aprilTagViable) {
     /**
      * tx - Horizontal Offset
@@ -75,8 +76,15 @@ public class Limelight extends SubsystemBase {
     SmartDashboard.putNumber("LimelightY", y);
     SmartDashboard.putNumber("LimelightArea", area);
 
+    SmartDashboard.putNumber(name + ":tx", x);
+    SmartDashboard.putNumber(name + ":ty", y);
+    SmartDashboard.putNumber(name + ":area", area);
 
-    if (aprilTagViable ) {
+    
+    //SmartDashboard.putBoolean(name + ":", aprilTagViable);
+
+
+    if (aprilTagViable && getPipeline() == LimelightConstants.APRIL_TAG_TARGETING) {
       CommandSwerveDrivetrain drivetrain = RobotContainer.getInstance().getDrivetrain();
       Double targetDistance = LimelightHelpers.getTargetPose3d_CameraSpace(name).getTranslation().getDistance(new Translation3d());
       // Tune this for your robot around how much variance you see in the pose at a given distance
@@ -94,13 +102,15 @@ public class Limelight extends SubsystemBase {
           if (drivetrain.getState().Pose.getTranslation().getDistance(botpose.getTranslation()) < 0.5
               || trust
               || result.targets_Fiducials.length > 1) {
-              drivetrain.addVisionMeasurement(
+                /*
+             drivetrain.addVisionMeasurement(
                 botpose,
                 Timer.getFPGATimestamp()
                     - (result.latency_capture / 1000.0)
-                    - (result.latency_pipeline / 1000.0),
+                    - (result.latency_pipeline / 1000.0)
                 VecBuilder.fill(confidence, confidence, .01));
-              
+                 */
+                
           } else {
             distanceError++;
             SmartDashboard.putNumber("Limelight Error", distanceError);
@@ -130,12 +140,12 @@ public class Limelight extends SubsystemBase {
   }
 
   public void setPipelineAprilTag(){
-    aprilTagViable = true;
+    aprilTagPipeline = true;
     setPipeline(LimelightConstants.APRIL_TAG_TARGETING);
   }
 
   public void setPipelineObjectDecection(){
-    aprilTagViable = false;
+    aprilTagPipeline = false;
     setPipeline(LimelightConstants.GAME_PIECE_RECOGNITION);
   }
 
@@ -165,6 +175,10 @@ public class Limelight extends SubsystemBase {
   }
   public void setPipeline(int pipeline){
     table.getEntry("pipeline").setNumber(pipeline);
+  }
+
+  public long getPipeline(){
+    return table.getEntry("pipeline").getInteger(0);
   }
   public Command setPipelineCommand(int pipeline){
     Command result = runOnce(()->setPipeline(pipeline));

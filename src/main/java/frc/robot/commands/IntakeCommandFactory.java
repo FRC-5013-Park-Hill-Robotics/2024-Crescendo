@@ -16,10 +16,10 @@ public class IntakeCommandFactory {
     private IntakeWrist m_wrist;
     private LauncherShoulder m_shoulder;
 
-    public IntakeCommandFactory(IntakeRollers rollers, IntakeWrist wrist, LauncherShoulder shoulder) {
-        m_rollers = rollers;
-        m_wrist = wrist;
-        m_shoulder = shoulder;
+    public IntakeCommandFactory(RobotContainer robotContainer) {
+        m_rollers = robotContainer.getIntakeRollers();
+        m_wrist = robotContainer.getIntakeWrist();
+        m_shoulder = robotContainer.getLauncherShoulder();
     }
     public Command deployCommand(){
         Command theCommand =  m_wrist.run(()->{
@@ -59,5 +59,4 @@ public class IntakeCommandFactory {
             .alongWith(startRollersCommand())
             .until(m_rollers::hasGamePiece).andThen(stopRollersCommand().alongWith(retractCommand()));
     }
-
 }

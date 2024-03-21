@@ -20,4 +20,5 @@ public final class DrivetrainConstants {
     public static final double maxAngularVelocityRadiansPerSecond = 2 * Math.PI * rotationsPerSecond;
     public static Matrix<N3, N1> visionMeasurementStdDevs = VecBuilder.fill(0.9, 0.9, 0.9);
     public static final double currentLimit = 60;
+    public static final double autoMaxSpeedMetersPerSecond = maxSpeedMetersPerSecond * 0.8;
 }
