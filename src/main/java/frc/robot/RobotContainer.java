@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -45,6 +46,10 @@ import frc.robot.subsystems.LauncherRollers;
 import frc.robot.subsystems.LauncherShoulder;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.StatusLED;
+import frc.robot.trobot5013lib.led.RainbowPattern;
+import frc.robot.trobot5013lib.led.SolidColorPattern;
+import frc.robot.trobot5013lib.led.TrobotAddressableLED;
+import frc.robot.trobot5013lib.led.TrobotAddressableLEDPattern;
 
 public class RobotContainer {
   private SendableChooser<Command> autoChooser;
@@ -73,6 +78,8 @@ public class RobotContainer {
   private IntakeCommandFactory m_IntakeCommandFactory = new IntakeCommandFactory(this);
   private CommandFactory m_CommandFactory = new CommandFactory(this);
 
+  private TrobotAddressableLED m_AddressableLED = new TrobotAddressableLED(0, 39);
+
   private StatusLED m_statusLED = new StatusLED(); // creates the status led instance variable
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -94,6 +101,8 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
     //SmartDashboard.putStringArray("Auto List", AutoBuilder.getAllAutoNames().toArray(new String[0]));
+
+    m_AddressableLED.setPattern(new SolidColorPattern(Color.kRed));
   }
 
   private void configureBindings() {
@@ -142,16 +151,18 @@ public class RobotContainer {
     operatorController.rightBumper().onTrue(m_launcherRollers.stopCommand());
 
     //Calibration controls for the launcher
-    //operatorController.povLeft().onTrue(m_launcherRollers.incrementSpeedCommand(-5));
-    //operatorController.povRight().onTrue(m_launcherRollers.incrementSpeedCommand(5));
-    //operatorController.povUp().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(1)));
-    //operatorController.povDown().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(-1)));
+    operatorController.povLeft().onTrue(m_launcherRollers.incrementSpeedCommand(-5));
+    operatorController.povRight().onTrue(m_launcherRollers.incrementSpeedCommand(5));
+    operatorController.povUp().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(1)));
+    operatorController.povDown().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(-1)));
 
-    operatorController.povLeft().whileTrue(drivetrain.runDriveQuasiTest(Direction.kForward));
-    operatorController.povRight().whileTrue(drivetrain.runDriveQuasiTest(Direction.kReverse));
+    operatorController.leftTrigger().whileTrue(m_launcherShoulder.goToSetpointCommand(LauncherConstants.PODIUM_ANGLE_RADIANS).alongWith(m_launcherRollers.setSpeedCommand(45))).onFalse(m_launcherRollers.setSpeedCommand(50));
 
-    operatorController.povUp().whileTrue(drivetrain.runDriveDynamTest(Direction.kForward));
-    operatorController.povDown().whileTrue(drivetrain.runDriveDynamTest(Direction.kReverse));
+    // operatorController.povLeft().whileTrue(drivetrain.runDriveQuasiTest(Direction.kForward));
+    // operatorController.povRight().whileTrue(drivetrain.runDriveQuasiTest(Direction.kReverse));
+
+    // operatorController.povUp().whileTrue(drivetrain.runDriveDynamTest(Direction.kForward));
+    // operatorController.povDown().whileTrue(drivetrain.runDriveDynamTest(Direction.kReverse));
 
     //other events
     new Trigger(m_intakeRollers::hasGamePiece)

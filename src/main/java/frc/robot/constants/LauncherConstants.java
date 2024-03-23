@@ -16,9 +16,9 @@ public final class LauncherConstants {
     public final static int LAUNCHER_BOTTOM_CAN_ID = CANConstants.LAUNCHER_BOTTOM_CAN_ID;
     public static final class RotationGains {
         public static final Rotation2d kPositionTolerance= Rotation2d.fromDegrees(1);
-        public static final double kP = 4.5;
+        public static final double kP = 5.25;
         public static final double kI = 0;
-        public static final double kD = 0;
+        public static final double kD = 0.25;
         public static final double kF = 0;
         public static final double kS = 0;
         public static final double kMaxSpeed = 1.6 ; //theoretial free speed of the arm is 1.8868
@@ -74,12 +74,17 @@ public final class LauncherConstants {
     public final static double RETRACT_SETPOINT = 0;
     public static final double AMP_ANGLE_RADANS = Math.toRadians(98);//Math.toRadians(96.5);
     public static final double DUCK_RADIANS = Math.toRadians(31);
-    public static final double START_ANGLE_RADIANS = Math.toRadians(60);
+    public static final double START_ANGLE_RADIANS = Math.toRadians(53);
+    //start angle used to be 60
 
-    public static final double SPEAKER_ANGLE_RADIANS = Math.toRadians(61);
-    public static final double PODIUM_ANGLE_RADIANS = Math.toRadians(43);
+    public static final double SPEAKER_ANGLE_RADIANS = Math.toRadians(53);
+    public static final double PODIUM_ANGLE_RADIANS = Math.toRadians(38);
 
     public static final double SHOULDER_ANGLE_MAX = Math.toRadians(65);
     public static final double SHOULDER_ANGLE_MIN = Math.toRadians(30);
+
+    public static final double SHOULDER_CURRENT_LIMIT = 4;
+
+    public static final double SHOULDER_CURRENT_THRESHOLD = 0.2;
 
 }

@@ -105,7 +105,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
                                             new PIDConstants(10, 0, 0),
                                             DrivetrainConstants.autoMaxSpeedMetersPerSecond ,
                                             driveBaseRadius,
-                                            new ReplanningConfig()),
+                                            new ReplanningConfig(true,true)),
             () -> {
                     // Boolean supplier that controls when the path will be mirrored for the red alliance
                     // THE ORIGIN WILL REMAIN ON THE BLUE SIDE

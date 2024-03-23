@@ -36,9 +36,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "C3start"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "C3start"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "CloseAlign"
+                }
+              }
+            ]
           }
         },
         {
@@ -51,12 +64,6 @@
           "type": "wait",
           "data": {
             "waitTime": 0.35
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CloseAlign"
           }
         },
         {
@@ -146,6 +153,6 @@
       ]
     }
   },
-  "folder": "Short",
+  "folder": null,
   "choreoAuto": false
 }
