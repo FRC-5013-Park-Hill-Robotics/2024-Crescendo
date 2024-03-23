@@ -16,12 +16,8 @@
     "XPath"
   ],
   "autoFolders": [
-    "2-3Mid",
-    "Short",
-    "4Mid",
-    "Short-Mid",
-    "Troll",
-    "WIP-MISC."
+    "C Autos",
+    "A Autos"
   ],
   "defaultMaxVel": 4.8,
   "defaultMaxAccel": 3.0,
