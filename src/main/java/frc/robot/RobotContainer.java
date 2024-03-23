@@ -192,17 +192,19 @@ public class RobotContainer {
     NamedCommands.registerCommand("Intake Sequence", m_IntakeCommandFactory.intakeSequenceCommand());
     NamedCommands.registerCommand("Duck", m_CommandFactory.duckCommand());
     NamedCommands.registerCommand("Align and Adjust to Speaker", m_CommandFactory.alignAndAdjustToSpeakerCommand());
-    NamedCommands.registerCommand("Intake Roller Out", m_CommandFactory.intakeRollerOutCommand());
+    NamedCommands.registerCommand("Intake Roller Out", m_CommandFactory.intakeRollerOutCommand().andThen(new WaitCommand(0.15)));
     
     NamedCommands.registerCommand("Adjust to Subwoofer", m_CommandFactory.presetAngleAdjust(AutoConstants.SUBWOOFER));
     NamedCommands.registerCommand("Adjust to Subwoofer Side", m_CommandFactory.presetAngleAdjust(AutoConstants.SUBWOOFER_SIDE));
     NamedCommands.registerCommand("CloseAllign 2", m_CommandFactory.presetAngleAdjust(AutoConstants.TWO));
+    NamedCommands.registerCommand("CloseAlign", m_CommandFactory.presetAngleAdjust(AutoConstants.TWO));
     NamedCommands.registerCommand("Shooter Allign 1", m_CommandFactory.presetAngleAdjust(AutoConstants.ONE));
     NamedCommands.registerCommand("Shooter Allign 2", m_CommandFactory.presetAngleAdjust(AutoConstants.TWO));
     NamedCommands.registerCommand("Shooter Allign 3", m_CommandFactory.presetAngleAdjust(AutoConstants.THREE));
 
-    NamedCommands.registerCommand("Intake Down", m_intakeWrist.intakeGamePieceManualCommand().andThen(new WaitCommand(0.75)));
-    NamedCommands.registerCommand("Intake Up", m_intakeWrist.intakeGamePieceManualEndCommand().andThen(new WaitCommand(0.75)));
+    NamedCommands.registerCommand("Intake Down", m_IntakeCommandFactory.deployAndStartIntakeCommand());
+    NamedCommands.registerCommand("Intake Up", m_IntakeCommandFactory.retractAndStopIntakeCommand());
+    //NamedCommands.registerCommand("Intake Up", m_intakeWrist.intakeGamePieceManualEndCommand().until(m_intakeWrist::atGoal));
   }
 
   public Command getAutonomousCommand() {

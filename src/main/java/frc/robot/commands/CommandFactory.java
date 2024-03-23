@@ -53,7 +53,7 @@ public class CommandFactory {
         return align.alongWith(adjust);
     }
     public Command intakeRollerOutCommand() {
-        return m_intake_rollers.throwOutManual().withTimeout(0.3);
+        return m_intake_rollers.throwOutManual();
     }
     
     public Command presetAngleAdjust(double setpoint) {

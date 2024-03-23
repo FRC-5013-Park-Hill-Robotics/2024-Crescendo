@@ -16,9 +16,9 @@ public final class LauncherConstants {
     public final static int LAUNCHER_BOTTOM_CAN_ID = CANConstants.LAUNCHER_BOTTOM_CAN_ID;
     public static final class RotationGains {
         public static final Rotation2d kPositionTolerance= Rotation2d.fromDegrees(1);
-        public static final double kP = 5.25;
+        public static final double kP = 8;
         public static final double kI = 0;
-        public static final double kD = 0.25;
+        public static final double kD = 0.0;
         public static final double kF = 0;
         public static final double kS = 0;
         public static final double kMaxSpeed = 1.6 ; //theoretial free speed of the arm is 1.8868
