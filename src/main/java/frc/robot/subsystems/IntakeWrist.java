@@ -137,6 +137,13 @@ public class IntakeWrist extends SubsystemBase {
                     wristController.getSetpoint().velocity, acceleration);
             SmartDashboard.putNumber("feedforwardVal", feedforwardVal);
 
+            //if intake is at 0 it is resting on launcher and does not need to have any
+            //feed forward or pid adjustemnt.  Save motor stall.
+            if (wristGoalRadians.getGoal() == 0 && wristController.atGoal()){
+                pidVal = 0;
+                feedforwardVal = 0;
+            }
+
             intakeWristMotor
                     .setControl(wristVoltageOut.withOutput(MathUtil.clamp(pidVal + feedforwardVal, -12.0, 12.0)));
             lastSpeed = wristController.getSetpoint().velocity;

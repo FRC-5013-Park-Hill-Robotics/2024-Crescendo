@@ -81,7 +81,7 @@ public class RobotContainer {
   private IntakeCommandFactory m_IntakeCommandFactory = new IntakeCommandFactory(this);
   private CommandFactory m_CommandFactory = new CommandFactory(this);
 
-  private TrobotAddressableLED m_AddressableLED = new TrobotAddressableLED(0, 39);
+  private TrobotAddressableLED m_AddressableLED = new TrobotAddressableLED(9, 39);
 
   private StatusLED m_statusLED = new StatusLED(); // creates the status led instance variable
 
@@ -106,6 +106,7 @@ public class RobotContainer {
 
     //SmartDashboard.putStringArray("Auto List", AutoBuilder.getAllAutoNames().toArray(new String[0]));
     m_AddressableLED.setPattern(new SolidColorPattern(Color.kRed));
+    m_AddressableLED.update();
     m_LimelightFront.setPipeline(getSpeakerPipeline());
   }
 
