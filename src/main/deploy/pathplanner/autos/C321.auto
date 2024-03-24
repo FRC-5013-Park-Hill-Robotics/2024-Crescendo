@@ -24,39 +24,34 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.35
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Intake Down"
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "C3start"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "C3start"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Shooter Allign 3"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Intake Up"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.35
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CloseAlign"
           }
         },
         {
@@ -72,33 +67,28 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "32"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.35
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "32"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Shooter Allign 2"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Intake Up"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.35
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CloseAlign"
           }
         },
         {
@@ -114,27 +104,28 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "21"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "21"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Shooter Allign 1"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Intake Up"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.35
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CloseAlign"
           }
         },
         {
@@ -146,6 +137,6 @@
       ]
     }
   },
-  "folder": "Short",
+  "folder": "C Autos",
   "choreoAuto": false
 }

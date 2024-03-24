@@ -4,11 +4,14 @@
 
 package frc.robot;
 
+import java.nio.file.Path;
+
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -19,6 +22,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -45,6 +49,10 @@ import frc.robot.subsystems.LauncherRollers;
 import frc.robot.subsystems.LauncherShoulder;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.StatusLED;
+import frc.robot.trobot5013lib.led.RainbowPattern;
+import frc.robot.trobot5013lib.led.SolidColorPattern;
+import frc.robot.trobot5013lib.led.TrobotAddressableLED;
+import frc.robot.trobot5013lib.led.TrobotAddressableLEDPattern;
 
 public class RobotContainer {
   private SendableChooser<Command> autoChooser;
@@ -73,6 +81,8 @@ public class RobotContainer {
   private IntakeCommandFactory m_IntakeCommandFactory = new IntakeCommandFactory(this);
   private CommandFactory m_CommandFactory = new CommandFactory(this);
 
+  private TrobotAddressableLED m_AddressableLED = new TrobotAddressableLED(0, 39);
+
   private StatusLED m_statusLED = new StatusLED(); // creates the status led instance variable
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -93,7 +103,10 @@ public class RobotContainer {
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
+
     //SmartDashboard.putStringArray("Auto List", AutoBuilder.getAllAutoNames().toArray(new String[0]));
+    m_AddressableLED.setPattern(new SolidColorPattern(Color.kRed));
+    m_LimelightFront.setPipeline(getSpeakerPipeline());
   }
 
   private void configureBindings() {
@@ -119,8 +132,8 @@ public class RobotContainer {
     //    .whileTrue(new DriveToLLTarget(drivetrain, m_LimelightBack, this::gamepiecePipeline, driverController.rightTrigger()));
     
     driverController.a()
-        .whileTrue(m_CommandFactory.alignAndAdjustToSpeakerCommand())
-        .onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING));
+        .whileTrue(m_CommandFactory.alignAndAdjustToSpeakerCommand());
+       // .onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING));
 
         /*
         .whileTrue(new AllignOnLLTarget(drivetrain, m_LimelightFront, this::getSpeakerPipeline, this::getSpeakerSkew)
@@ -142,23 +155,25 @@ public class RobotContainer {
     operatorController.rightBumper().onTrue(m_launcherRollers.stopCommand());
 
     //Calibration controls for the launcher
-    //operatorController.povLeft().onTrue(m_launcherRollers.incrementSpeedCommand(-5));
-    //operatorController.povRight().onTrue(m_launcherRollers.incrementSpeedCommand(5));
-    //operatorController.povUp().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(1)));
-    //operatorController.povDown().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(-1)));
+    operatorController.povLeft().onTrue(m_launcherRollers.incrementSpeedCommand(-5));
+    operatorController.povRight().onTrue(m_launcherRollers.incrementSpeedCommand(5));
+    operatorController.povUp().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(1)));
+    operatorController.povDown().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(-1)));
 
-    operatorController.povLeft().whileTrue(drivetrain.runDriveQuasiTest(Direction.kForward));
-    operatorController.povRight().whileTrue(drivetrain.runDriveQuasiTest(Direction.kReverse));
+    operatorController.leftTrigger().whileTrue(m_launcherShoulder.goToSetpointCommand(LauncherConstants.PODIUM_ANGLE_RADIANS).alongWith(m_launcherRollers.setSpeedCommand(45))).onFalse(m_launcherRollers.setSpeedCommand(50));
 
-    operatorController.povUp().whileTrue(drivetrain.runDriveDynamTest(Direction.kForward));
-    operatorController.povDown().whileTrue(drivetrain.runDriveDynamTest(Direction.kReverse));
+    // operatorController.povLeft().whileTrue(drivetrain.runDriveQuasiTest(Direction.kForward));
+    // operatorController.povRight().whileTrue(drivetrain.runDriveQuasiTest(Direction.kReverse));
+
+    // operatorController.povUp().whileTrue(drivetrain.runDriveDynamTest(Direction.kForward));
+    // operatorController.povDown().whileTrue(drivetrain.runDriveDynamTest(Direction.kReverse));
 
     //other events
-    new Trigger(m_intakeRollers::hasGamePiece)
-        .onTrue(m_LimelightFront.setPipelineCommand(this::getSpeakerPipeline))
-        //  .alongWith(m_LimelightBack.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING)))
-        .onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING));
-       //   .alongWith(m_LimelightBack.setPipelineCommand(LimelightConstants.GAME_PIECE_RECOGNITION)));
+    // new Trigger(m_intakeRollers::hasGamePiece)
+    //     .onTrue(m_LimelightFront.setPipelineCommand(this::getSpeakerPipeline))
+    //     //  .alongWith(m_LimelightBack.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING)))
+    //     .onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING));
+    //    //   .alongWith(m_LimelightBack.setPipelineCommand(LimelightConstants.GAME_PIECE_RECOGNITION)));
 
 
     // driverController.a().whileTrue(new InstantCommand(() ->
@@ -181,22 +196,31 @@ public class RobotContainer {
     NamedCommands.registerCommand("Intake Sequence", m_IntakeCommandFactory.intakeSequenceCommand());
     NamedCommands.registerCommand("Duck", m_CommandFactory.duckCommand());
     NamedCommands.registerCommand("Align and Adjust to Speaker", m_CommandFactory.alignAndAdjustToSpeakerCommand());
-    NamedCommands.registerCommand("Intake Roller Out", m_CommandFactory.intakeRollerOutCommand());
+    NamedCommands.registerCommand("Intake Roller Out", m_CommandFactory.intakeRollerOutCommand().andThen(new WaitCommand(0.15)));
     
     NamedCommands.registerCommand("Adjust to Subwoofer", m_CommandFactory.presetAngleAdjust(AutoConstants.SUBWOOFER));
     NamedCommands.registerCommand("Adjust to Subwoofer Side", m_CommandFactory.presetAngleAdjust(AutoConstants.SUBWOOFER_SIDE));
     NamedCommands.registerCommand("CloseAllign 2", m_CommandFactory.presetAngleAdjust(AutoConstants.TWO));
+    NamedCommands.registerCommand("CloseAlign", m_CommandFactory.presetAngleAdjust(AutoConstants.TWO));
     NamedCommands.registerCommand("Shooter Allign 1", m_CommandFactory.presetAngleAdjust(AutoConstants.ONE));
     NamedCommands.registerCommand("Shooter Allign 2", m_CommandFactory.presetAngleAdjust(AutoConstants.TWO));
     NamedCommands.registerCommand("Shooter Allign 3", m_CommandFactory.presetAngleAdjust(AutoConstants.THREE));
 
-    NamedCommands.registerCommand("Intake Down", m_intakeWrist.intakeGamePieceManualCommand().andThen(new WaitCommand(0.75)));
-    NamedCommands.registerCommand("Intake Up", m_intakeWrist.intakeGamePieceManualEndCommand().andThen(new WaitCommand(0.75)));
+    NamedCommands.registerCommand("Intake Down", m_IntakeCommandFactory.deployAndStartIntakeCommand());
+    NamedCommands.registerCommand("Intake Up", m_IntakeCommandFactory.retractAndStopIntakeCommand());
+
+    NamedCommands.registerCommand("Lower Speed", m_CommandFactory.lowerSpeed());
+    NamedCommands.registerCommand("Reset Speed", m_CommandFactory.resetSpeed());
+    //NamedCommands.registerCommand("Intake Up", m_intakeWrist.intakeGamePieceManualEndCommand().until(m_intakeWrist::atGoal));
   }
 
   public Command getAutonomousCommand() {
     /* First put the drivetrain into auto run mode, then run the auto */
     return autoChooser.getSelected();
+  }
+
+  public PathPlannerAuto getPathPlannerAuto() {
+    return (PathPlannerAuto) autoChooser.getSelected();
   }
 
   public static RobotContainer getInstance() {

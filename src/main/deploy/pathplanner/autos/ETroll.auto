@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.5309019562582962,
-      "y": 1.1601689035220655
+      "x": 1.4827362513562519,
+      "y": 0.9640810740696224
     },
-    "rotation": 59.32271997820355
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -26,6 +26,6 @@
       ]
     }
   },
-  "folder": "Troll",
+  "folder": "E Autos",
   "choreoAuto": false
 }

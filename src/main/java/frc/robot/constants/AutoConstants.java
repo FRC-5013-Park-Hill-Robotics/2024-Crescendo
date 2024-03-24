@@ -7,9 +7,12 @@ package frc.robot.constants;
 
 /** Add your docs here. */
 public final class AutoConstants {
-    public static final double SUBWOOFER = Math.toRadians(61);
+    public static final double SUBWOOFER = LauncherConstants.SPEAKER_ANGLE_RADIANS;
+    //public static final double SUBWOOFER = Math.toRadians(53);
     public static final double SUBWOOFER_SIDE = Math.toRadians(55);
-    public static final double ONE = Math.toRadians(46.5);
-    public static final double TWO = Math.toRadians(46.5);
-    public static final double THREE = Math.toRadians(46.5);
+    public static final double ONE = Math.toRadians(36);
+    public static final double TWO = Math.toRadians(40);
+    public static final double THREE = Math.toRadians(36);
+
+    //36 near amp
 }

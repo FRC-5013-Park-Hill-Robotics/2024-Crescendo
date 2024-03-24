@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.5539374447620733,
-        "y": 4.080302727623126
+        "x": 2.5247228667648325,
+        "y": 4.245852002973283
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5697075408574257,
-        "y": 4.08030272761848
+        "x": 2.540492962860185,
+        "y": 4.245852002968637
       },
       "isLocked": false,
       "linkedName": "C3start"
     },
     {
       "anchor": {
-        "x": 2.495508288762723,
-        "y": 4.097305368134887
+        "x": 2.42,
+        "y": 4.35
       },
       "prevControl": {
-        "x": 2.4857700960952256,
-        "y": 4.107043560802385
+        "x": 2.4102618073325024,
+        "y": 4.359738192667497
       },
       "nextControl": null,
       "isLocked": false,
@@ -55,7 +55,7 @@
     "rotateFast": true
   },
   "reversed": false,
-  "folder": "CPath",
+  "folder": null,
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

@@ -121,7 +121,7 @@ public class IntakeRollers extends SubsystemBase {
     } 
 
     public Command throwOutManual(){
-        Command result = run(this::feedOut);
+        Command result = runOnce(this::feedOut);
         return result;
     } 
 

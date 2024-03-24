@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7718481866382481,
-      "y": 6.563541857807322
+      "x": 2.0,
+      "y": 7.0
     },
-    "rotation": -116.6398172671067
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -14,18 +14,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": "XAMP"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "AMP1"
+            "pathName": "4m"
           }
         }
       ]
     }
   },
-  "folder": "WIP-MISC.",
+  "folder": "Distance Tests",
   "choreoAuto": false
 }

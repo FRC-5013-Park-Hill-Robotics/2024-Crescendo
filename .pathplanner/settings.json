@@ -16,12 +16,12 @@
     "XPath"
   ],
   "autoFolders": [
-    "2-3Mid",
-    "Short",
-    "4Mid",
-    "Short-Mid",
-    "Troll",
-    "WIP-MISC."
+    "A Autos",
+    "B Autos",
+    "C Autos",
+    "E Autos",
+    "Distance Tests",
+    "X Autos"
   ],
   "defaultMaxVel": 4.8,
   "defaultMaxAccel": 3.0,

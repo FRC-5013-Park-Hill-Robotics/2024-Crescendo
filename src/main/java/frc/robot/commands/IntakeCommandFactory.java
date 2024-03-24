@@ -21,25 +21,23 @@ public class IntakeCommandFactory {
         m_wrist = robotContainer.getIntakeWrist();
         m_shoulder = robotContainer.getLauncherShoulder();
     }
-    public Command deployCommand(){
-        Command theCommand =  m_wrist.run(()->{
-           m_wrist.deploy();
-        });
+    public Command deployAndStartIntakeCommand(){
+        Command theCommand =  m_wrist.runOnce(m_wrist::deploy);
 
-        theCommand.addRequirements(m_shoulder);
-        return theCommand;
+        Command takeInCommand = m_rollers.takeIn();
+        return theCommand.alongWith(takeInCommand);
     }
 
-    public Command retractCommand(){  
-        Command theCommand =  m_wrist.run(()->{
-           m_wrist.retract();
-        });
+    public Command retractAndStopIntakeCommand(){  
+        Command retractCommand =  m_wrist.run(m_wrist::retract).until(m_wrist::atGoal);
 
-        return theCommand;
+        Command stopCommand = m_rollers.stopC();
+
+        return stopCommand.alongWith(retractCommand);
     }
 
     public Command startRollersCommand(){
-        Command theCommand = m_rollers.run(()->{
+        Command theCommand = m_rollers.runOnce(()->{
             m_rollers.feedIn();
         });
 
@@ -48,15 +46,15 @@ public class IntakeCommandFactory {
 
 
     public Command stopRollersCommand(){
-        Command theCommand = m_rollers.run(()->{
+        Command theCommand = m_rollers.runOnce(()->{
             m_rollers.stop();;
         });
 
         return theCommand;
     }
+
     public Command intakeSequenceCommand(){
-        return deployCommand()
-            .alongWith(startRollersCommand())
-            .until(m_rollers::hasGamePiece).andThen(stopRollersCommand().alongWith(retractCommand()));
+        return deployAndStartIntakeCommand()
+            .until(m_rollers::hasGamePiece).andThen(retractAndStopIntakeCommand());
     }
 }
