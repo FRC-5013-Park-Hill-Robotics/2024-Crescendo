@@ -16,8 +16,12 @@
     "XPath"
   ],
   "autoFolders": [
+    "A Autos",
+    "B Autos",
     "C Autos",
-    "A Autos"
+    "E Autos",
+    "Distance Tests",
+    "X Autos"
   ],
   "defaultMaxVel": 4.8,
   "defaultMaxAccel": 3.0,

@@ -12,6 +12,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -180,6 +181,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     public void periodic() {
         m_field.setRobotPose(m_odometry.getEstimatedPosition());
         SmartDashboard.putData("Field", m_field);
+        // m_field.getObject("trajectory").setTrajectory(null);
+
+        // PathPlannerAuto pathPlannerAuto = RobotContainer.getInstance().getPathPlannerAuto();
+        // PathPlannerTrajectory pathPlannerTrajectory = new PathPlannerTrajectory(null, getCurrentRobotChassisSpeeds(), m_fieldRelativeOffset);
 
         if (!hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
             DriverStation.getAlliance().ifPresent((allianceColor) -> {

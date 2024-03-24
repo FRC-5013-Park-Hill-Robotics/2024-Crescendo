@@ -16,7 +16,7 @@ public final class LauncherConstants {
     public final static int LAUNCHER_BOTTOM_CAN_ID = CANConstants.LAUNCHER_BOTTOM_CAN_ID;
     public static final class RotationGains {
         public static final Rotation2d kPositionTolerance= Rotation2d.fromDegrees(1);
-        public static final double kP = 8;
+        public static final double kP = 22;
         public static final double kI = 0;
         public static final double kD = 0.0;
         public static final double kF = 0;
@@ -81,7 +81,7 @@ public final class LauncherConstants {
     public static final double PODIUM_ANGLE_RADIANS = Math.toRadians(38);
 
     public static final double SHOULDER_ANGLE_MAX = Math.toRadians(65);
-    public static final double SHOULDER_ANGLE_MIN = Math.toRadians(30);
+    public static final double SHOULDER_ANGLE_MIN = Math.toRadians(25);
 
     public static final double SHOULDER_CURRENT_LIMIT = 4;
 

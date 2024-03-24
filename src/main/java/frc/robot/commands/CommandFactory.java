@@ -60,4 +60,12 @@ public class CommandFactory {
         return m_shoulder.goToSetpointUntilCompleteCommand(setpoint);
     }
 
+    public Command lowerSpeed() {
+        return m_launcher_rollers.setSpeedCommand(20);
+    }
+
+    public Command resetSpeed() {
+        return m_launcher_rollers.setSpeedCommand(50);
+    }
+
 }

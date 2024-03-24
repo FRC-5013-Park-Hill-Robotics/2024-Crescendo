@@ -166,7 +166,8 @@ public class IntakeWrist extends SubsystemBase {
     }
 
     public boolean atGoal() {
-        return TrobotUtil.withinTolerance(getAngle(), wristGoalRadians.getGoal(), IntakeConstants.RotationGains.kPositionTolerance.getRadians());
+        return  wristController.atGoal();
+
     }
 
     public void retract() {

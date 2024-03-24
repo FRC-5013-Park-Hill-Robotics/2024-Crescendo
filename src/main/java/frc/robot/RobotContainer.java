@@ -4,11 +4,14 @@
 
 package frc.robot;
 
+import java.nio.file.Path;
+
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -100,9 +103,10 @@ public class RobotContainer {
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
-    //SmartDashboard.putStringArray("Auto List", AutoBuilder.getAllAutoNames().toArray(new String[0]));
 
+    //SmartDashboard.putStringArray("Auto List", AutoBuilder.getAllAutoNames().toArray(new String[0]));
     m_AddressableLED.setPattern(new SolidColorPattern(Color.kRed));
+    m_LimelightFront.setPipeline(getSpeakerPipeline());
   }
 
   private void configureBindings() {
@@ -128,8 +132,8 @@ public class RobotContainer {
     //    .whileTrue(new DriveToLLTarget(drivetrain, m_LimelightBack, this::gamepiecePipeline, driverController.rightTrigger()));
     
     driverController.a()
-        .whileTrue(m_CommandFactory.alignAndAdjustToSpeakerCommand())
-        .onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING));
+        .whileTrue(m_CommandFactory.alignAndAdjustToSpeakerCommand());
+       // .onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING));
 
         /*
         .whileTrue(new AllignOnLLTarget(drivetrain, m_LimelightFront, this::getSpeakerPipeline, this::getSpeakerSkew)
@@ -165,11 +169,11 @@ public class RobotContainer {
     // operatorController.povDown().whileTrue(drivetrain.runDriveDynamTest(Direction.kReverse));
 
     //other events
-    new Trigger(m_intakeRollers::hasGamePiece)
-        .onTrue(m_LimelightFront.setPipelineCommand(this::getSpeakerPipeline))
-        //  .alongWith(m_LimelightBack.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING)))
-        .onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING));
-       //   .alongWith(m_LimelightBack.setPipelineCommand(LimelightConstants.GAME_PIECE_RECOGNITION)));
+    // new Trigger(m_intakeRollers::hasGamePiece)
+    //     .onTrue(m_LimelightFront.setPipelineCommand(this::getSpeakerPipeline))
+    //     //  .alongWith(m_LimelightBack.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING)))
+    //     .onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING));
+    //    //   .alongWith(m_LimelightBack.setPipelineCommand(LimelightConstants.GAME_PIECE_RECOGNITION)));
 
 
     // driverController.a().whileTrue(new InstantCommand(() ->
@@ -204,12 +208,19 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("Intake Down", m_IntakeCommandFactory.deployAndStartIntakeCommand());
     NamedCommands.registerCommand("Intake Up", m_IntakeCommandFactory.retractAndStopIntakeCommand());
+
+    NamedCommands.registerCommand("Lower Speed", m_CommandFactory.lowerSpeed());
+    NamedCommands.registerCommand("Reset Speed", m_CommandFactory.resetSpeed());
     //NamedCommands.registerCommand("Intake Up", m_intakeWrist.intakeGamePieceManualEndCommand().until(m_intakeWrist::atGoal));
   }
 
   public Command getAutonomousCommand() {
     /* First put the drivetrain into auto run mode, then run the auto */
     return autoChooser.getSelected();
+  }
+
+  public PathPlannerAuto getPathPlannerAuto() {
+    return (PathPlannerAuto) autoChooser.getSelected();
   }
 
   public static RobotContainer getInstance() {
