@@ -4,14 +4,24 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.trobot5013lib.led.SolidColorPattern;
+import frc.robot.trobot5013lib.led.TrobotAddressableLED;
 
-
-/** Add your docs here. */
 public class StatusLED extends SubsystemBase {
-    public StatusLED() {
+   private TrobotAddressableLED m_AddressableLED = new TrobotAddressableLED(9, 39);
 
-    }
+  /** Creates a new StatusLED. */
+  public StatusLED() {
     
+  }
+
+  @Override
+  public void periodic() {
+    // check conditions and set patterns
+    m_AddressableLED.setPattern(new SolidColorPattern(Color.kRed));
+
+    m_AddressableLED.update();
+  }
 }
-    
