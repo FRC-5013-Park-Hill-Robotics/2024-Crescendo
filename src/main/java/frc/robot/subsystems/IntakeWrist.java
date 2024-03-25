@@ -173,8 +173,7 @@ public class IntakeWrist extends SubsystemBase {
     }
 
     public boolean atGoal() {
-        return  wristController.atGoal();
-
+        return wristController.atGoal();
     }
 
     public void retract() {
