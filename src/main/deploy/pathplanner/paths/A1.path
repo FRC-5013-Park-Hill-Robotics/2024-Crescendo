@@ -43,7 +43,7 @@
     "rotateFast": true
   },
   "reversed": false,
-  "folder": null,
+  "folder": "APath",
   "previewStartingState": {
     "rotation": -119.7448812969422,
     "velocity": 0

@@ -36,12 +36,12 @@
         "y": 5.786158835287259
       },
       "prevControl": {
-        "x": 7.528005508090582,
-        "y": 5.834093114840842
+        "x": 4.569464595100926,
+        "y": 6.4910715867943365
       },
       "nextControl": {
-        "x": 8.936912619197873,
-        "y": 5.74487172286285
+        "x": 8.409059195037106,
+        "y": 5.762610951233322
       },
       "isLocked": false,
       "linkedName": null
@@ -52,12 +52,12 @@
         "y": 5.9973883419737914
       },
       "prevControl": {
-        "x": 4.989347638880248,
-        "y": 5.964299083068659
+        "x": 7.829686070821158,
+        "y": 6.681985456994171
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "45end"
     }
   ],
   "rotationTargets": [
@@ -76,12 +76,12 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0,
+    "velocity": 0.0,
     "rotation": -172.42859575595537,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "MidConnections",
   "previewStartingState": {
     "rotation": -141.9003281692773,
     "velocity": 0

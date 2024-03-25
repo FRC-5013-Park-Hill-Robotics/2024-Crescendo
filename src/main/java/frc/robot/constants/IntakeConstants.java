@@ -15,9 +15,9 @@ public final class IntakeConstants {
         public static final Rotation2d kPositionTolerance= Rotation2d.fromDegrees(2.5);
         //public static final double kP = 3.5;
         //public static final double kP = 3.75013;
-        public static final double kP = 3.55013;
+        public static final double kP = 4.55013;
         public static final double kI = 0.0;
-        public static final double kD = 0.6505013;
+        public static final double kD = 0.65013;
         public static final double kF = 0;
         public static final double kS = 0.45005013;
         public static final double kG = 0.672;
@@ -46,6 +46,6 @@ public final class IntakeConstants {
     public final static double RETRACT_SETPOINT = 0;
     public static final int TIME_OF_FLIGHT_CAN_ID = 1;
     public static final double TIME_OF_FLIGHT_RANGE_MM = 140;
-    public static final double ENCODER_OFFSET_RADIANS = Math.toRadians(-110);
+    public static final double ENCODER_OFFSET_RADIANS = Math.toRadians(-111.8);
 
 }

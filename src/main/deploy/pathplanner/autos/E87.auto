@@ -2,25 +2,69 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.300350652649357,
-      "y": 3.01
+      "x": 1.4827362513562519,
+      "y": 0.9640810740696224
     },
-    "rotation": 114.61780438059193
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "E8"
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Lower Speed"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake Roller Out"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Reset Speed"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake Down"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "E8"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Align and Adjust to Speaker"
+            "name": "Intake Up"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shooter Allign 2"
           }
         },
         {
@@ -32,24 +76,30 @@
         {
           "type": "path",
           "data": {
-            "pathName": "8-7"
+            "pathName": "87start"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Align and Adjust to Speaker"
+            "name": "Shooter Allign 2"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Intake Roller Out"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "87end"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "E Autos",
   "choreoAuto": false
 }

@@ -1,0 +1,31 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.4827362513562519,
+      "y": 0.9640810740696224
+    },
+    "rotation": 180.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "E8"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "84Short"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "E Autos",
+  "choreoAuto": false
+}

@@ -48,8 +48,9 @@ public class LauncherShoulder extends SubsystemBase {
     /** Creates a new IntakeShoulder. */
     public LauncherShoulder() {
       CurrentLimitsConfigs currentConfig = new CurrentLimitsConfigs();
-      currentConfig.withSupplyCurrentLimit(2);
-      currentConfig.withSupplyCurrentThreshold(0.2);
+      //use constants for shootercurrentlimit and shootercurrentthreshold
+      currentConfig.withSupplyCurrentLimit(LauncherConstants.SHOULDER_CURRENT_LIMIT);
+      currentConfig.withSupplyCurrentThreshold(LauncherConstants.SHOULDER_CURRENT_THRESHOLD);
       currentConfig.withSupplyCurrentLimitEnable(true);
       leftLauncherShoulderMotor.getConfigurator().apply(currentConfig);
       leftLauncherShoulderMotor.setInverted(true);
@@ -67,35 +68,35 @@ public class LauncherShoulder extends SubsystemBase {
     @Override
     public void periodic() {
       
-        // if(shoulderGoalRadians > LauncherConstants.SHOULDER_ANGLE_MAX){
-        //   shoulderGoalRadians = LauncherConstants.SHOULDER_ANGLE_MAX;
-        // }
-        // if(shoulderGoalRadians < LauncherConstants.SHOULDER_ANGLE_MIN){
-        //   shoulderGoalRadians = LauncherConstants.SHOULDER_ANGLE_MIN;
-        // }
+        if(shoulderGoalRadians > LauncherConstants.SHOULDER_ANGLE_MAX){
+          shoulderGoalRadians = LauncherConstants.SHOULDER_ANGLE_MAX;
+        }
+        if(shoulderGoalRadians < LauncherConstants.SHOULDER_ANGLE_MIN){
+          shoulderGoalRadians = LauncherConstants.SHOULDER_ANGLE_MIN;
+        }
 
-        // double pidVal = shoulderController.calculate(getShoulderAngleRadians(), shoulderGoalRadians);
-        // State setpoint = shoulderController.getSetpoint();
-        // double acceleration = (shoulderController.getSetpoint().velocity - lastSpeed) / (Timer.getFPGATimestamp() - lastTime);
+        double pidVal = shoulderController.calculate(getShoulderAngleRadians(), shoulderGoalRadians);
+        State setpoint = shoulderController.getSetpoint();
+        double acceleration = (shoulderController.getSetpoint().velocity - lastSpeed) / (Timer.getFPGATimestamp() - lastTime);
      
-        // double output = 0;
-        // if(pidVal  > 0 && LauncherConstants.SHOULDER_ANGLE_MAX < getShoulderAngleRadians()){
-        //   output = 0;
-        // } 
-        // else if (pidVal < 0 && LauncherConstants.SHOULDER_ANGLE_MIN > getShoulderAngleRadians()){
-        //   output = 0;
-        // } else{
-        //   output = pidVal;
-        // }
-        // leftLauncherShoulderMotor.setControl(shoulderVoltageOut.withOutput(output));
+        double output = 0;
+        if(pidVal  > 0 && LauncherConstants.SHOULDER_ANGLE_MAX < getShoulderAngleRadians()){
+          output = 0;
+        } 
+        else if (pidVal < 0 && LauncherConstants.SHOULDER_ANGLE_MIN > getShoulderAngleRadians()){
+          output = 0;
+        } else{
+          output = pidVal;
+        }
+        leftLauncherShoulderMotor.setControl(shoulderVoltageOut.withOutput(output));
       
-        // lastSpeed = shoulderController.getSetpoint().velocity;
-        // lastTime = Timer.getFPGATimestamp();
-        // SmartDashboard.putNumber("Launcher Output", output);
-        //  SmartDashboard.putNumber("Launcher Pid Value", pidVal);
-        // SmartDashboard.putNumber("Launcher Goal", Math.toDegrees(shoulderGoalRadians));
-        // SmartDashboard.putNumber("Launcher Absolute" , encoder.getAngle().getDegrees());
-        // SmartDashboard.putBoolean("Launcher at goal", atGoal());
+        lastSpeed = shoulderController.getSetpoint().velocity;
+        lastTime = Timer.getFPGATimestamp();
+        SmartDashboard.putNumber("Launcher Output", output);
+         SmartDashboard.putNumber("Launcher Pid Value", pidVal);
+        SmartDashboard.putNumber("Launcher Goal", Math.toDegrees(shoulderGoalRadians));
+        SmartDashboard.putNumber("Launcher Absolute" , encoder.getAngle().getDegrees());
+        SmartDashboard.putBoolean("Launcher at goal", atGoal());
     
       }
 

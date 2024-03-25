@@ -57,8 +57,8 @@ public class AllignOnLLTarget extends Command {
     double xOutput = 0;
     double yOutput = 0;
 		if (m_Limelight.hasTarget()){
-			double vertical_angle = m_Limelight.getVerticalAngleOfErrorDegrees();
-			double horizontal_angle = -m_Limelight.getHorizontalAngleOfErrorDegrees() ;
+			double vertical_angle = m_Limelight.getHorizontalAngleOfErrorDegrees();
+			double horizontal_angle = -m_Limelight.getVerticalAngleOfErrorDegrees() ;
 			double setpoint = Math.toRadians(horizontal_angle)+ m_Drivetrain.getPose().getRotation().getRadians() + Math.toRadians(m_skew.get());
       thetaController.setSetpoint(setpoint);
       targeting = true;
@@ -83,6 +83,6 @@ public class AllignOnLLTarget extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return targeting && TrobotUtil.withinTolerance(m_Limelight.getHorizontalAngleOfErrorDegrees(), 0,3);
+    return targeting && TrobotUtil.withinTolerance(m_Limelight.getVerticalAngleOfErrorDegrees(), 0,3);
   }
 }

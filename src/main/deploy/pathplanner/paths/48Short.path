@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.770943341528902,
+        "y": 7.25472706759367
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 8.681455645558877,
+        "y": 7.093184562039965
+      },
+      "isLocked": false,
+      "linkedName": "4IN"
+    },
+    {
+      "anchor": {
+        "x": 8.490541775359043,
+        "y": 3.6273635337968355
+      },
+      "prevControl": {
+        "x": 8.652084280912748,
+        "y": 3.832963086319733
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.8,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": -135.0000000000001,
+    "rotateFast": true
+  },
+  "reversed": false,
+  "folder": "TrollConnections",
+  "previewStartingState": {
+    "rotation": -148.6713071321957,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

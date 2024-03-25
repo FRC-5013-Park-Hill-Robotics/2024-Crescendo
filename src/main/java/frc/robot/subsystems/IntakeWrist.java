@@ -61,12 +61,41 @@ public class IntakeWrist extends SubsystemBase {
             IntakeConstants.RotationGains.kD,
             wristConstraints);
     private final VoltageOut wristVoltageOut = new VoltageOut(0);
-    private double wristGoalRadians = 0;
+    private WristGoal wristGoalRadians = new ArmRelativeGoal(0);
     private double lastSpeed = 0;
     private double lastTime = 0;
 
     private boolean stop = true;
     private IntakeRollers m_intakeRollers;
+
+    public abstract class WristGoal { 
+        protected double goal;
+        public WristGoal(double goal) {
+            this.goal = goal;
+        }
+        abstract double getGoal(); 
+        public void incrementAngleBy(double radianChange) {
+            this.goal += radianChange;
+        }
+    }
+
+    public class GroundRelativeGoal extends WristGoal {
+        public GroundRelativeGoal(double goal) {
+            super(goal);
+        }
+        double getGoal() {
+            return getGroundRelativeWristPositionRadians(goal);
+        }
+    }
+
+    public class ArmRelativeGoal extends WristGoal {
+        public ArmRelativeGoal(double goal) {
+            super(goal);
+        }
+        double getGoal() {
+            return goal;
+        }
+    }
 
     /** Creates a new IntakeShoulder. */
     public IntakeWrist(IntakeRollers intakeRollers) {
@@ -95,8 +124,8 @@ public class IntakeWrist extends SubsystemBase {
         if (this.stop == true) {
             intakeWristMotor.setControl(wristVoltageOut.withOutput(0));
         } else {
-            if (wristGoalRadians != wristController.getGoal().position) {
-                wristController.setGoal(wristGoalRadians);
+            if (wristGoalRadians.getGoal() != wristController.getGoal().position) {
+                wristController.setGoal(wristGoalRadians.getGoal());
             }
             double pidVal = wristController.calculate(getAngle());
             SmartDashboard.putNumber("pidValue", pidVal);
@@ -108,6 +137,13 @@ public class IntakeWrist extends SubsystemBase {
                     wristController.getSetpoint().velocity, acceleration);
             SmartDashboard.putNumber("feedforwardVal", feedforwardVal);
 
+            //if intake is at 0 it is resting on launcher and does not need to have any
+            //feed forward or pid adjustemnt.  Save motor stall.
+            if (wristGoalRadians.getGoal() == 0 && wristController.atGoal()){
+                pidVal = 0;
+                feedforwardVal = 0;
+            }
+
             intakeWristMotor
                     .setControl(wristVoltageOut.withOutput(MathUtil.clamp(pidVal + feedforwardVal, -12.0, 12.0)));
             lastSpeed = wristController.getSetpoint().velocity;
@@ -116,41 +152,42 @@ public class IntakeWrist extends SubsystemBase {
         SmartDashboard.putBoolean("Intake at goal", atGoal());
         SmartDashboard.putNumber("Ground Angle", Math.toDegrees(getGroundRelativeWristPositionRadians()));
         SmartDashboard.putNumber("Wrist Position", encoder.getAngle().getDegrees());
-        SmartDashboard.putNumber("Wrist  goal", Math.toDegrees(wristGoalRadians));
+        SmartDashboard.putNumber("Wrist  goal", Math.toDegrees(wristGoalRadians.getGoal()));
+        
     }
 
     public void deploy() {
         this.stop = false;
-        double goal = Math.PI - getLauncherShoulder().getShoulderAngleRadians()
-                - IntakeConstants.DEPLOY_SETPOINT_TO_GROUND;
-        setWristGoalRadians(goal);
+        double goal = IntakeConstants.DEPLOY_SETPOINT_TO_GROUND;
+        setWristGoalRadians(new GroundRelativeGoal(goal));
     }
 
     public void amp() {
-        setWristGoalRadians(getGroundRelativeWristPositionRadians(IntakeConstants.AMP_ANGLE_GROUND));
+        setWristGoalRadians(new GroundRelativeGoal(IntakeConstants.AMP_ANGLE_GROUND));
     }
 
     public Command ampCommand() {
         Command result = run(this::amp).until(this::atAmp);
-        result.addRequirements(getLauncherShoulder());
+        //result.addRequirements(getLauncherShoulder());
         return result;
     }
 
     public boolean atGoal() {
-        return TrobotUtil.withinTolerance(getAngle(), wristGoalRadians, IntakeConstants.RotationGains.kPositionTolerance.getRadians());
+        return  wristController.atGoal();
+
     }
 
     public void retract() {
         this.stop = false;
-        setWristGoalRadians(IntakeConstants.RETRACT_SETPOINT);
+        setWristGoalRadians(new ArmRelativeGoal(IntakeConstants.RETRACT_SETPOINT));
     }
 
     public void stop() {
         this.stop = true;
     }
 
-    public void setWristGoalRadians(double radians) {
-        wristGoalRadians = radians;
+    public void setWristGoalRadians(WristGoal goal) {
+        wristGoalRadians = goal;
     }
 
     private LauncherShoulder getLauncherShoulder() {
@@ -167,13 +204,13 @@ public class IntakeWrist extends SubsystemBase {
 
     public Command deployCommand() {
         Command result = runOnce(this::deploy);
-        result.addRequirements(getLauncherShoulder());
+        //result.addRequirements(getLauncherShoulder());
         return result;
     }
 
     public Command retractCommand() {
         Command result = runOnce(this::retract);
-        result.addRequirements(getLauncherShoulder());
+        //result.addRequirements(getLauncherShoulder());
         return result;
     }
 
@@ -196,7 +233,7 @@ public class IntakeWrist extends SubsystemBase {
     }
 
     public void incrementAngle(double radianChange) {
-        this.wristGoalRadians += radianChange;
+        this.wristGoalRadians.incrementAngleBy(radianChange);
 
     }
 

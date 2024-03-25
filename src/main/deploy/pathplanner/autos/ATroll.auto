@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.3840451330276551,
-      "y": 7.6910013507242425
+      "x": 0.765872873427322,
+      "y": 6.579185680732721
     },
-    "rotation": -90.0
+    "rotation": -120.52970589993419
   },
   "command": {
     "type": "sequential",
@@ -14,18 +14,18 @@
         {
           "type": "path",
           "data": {
-            "pathName": "A4"
+            "pathName": "X4"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "4-8"
+            "pathName": "48"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "A Autos",
   "choreoAuto": false
 }

@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.765872873427322,
+      "y": 4.508504473180682
+    },
+    "rotation": 119.15848977199278
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "C6"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "67"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "78"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "C Autos",
+  "choreoAuto": false
+}

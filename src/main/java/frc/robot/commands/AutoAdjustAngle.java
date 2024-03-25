@@ -36,7 +36,7 @@ public class AutoAdjustAngle extends Command {
   @Override
   public void execute() {
     Limelight frontLL = RobotContainer.getInstance().getFrontLimelight();
-    double ty = frontLL.getVerticalAngleOfErrorDegrees();
+    double ty = frontLL.getHorizontalAngleOfErrorDegrees();
     LinearInterpolator LAUNCHER_TY_ANGLE_INTERPOLATOR = LauncherConstants.TargetConstants.LAUNCHER_TY_ANGLE_INTERPOLATOR;
     LinearInterpolator LAUNCHER_TY_SHOOTER_SPEED_INTERPOLATOR = LauncherConstants.TargetConstants.LAUNCHER_TY_SHOOTER_SPEED_INTERPOLATOR;
 

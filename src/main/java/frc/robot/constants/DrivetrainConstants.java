@@ -21,4 +21,5 @@ public final class DrivetrainConstants {
     public static Matrix<N3, N1> visionMeasurementStdDevs = VecBuilder.fill(0.9, 0.9, 0.9);
     public static final double currentLimit = 60;
     public static final double autoMaxSpeedMetersPerSecond = maxSpeedMetersPerSecond * 0.8;
+    public static final double estimatedKp = 12/(maxSpeedMetersPerSecond/ (Units.inchesToMeters(TunerConstants.kWheelRadiusInches) * 2 * Math.PI));
 }
