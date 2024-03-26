@@ -3,45 +3,33 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7718481866382481,
-        "y": 6.563541857807322
+        "x": 0.7805585557503859,
+        "y": 4.523190155503746
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.7328954159687686,
-        "y": 6.456421738466253
+        "x": 1.9260417769493865,
+        "y": 3.0693076055203994
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.3007444354153246,
-        "y": 6.9433313718347485
+        "x": 7.697514929913581,
+        "y": 2.4525089479517073
       },
       "prevControl": {
-        "x": 0.8010627646403579,
-        "y": 6.875164023163159
+        "x": 4.217008219347387,
+        "y": 0.6461700222148214
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "X1start"
+      "linkedName": "C7start"
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [
-    {
-      "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 1.0,
-      "constraints": {
-        "maxVelocity": 3.0,
-        "maxAcceleration": 2.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0
-      }
-    }
-  ],
+  "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.8,
@@ -55,9 +43,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "APath",
+  "folder": "CPath",
   "previewStartingState": {
-    "rotation": -119.94568344039523,
+    "rotation": 121.21840276434638,
     "velocity": 0
   },
   "useDefaultConstraints": true

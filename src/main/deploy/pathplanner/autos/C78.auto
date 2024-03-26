@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7511871911042578,
-      "y": 6.579185680732721
+      "x": 0.7523718013035084,
+      "y": 4.5087832049922705
     },
-    "rotation": -120.0
+    "rotation": 119.18080605249983
   },
   "command": {
     "type": "sequential",
@@ -36,44 +36,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "A1"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Shooter Allign 1"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Up"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Roller Out"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Down"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "14start"
+                  "pathName": "C7start"
                 }
               },
               {
@@ -94,7 +57,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "14end"
+            "pathName": "C7end"
           }
         },
         {
@@ -114,9 +77,9 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "45start"
+                  "name": "path goes here (placeholder)"
                 }
               },
               {
@@ -131,13 +94,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Intake Up"
+            "name": "path goes here (placeholder)"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "45end"
+            "name": "Intake Up"
           }
         },
         {
@@ -149,6 +112,6 @@
       ]
     }
   },
-  "folder": "A Autos",
+  "folder": "C Autos",
   "choreoAuto": false
 }

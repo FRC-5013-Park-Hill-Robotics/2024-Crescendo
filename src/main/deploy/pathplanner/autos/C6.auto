@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.75,
-      "y": 4.52
+      "x": 0.7523718013035084,
+      "y": 4.51852139765964
     },
-    "rotation": 121.09
+    "rotation": 121.09048712581416
   },
   "command": {
     "type": "sequential",
@@ -30,9 +30,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "C3start"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "C6start"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Shooter Allign 3"
+                }
+              }
+            ]
           }
         },
         {
@@ -42,9 +55,9 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "CloseAllign 2"
+            "pathName": "C6end"
           }
         },
         {

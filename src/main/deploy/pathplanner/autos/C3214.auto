@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7511871911042578,
-      "y": 6.579185680732721
+      "x": 0.7523718013035084,
+      "y": 4.51852139765964
     },
-    "rotation": -120.0
+    "rotation": 121.09048712581416
   },
   "command": {
     "type": "sequential",
@@ -36,7 +36,81 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "A1"
+                  "pathName": "C3start"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Shooter Allign 3"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Up"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Roller Out"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Down"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "32"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Shooter Allign 2"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Up"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Roller Out"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Down"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "21"
                 }
               },
               {
@@ -61,34 +135,9 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Intake Down"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "14start"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Close To Wing Align"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Up"
+            "pathName": "14start"
           }
         },
         {
@@ -96,59 +145,10 @@
           "data": {
             "pathName": "14end"
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Roller Out"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Down"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "45start"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Close To Wing Align"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Up"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "45end"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Roller Out"
-          }
         }
       ]
     }
   },
-  "folder": "A Autos",
+  "folder": "C Autos",
   "choreoAuto": false
 }

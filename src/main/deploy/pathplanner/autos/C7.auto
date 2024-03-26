@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.75,
-      "y": 4.52
+      "x": 0.7523718013035084,
+      "y": 4.5087832049922705
     },
-    "rotation": 121.09
+    "rotation": 119.18080605249983
   },
   "command": {
     "type": "sequential",
@@ -30,9 +30,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "C3start"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "C7start"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Close To Wing Align"
+                }
+              }
+            ]
           }
         },
         {
@@ -42,9 +55,9 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "CloseAllign 2"
+            "pathName": "C7end"
           }
         },
         {

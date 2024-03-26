@@ -52,6 +52,18 @@
           "data": {
             "name": "Intake Roller Out"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "36start"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "36end"
+          }
         }
       ]
     }
