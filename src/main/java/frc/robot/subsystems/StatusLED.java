@@ -39,7 +39,7 @@ public class StatusLED extends SubsystemBase {
     double matchTime = DriverStation.getMatchTime();
 
     if(!isDisabled){
-      if(mFrontLimelight.hasTarget() && mShoulder.atGoal() && TrobotUtil.withinTolerance(mFrontLimelight.getTy().getDouble(50), 0-LimelightConstants.GETSPEAKERSKEW(), 1.5)){
+      if(mFrontLimelight.hasTarget() && mShoulder.atGoal() && TrobotUtil.withinTolerance(mFrontLimelight.getVerticalAngleOfErrorDegrees(), 0-LimelightConstants.GETSPEAKERSKEW(), 1.5)){
         m_AddressableLED.setPattern(new SolidColorPattern(Color.kGreen));
       }else if(mFrontLimelight.hasTarget()){
         m_AddressableLED.setPattern(new BlinkingPattern(Color.kGreen, 0.5));
@@ -53,8 +53,8 @@ public class StatusLED extends SubsystemBase {
 
       if(mShoulder.getGoal() == LauncherConstants.AMP_ANGLE_RADANS){
         m_AddressableLED.setPattern(new BlinkingPattern(Color.kPurple, 0.5));
-      }
-      if(mShoulder.getGoal() == LauncherConstants.DUCK_RADIANS && mShoulder.atGoal()){
+      } 
+      else if(mShoulder.getGoal() == LauncherConstants.DUCK_RADIANS && mShoulder.atGoal()){
         m_AddressableLED.setPattern(new BlinkingPattern(Color.kPink, 0.5));
       }
 
