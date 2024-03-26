@@ -112,7 +112,7 @@ public class RobotContainer {
 
   private void configureBindings() {
     //Default Commands
-    drivetrain.setDefaultCommand(new GamepadDrive(drivetrain, driverController));
+    drivetrain.setDefaultCommand(new GamepadDrive(drivetrain, driverController, m_LimelightFront));
     m_climber.setDefaultCommand(new ClimbCommand(m_climber));
 
     //Driver Controls

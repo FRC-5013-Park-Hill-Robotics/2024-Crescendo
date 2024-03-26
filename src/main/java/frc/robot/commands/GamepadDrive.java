@@ -5,28 +5,37 @@
 package frc.robot.commands;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.SteerRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.ControllerConstants;
 import frc.robot.constants.DrivetrainConstants;
+import frc.robot.subsystems.Limelight;
 import frc.robot.CommandSwerveDrivetrain;
 
 public class GamepadDrive extends Command {
 	private CommandSwerveDrivetrain m_drivetrain;
 	private CommandXboxController m_gamepad;
+	private Limelight m_limelight;
 	private SlewRateLimiter xLimiter = new SlewRateLimiter(2.5);
 	private SlewRateLimiter yLimiter = new SlewRateLimiter(2.5);
 	private SlewRateLimiter rotationLimiter = new SlewRateLimiter(3);
 
 	private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-      .withDeadband(DrivetrainConstants.maxAngularVelocityRadiansPerSecond * ControllerConstants.DEADBAND).withRotationalDeadband(DrivetrainConstants.maxAngularVelocityRadiansPerSecond * ControllerConstants.DEADBAND) // Add a 5% deadband
-      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
-                                                               // driving in open loop
+      .withDeadband(DrivetrainConstants.maxAngularVelocityRadiansPerSecond * ControllerConstants.DEADBAND)
+	  .withRotationalDeadband(DrivetrainConstants.maxAngularVelocityRadiansPerSecond * ControllerConstants.DEADBAND) // Add a 5% deadband
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); 
+	private final SwerveRequest.FieldCentricFacingAngle driveFacingAngle = new SwerveRequest.FieldCentricFacingAngle()
+	  .withDeadband(DrivetrainConstants.maxAngularVelocityRadiansPerSecond * ControllerConstants.DEADBAND)
+	  .withRotationalDeadband(DrivetrainConstants.maxAngularVelocityRadiansPerSecond * ControllerConstants.DEADBAND) // Add a 5% deadband
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); 
+	  
   	private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   	//private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
@@ -34,21 +43,18 @@ public class GamepadDrive extends Command {
 	 * Constructor method for the GamepadDrive class
 	 * - Creates a new GamepadDrive object.
 	 */
-	public GamepadDrive(CommandSwerveDrivetrain drivetrain, CommandXboxController gamepad) {
+	public GamepadDrive(CommandSwerveDrivetrain drivetrain, CommandXboxController gamepad, Limelight limelight) {
 		super();
 		addRequirements(drivetrain);
 		m_gamepad = gamepad;
 		m_drivetrain = drivetrain;
+		m_limelight = limelight;
 	}
 
 	@Override
 	public void execute() {
 
 		double throttle = modifyAxis(m_gamepad.getRightTriggerAxis());
-
-		if (m_gamepad.getLeftTriggerAxis() > 0.5){
-			throttle = throttle/3;
-		}
 
 		double translationX = modifyAxis(-m_gamepad.getLeftY());
 		double translationY = modifyAxis(-m_gamepad.getLeftX());
@@ -58,13 +64,21 @@ public class GamepadDrive extends Command {
 			translationX = Math.cos(angle) * throttle;
 			translationY = Math.sin(angle) * throttle;
 		}
-
-		//Applied %50 reduction to rotation
-		m_drivetrain.setControl(drive
-			.withVelocityX(-CommandSwerveDrivetrain.percentOutputToMetersPerSecond(xLimiter.calculate(translationX)))
-			.withVelocityY(CommandSwerveDrivetrain.percentOutputToMetersPerSecond(yLimiter.calculate(translationY))) 
-			.withRotationalRate(-CommandSwerveDrivetrain.percentOutputToRadiansPerSecond(rotationLimiter.calculate(m_gamepad.getRightX()/2))));
 		
+		if(m_gamepad.getLeftTriggerAxis() > 0.5 && m_limelight.hasTarget()){
+			m_drivetrain.setControl(driveFacingAngle
+				.withVelocityX(-CommandSwerveDrivetrain.percentOutputToMetersPerSecond(xLimiter.calculate(translationX)))
+				.withVelocityY(CommandSwerveDrivetrain.percentOutputToMetersPerSecond(yLimiter.calculate(translationY))) 
+				.withTargetDirection(m_drivetrain.getRotation3d().toRotation2d().plus(Rotation2d.fromDegrees(10))));
+				//.withTargetDirection(m_drivetrain.getRotation3d().toRotation2d().plus(Rotation2d.fromDegrees(m_limelight.getVerticalAngleOfErrorDegrees()))));
+		} 
+		else{
+			//Applied %50 reduction to rotation
+			m_drivetrain.setControl(drive
+				.withVelocityX(-CommandSwerveDrivetrain.percentOutputToMetersPerSecond(xLimiter.calculate(translationX)))
+				.withVelocityY(CommandSwerveDrivetrain.percentOutputToMetersPerSecond(yLimiter.calculate(translationY))) 
+				.withRotationalRate(-CommandSwerveDrivetrain.percentOutputToRadiansPerSecond(rotationLimiter.calculate(m_gamepad.getRightX()/2))));
+		}
 
 		SmartDashboard.putNumber("Throttle", throttle);
 		SmartDashboard.putNumber("Drive Rotation",-CommandSwerveDrivetrain.percentOutputToRadiansPerSecond(m_gamepad.getRightX()) );
