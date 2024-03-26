@@ -30,9 +30,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "B2"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "B2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Shooter Allign 2"
+                }
+              }
+            ]
           }
         },
         {
@@ -42,15 +55,59 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 0.2
+            "name": "Intake Roller Out"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "CloseAlign"
+            "name": "Intake Down"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "26start"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Duck"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Up"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "26end"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Duck2"
+                }
+              }
+            ]
           }
         },
         {
@@ -60,21 +117,21 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "26start"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "26end"
+            "name": "Intake Down"
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "67start"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Up"
           }
         },
         {
