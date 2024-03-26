@@ -83,7 +83,7 @@ public class RobotContainer {
   private IntakeCommandFactory m_IntakeCommandFactory = new IntakeCommandFactory(this);
   private CommandFactory m_CommandFactory = new CommandFactory(this);
 
-  private StatusLED m_statusLED = new StatusLED(); // creates the status led instance variable
+  private StatusLED m_statusLED = new StatusLED(m_LimelightFront, m_launcherShoulder); // creates the status led instance variable
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
       .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
@@ -285,6 +285,10 @@ public class RobotContainer {
     return m_launcherShoulder;
   }
 
+  public StatusLED getLED(){
+    return m_statusLED;
+  }
+
   public CommandXboxController getOperatorController() {
     return operatorController;
   }
@@ -296,17 +300,6 @@ public class RobotContainer {
     int pipeline = (DriverStation.getAlliance().get() == Alliance.Red) ? LimelightConstants.APRIL_TAG_RED_SPEAKER
         : LimelightConstants.APRIL_TAG_BLUE_SPEAKER;
     return pipeline;
-  }
-
-  public Double getSpeakerSkew(){
-    Alliance alliance = DriverStation.getAlliance().get();
-    Double skew = -1.5;
-    if (alliance == Alliance.Red) {
-      return skew;
-    }
-    else {
-      return -skew;
-    }
   }
 
   public Double getGamepieceSkew(){

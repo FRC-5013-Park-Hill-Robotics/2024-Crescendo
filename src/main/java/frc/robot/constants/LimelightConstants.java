@@ -1,6 +1,8 @@
 package frc.robot.constants;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public class LimelightConstants {
     public static final double HORIZONTAL_OFFSET = 0;
@@ -30,6 +32,16 @@ public class LimelightConstants {
 
     //BACK HEIGHT FROM FLOOR
     public static final double BACK_LL_HEIGHT_OFFSET_INCHES = 12.263;
+    public static final Double GETSPEAKERSKEW(){
+    Alliance alliance = DriverStation.getAlliance().get();
+    Double skew = -1.5;
+    if (alliance == Alliance.Red) {
+      return skew;
+    }
+    else {
+      return -skew;
+    }
+  }
 
 
 
