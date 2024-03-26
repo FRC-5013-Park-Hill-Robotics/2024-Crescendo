@@ -47,24 +47,19 @@ public final class LauncherConstants {
             //subwoofer angle is 63 with a speed of 55
 				
 
-				{15,53},
-				{5,47},
-				{-1,41},
-				{-4.71, 38.5},
-                {-6,37},
-				{-6.8,35},
-				{-8.6,34},
-				{-10,32}
+				{9.7,26.5},
+				{5.3,30},
+				{0.1,35},
+				{-6.1, 39},
+                {-26.5,53}
 			};
         //ty is the first number, shooter speed in rps is the second
 		public static final double[][] TY_SHOOTER_SPEED_ARRAY = {
-			{15,50},
-			{5,50},
-			{-1,55},
-			{-4.71,55},
-			{-6.8,55},
-			{-8.6,55},
-			{-10,60},
+			{9.7,50},
+			{5.3,50},
+			{0.1,55},
+			{-6.1,55},
+			{-26.5,55}
 		};
 				
 

@@ -1,0 +1,117 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7523718013035084,
+      "y": 4.5087832049922705
+    },
+    "rotation": 119.18080605249983
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Adjust to Subwoofer"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Roller Out"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Down"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "C7start"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Close To Wing Align"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Up"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "C7end"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Roller Out"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Down"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "path goes here (placeholder)"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Close To Wing Align"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "path goes here (placeholder)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Up"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Roller Out"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "C Autos",
+  "choreoAuto": false
+}

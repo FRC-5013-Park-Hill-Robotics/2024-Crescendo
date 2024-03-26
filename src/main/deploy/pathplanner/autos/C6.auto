@@ -1,0 +1,74 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7523718013035084,
+      "y": 4.51852139765964
+    },
+    "rotation": 121.09048712581416
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Adjust to Subwoofer"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Roller Out"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Down"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "C6start"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Shooter Allign 3"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Up"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "C6end"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Roller Out"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "C Autos",
+  "choreoAuto": false
+}

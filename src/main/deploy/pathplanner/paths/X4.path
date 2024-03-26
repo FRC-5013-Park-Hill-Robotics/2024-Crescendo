@@ -75,7 +75,7 @@
     "rotateFast": true
   },
   "reversed": false,
-  "folder": "XPath",
+  "folder": "APath",
   "previewStartingState": {
     "rotation": -120.80144597613682,
     "velocity": 0

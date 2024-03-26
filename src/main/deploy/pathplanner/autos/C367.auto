@@ -1,0 +1,85 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.75,
+      "y": 4.52
+    },
+    "rotation": 121.09
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Adjust to Subwoofer"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Roller Out"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Down"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "C3start"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Up"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CloseAllign 2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Roller Out"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "36start"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "36end"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "67startC"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "67endC"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "C Autos",
+  "choreoAuto": false
+}

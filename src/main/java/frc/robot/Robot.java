@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.AutoAdjustAngle;
 import frc.robot.subsystems.Limelight;
 
 public class Robot extends TimedRobot {
@@ -74,6 +75,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     m_robotContainer.getLauncherShoulder().holdCommand().schedule();
+    //m_robotContainer.getLauncherShoulder().setDefaultCommand(new AutoAdjustAngle(m_robotContainer.getLauncherRollers(), m_robotContainer.getLauncherShoulder()));
 
   }
 
