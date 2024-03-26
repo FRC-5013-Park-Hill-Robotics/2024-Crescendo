@@ -1,0 +1,148 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.2684960126741138,
+      "y": 5.531293435070981
+    },
+    "rotation": -179.3704013912749
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Adjust to Subwoofer"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Roller Out"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Down"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "B2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Shooter Allign 2"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Up"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Roller Out"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Down"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "26start"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Duck"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Up"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "26end"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Duck2"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Roller Out"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Down"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "65start"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Up"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "65end"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "B Autos",
+  "choreoAuto": false
+}

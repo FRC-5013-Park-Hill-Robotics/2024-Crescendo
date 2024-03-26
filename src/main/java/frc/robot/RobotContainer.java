@@ -5,6 +5,8 @@
 package frc.robot;
 
 import java.nio.file.Path;
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.Pigeon2;
@@ -105,6 +107,7 @@ public class RobotContainer {
     //SmartDashboard.putStringArray("Auto List", AutoBuilder.getAllAutoNames().toArray(new String[0]));
 
     m_LimelightFront.setPipeline(getSpeakerPipeline());
+    m_LimelightBack.setPipeline(LimelightConstants.GAME_PIECE_RECOGNITION);
   }
 
   private void configureBindings() {
@@ -142,9 +145,9 @@ public class RobotContainer {
 
     //operator controls
     operatorController.a().whileTrue(new AmpCommand(m_launcherShoulder, m_intakeRollers, m_intakeWrist)).onFalse(m_intakeRollers.ampOutCommand().andThen(m_intakeWrist.retractCommand()));
-    operatorController.b().whileTrue(m_launcherShoulder.goToSetpointCommand(LauncherConstants.DUCK_RADIANS));
-    operatorController.x().whileTrue(m_launcherShoulder.goToSetpointCommand(LauncherConstants.SPEAKER_ANGLE_RADIANS));
-    operatorController.y().whileTrue(m_launcherShoulder.goToSetpointCommand(LauncherConstants.PODIUM_ANGLE_RADIANS));
+    operatorController.b().whileTrue(m_launcherShoulder.goToSetpointCommandContinuous(LauncherConstants.DUCK_RADIANS));
+    operatorController.x().whileTrue(m_launcherShoulder.goToSetpointCommandContinuous(LauncherConstants.SPEAKER_ANGLE_RADIANS));
+    operatorController.y().whileTrue(m_launcherShoulder.goToSetpointCommandContinuous(LauncherConstants.PODIUM_ANGLE_RADIANS));
 
     operatorController.leftStick().whileTrue(m_climber.climbLeftCommand(operatorController.getLeftY()));
     operatorController.rightStick().whileTrue(m_climber.climbRightCommand(operatorController.getRightY()));
@@ -158,7 +161,7 @@ public class RobotContainer {
     operatorController.povUp().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(1)));
     operatorController.povDown().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(-1)));
 
-    operatorController.leftTrigger().whileTrue(m_launcherShoulder.goToSetpointCommand(LauncherConstants.PODIUM_ANGLE_RADIANS).alongWith(m_launcherRollers.setSpeedCommand(45))).onFalse(m_launcherRollers.setSpeedCommand(50));
+    operatorController.leftTrigger().whileTrue(m_launcherShoulder.goToSetpointCommandContinuous(LauncherConstants.PODIUM_ANGLE_RADIANS).alongWith(m_launcherRollers.setSpeedCommand(45))).onFalse(m_launcherRollers.setSpeedCommand(50));
 
     // operatorController.povLeft().whileTrue(drivetrain.runDriveQuasiTest(Direction.kForward));
     // operatorController.povRight().whileTrue(drivetrain.runDriveQuasiTest(Direction.kReverse));
@@ -196,6 +199,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("Align and Adjust to Speaker", m_CommandFactory.alignAndAdjustToSpeakerCommand());
     NamedCommands.registerCommand("Intake Roller Out", m_CommandFactory.intakeRollerOutCommand().andThen(new WaitCommand(0.15)));
     
+    NamedCommands.registerCommand("Auto Drive to Note", new DriveToLLTarget(drivetrain, m_LimelightBack, this::gamepiecePipeline, AutoConstants::AUTODRIVETONOTESPEED).withTimeout(0.35));
+    NamedCommands.registerCommand("Auto Align to Speaker", new AutoAdjustAngle(m_launcherRollers, m_launcherShoulder));
+
     NamedCommands.registerCommand("Adjust to Subwoofer", m_CommandFactory.presetAngleAdjust(AutoConstants.SUBWOOFER));
     NamedCommands.registerCommand("Adjust to Subwoofer Side", m_CommandFactory.presetAngleAdjust(AutoConstants.SUBWOOFER_SIDE));
     NamedCommands.registerCommand("CloseAllign 2", m_CommandFactory.presetAngleAdjust(AutoConstants.TWO));
@@ -203,6 +209,10 @@ public class RobotContainer {
     NamedCommands.registerCommand("Shooter Allign 1", m_CommandFactory.presetAngleAdjust(AutoConstants.ONE));
     NamedCommands.registerCommand("Shooter Allign 2", m_CommandFactory.presetAngleAdjust(AutoConstants.TWO));
     NamedCommands.registerCommand("Shooter Allign 3", m_CommandFactory.presetAngleAdjust(AutoConstants.THREE));
+    NamedCommands.registerCommand("Duck", m_CommandFactory.presetAngleAdjust(AutoConstants.DUCK));
+    NamedCommands.registerCommand("Duck2", m_CommandFactory.presetAngleAdjust(AutoConstants.DUCK2));
+
+    NamedCommands.registerCommand("Close To Wing Align", m_CommandFactory.presetAngleAdjust(AutoConstants.CLOSETOWING));
 
     NamedCommands.registerCommand("Intake Down", m_IntakeCommandFactory.deployAndStartIntakeCommand());
     NamedCommands.registerCommand("Intake Up", m_IntakeCommandFactory.retractAndStopIntakeCommand());

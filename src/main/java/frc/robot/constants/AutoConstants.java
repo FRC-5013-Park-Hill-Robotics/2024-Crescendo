@@ -13,6 +13,12 @@ public final class AutoConstants {
     public static final double ONE = Math.toRadians(36);
     public static final double TWO = Math.toRadians(40);
     public static final double THREE = Math.toRadians(36);
+    public static final double CLOSETOWING = Math.toRadians(29.5);
+    public static final double DUCK = Math.toRadians(25);
+    public static final double DUCK2 = Math.toRadians(30);
 
+    public static final double AUTODRIVETONOTESPEED(){
+        return 0.8;
+    }
     //36 near amp
 }

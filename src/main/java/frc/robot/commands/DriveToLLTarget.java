@@ -63,10 +63,11 @@ public class DriveToLLTarget extends Command {
       targeting = true;
 		
 			thetaOutput = thetaController.calculate(m_Drivetrain.getPose().getRotation().getRadians(), setpoint);
-      xOutput = -m_throttle.get()*DrivetrainConstants.maxSpeedMetersPerSecond;
+      //xOutput = -m_throttle.get()*DrivetrainConstants.maxSpeedMetersPerSecond;
 		
       SmartDashboard.putNumber("targeting error", horizontal_angle);
 		} 
+    xOutput = -m_throttle.get()*DrivetrainConstants.maxSpeedMetersPerSecond;
     
     m_Drivetrain.setControl(drive.withVelocityX(xOutput).withRotationalRate(thetaOutput));
   }
