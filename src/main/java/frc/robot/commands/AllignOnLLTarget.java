@@ -46,7 +46,7 @@ public class AllignOnLLTarget extends Command {
     m_Limelight.setPipeline(m_pipeline.get());
     targeting = false;
     thetaController.reset();
-    thetaController.setTolerance(LimelightConstants.ALLIGNMENT_TOLLERANCE_RADIANS);
+    thetaController.setTolerance(Math.toRadians(1.5));
   }
 
   // Called every time the scheduler runs while the command is scheduled.
