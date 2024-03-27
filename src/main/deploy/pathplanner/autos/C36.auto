@@ -30,9 +30,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "C3start"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "C3start"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Shooter Allign 3"
+                }
+              }
+            ]
           }
         },
         {
@@ -44,25 +57,63 @@
         {
           "type": "named",
           "data": {
-            "name": "CloseAllign 2"
+            "name": "Intake Roller Out"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Down"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "36start"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Duck"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Up"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "36end"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Duck2"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Intake Roller Out"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "36start"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "36end"
           }
         }
       ]

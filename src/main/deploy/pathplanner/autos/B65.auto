@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.75,
-      "y": 4.52
+      "x": 1.2945574370576298,
+      "y": 5.53650223579517
     },
-    "rotation": 121.09
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -36,69 +36,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "C3start"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Shooter Allign 3"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Up"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Roller Out"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Down"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "36start"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Duck"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Up"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "36end"
+                  "pathName": "B6start"
                 }
               },
               {
@@ -113,6 +51,18 @@
         {
           "type": "named",
           "data": {
+            "name": "Intake Up"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "B6end"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Intake Roller Out"
           }
         },
@@ -125,7 +75,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "67startC"
+            "pathName": "65start"
           }
         },
         {
@@ -137,7 +87,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "67endC"
+            "pathName": "65end"
           }
         },
         {
@@ -149,6 +99,6 @@
       ]
     }
   },
-  "folder": "C Autos",
+  "folder": "B Autos",
   "choreoAuto": false
 }

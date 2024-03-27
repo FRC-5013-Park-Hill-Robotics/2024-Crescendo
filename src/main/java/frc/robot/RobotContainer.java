@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.commands.AimAndDrive;
 import frc.robot.commands.AllignOnLLTarget;
 import frc.robot.commands.AmpCommand;
 import frc.robot.commands.AutoAdjustAngle;
@@ -83,8 +84,6 @@ public class RobotContainer {
   private IntakeCommandFactory m_IntakeCommandFactory = new IntakeCommandFactory(this);
   private CommandFactory m_CommandFactory = new CommandFactory(this);
 
-  private StatusLED m_statusLED = new StatusLED(); // creates the status led instance variable
-
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
       .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
@@ -130,7 +129,7 @@ public class RobotContainer {
     driverController.y().onTrue(m_intakeRollers.throwOutManual()).onFalse(m_intakeRollers.stopC());
 
     driverController.x()
-        .whileTrue(new DriveToLLTarget(drivetrain, m_LimelightBack, this::gamepiecePipeline, driverController::getRightTriggerAxis));
+        .whileTrue(m_intakeWrist.intakeGamePieceManualCommand().alongWith(new DriveToLLTarget(drivetrain, m_LimelightBack, this::gamepiecePipeline, driverController::getRightTriggerAxis))).onFalse(m_intakeWrist.intakeGamePieceManualEndCommand());
     
     driverController.a()
         .whileTrue(m_CommandFactory.alignAndAdjustToSpeakerCommand());
@@ -143,6 +142,7 @@ public class RobotContainer {
         )
         */        
 
+    driverController.leftTrigger().whileTrue(new AimAndDrive(drivetrain, driverController, m_LimelightFront,this::getSpeakerSkew).alongWith(new AutoAdjustAngle(m_launcherRollers, m_launcherShoulder)));
     //operator controls
     operatorController.a().whileTrue(new AmpCommand(m_launcherShoulder, m_intakeRollers, m_intakeWrist)).onFalse(m_intakeRollers.ampOutCommand().andThen(m_intakeWrist.retractCommand()));
     operatorController.b().whileTrue(m_launcherShoulder.goToSetpointCommandContinuous(LauncherConstants.DUCK_RADIANS));
