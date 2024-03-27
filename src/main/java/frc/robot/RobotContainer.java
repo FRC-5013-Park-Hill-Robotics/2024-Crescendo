@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.commands.AimAndDrive;
 import frc.robot.commands.AllignOnLLTarget;
 import frc.robot.commands.AmpCommand;
 import frc.robot.commands.AutoAdjustAngle;
@@ -143,11 +144,12 @@ public class RobotContainer {
         )
         */        
 
+    driverController.leftTrigger().whileTrue(new AimAndDrive(drivetrain, driverController, m_LimelightFront, LimelightConstants::GETSPEAKERSKEW).alongWith(new AutoAdjustAngle(m_launcherRollers, m_launcherShoulder)));
     //operator controls
     operatorController.a().whileTrue(new AmpCommand(m_launcherShoulder, m_intakeRollers, m_intakeWrist)).onFalse(m_intakeRollers.ampOutCommand().andThen(m_intakeWrist.retractCommand()));
-    operatorController.b().whileTrue(m_launcherShoulder.goToSetpointCommand(LauncherConstants.DUCK_RADIANS));
-    operatorController.x().whileTrue(m_launcherShoulder.goToSetpointCommand(LauncherConstants.SPEAKER_ANGLE_RADIANS));
-    operatorController.y().whileTrue(m_launcherShoulder.goToSetpointCommand(LauncherConstants.PODIUM_ANGLE_RADIANS));
+    operatorController.b().whileTrue(m_launcherShoulder.goToSetpointCommandContinuous(LauncherConstants.DUCK_RADIANS));
+    operatorController.x().whileTrue(m_launcherShoulder.goToSetpointCommandContinuous(LauncherConstants.SPEAKER_ANGLE_RADIANS));
+    operatorController.y().whileTrue(m_launcherShoulder.goToSetpointCommandContinuous(LauncherConstants.PODIUM_ANGLE_RADIANS));
 
     operatorController.leftStick().whileTrue(m_climber.climbLeftCommand(operatorController.getLeftY()));
     operatorController.rightStick().whileTrue(m_climber.climbRightCommand(operatorController.getRightY()));
@@ -161,7 +163,7 @@ public class RobotContainer {
     operatorController.povUp().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(1)));
     operatorController.povDown().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(-1)));
 
-    operatorController.leftTrigger().whileTrue(m_launcherShoulder.goToSetpointCommand(LauncherConstants.PODIUM_ANGLE_RADIANS).alongWith(m_launcherRollers.setSpeedCommand(45))).onFalse(m_launcherRollers.setSpeedCommand(50));
+    operatorController.leftTrigger().whileTrue(m_launcherShoulder.goToSetpointCommandContinuous(LauncherConstants.PODIUM_ANGLE_RADIANS).alongWith(m_launcherRollers.setSpeedCommand(45))).onFalse(m_launcherRollers.setSpeedCommand(50));
 
     // operatorController.povLeft().whileTrue(drivetrain.runDriveQuasiTest(Direction.kForward));
     // operatorController.povRight().whileTrue(drivetrain.runDriveQuasiTest(Direction.kReverse));
@@ -210,6 +212,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Shooter Allign 2", m_CommandFactory.presetAngleAdjust(AutoConstants.TWO));
     NamedCommands.registerCommand("Shooter Allign 3", m_CommandFactory.presetAngleAdjust(AutoConstants.THREE));
     NamedCommands.registerCommand("Duck", m_CommandFactory.presetAngleAdjust(AutoConstants.DUCK));
+    NamedCommands.registerCommand("Duck2", m_CommandFactory.presetAngleAdjust(AutoConstants.DUCK2));
 
     NamedCommands.registerCommand("Close To Wing Align", m_CommandFactory.presetAngleAdjust(AutoConstants.CLOSETOWING));
 

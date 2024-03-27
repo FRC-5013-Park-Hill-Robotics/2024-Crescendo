@@ -39,7 +39,16 @@ public class StatusLED extends SubsystemBase {
     double matchTime = DriverStation.getMatchTime();
 
     if(!isDisabled){
-      if(mFrontLimelight.hasTarget() && mShoulder.atGoal() && TrobotUtil.withinTolerance(mFrontLimelight.getVerticalAngleOfErrorDegrees(), 0-LimelightConstants.GETSPEAKERSKEW(), 1.5)){
+      if(matchTime >= 115 && matchTime <= 118){
+        m_AddressableLED.setPattern(new RainbowPattern());
+      }
+      else if(mShoulder.getGoal() == LauncherConstants.AMP_ANGLE_RADANS){
+        m_AddressableLED.setPattern(new BlinkingPattern(Color.kPurple, 0.5));
+      } 
+      else if(mShoulder.getGoal() == LauncherConstants.DUCK_RADIANS && mShoulder.atGoal()){
+        m_AddressableLED.setPattern(new BlinkingPattern(Color.kPink, 0.5));
+      }
+      else if(mFrontLimelight.hasTarget() && mShoulder.atGoal() && TrobotUtil.withinTolerance(mFrontLimelight.getVerticalAngleOfErrorDegrees(), 0-LimelightConstants.GETSPEAKERSKEW(), 1.5)){
         m_AddressableLED.setPattern(new SolidColorPattern(Color.kGreen));
       }else if(mFrontLimelight.hasTarget()){
         m_AddressableLED.setPattern(new BlinkingPattern(Color.kGreen, 0.5));
@@ -50,17 +59,6 @@ public class StatusLED extends SubsystemBase {
       //if(mAdjustingWithoutTarget){
       //  m_AddressableLED.setPattern(new SolidColorPattern(Color.kRed));
       //}
-
-      if(mShoulder.getGoal() == LauncherConstants.AMP_ANGLE_RADANS){
-        m_AddressableLED.setPattern(new BlinkingPattern(Color.kPurple, 0.5));
-      } 
-      else if(mShoulder.getGoal() == LauncherConstants.DUCK_RADIANS && mShoulder.atGoal()){
-        m_AddressableLED.setPattern(new BlinkingPattern(Color.kPink, 0.5));
-      }
-
-      if(matchTime >= 115 && matchTime <= 118){
-        m_AddressableLED.setPattern(new RainbowPattern());
-      }
     }
     else{
       m_AddressableLED.setPattern(new ChasePattern(new Color[]{Color.kRed, Color.kOrange, Color.kYellow, Color.kGreen, Color.kBlue, Color.kPurple}, 1));

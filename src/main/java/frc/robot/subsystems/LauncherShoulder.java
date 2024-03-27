@@ -140,6 +140,11 @@ public class LauncherShoulder extends SubsystemBase {
       return result;
     }
 
+    public Command goToSetpointCommandContinuous(double radians) {
+      Command result = run(() -> setShoulderGoalRadians(radians));
+      return result;
+    }
+
     public Command goToSetpointUntilCompleteCommand(double radians) {
       Command result = run(() -> setShoulderGoalRadians(radians)).until(this::atGoal);
       return result;
