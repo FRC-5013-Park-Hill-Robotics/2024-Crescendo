@@ -129,7 +129,7 @@ public class RobotContainer {
     driverController.y().onTrue(m_intakeRollers.throwOutManual()).onFalse(m_intakeRollers.stopC());
 
     driverController.x()
-        .whileTrue(new DriveToLLTarget(drivetrain, m_LimelightBack, this::gamepiecePipeline, driverController::getRightTriggerAxis));
+        .whileTrue(m_intakeWrist.intakeGamePieceManualCommand().alongWith(new DriveToLLTarget(drivetrain, m_LimelightBack, this::gamepiecePipeline, driverController::getRightTriggerAxis))).onFalse(m_intakeWrist.intakeGamePieceManualEndCommand());
     
     driverController.a()
         .whileTrue(m_CommandFactory.alignAndAdjustToSpeakerCommand());
