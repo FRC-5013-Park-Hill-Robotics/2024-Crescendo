@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 9.033912021312414,
-        "y": 7.665926172639466
+        "x": 9.063283385958544,
+        "y": 7.519069349408824
       },
       "isLocked": false,
       "linkedName": "4IN"
@@ -20,8 +20,8 @@
         "y": 0.9105123040299752
       },
       "prevControl": {
-        "x": 8.446484728389851,
-        "y": 1.3951398206910917
+        "x": 7.961857211728735,
+        "y": 1.453882549983347
       },
       "nextControl": null,
       "isLocked": false,
@@ -38,7 +38,7 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0,
+    "velocity": 0.0,
     "rotation": -135.0000000000001,
     "rotateFast": true
   },

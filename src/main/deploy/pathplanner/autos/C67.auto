@@ -42,7 +42,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Shooter Allign 3"
+                  "name": "Duck2"
                 }
               }
             ]
@@ -67,15 +67,33 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Intake Down"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "67startC"
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Intake Up"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "67endC"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Roller Out"
           }
         }
       ]
