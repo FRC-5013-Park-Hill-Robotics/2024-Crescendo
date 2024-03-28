@@ -149,6 +149,8 @@ public class RobotContainer {
     driverController.leftTrigger().whileTrue(new AimAndDrive(drivetrain, driverController, m_LimelightFront, LimelightConstants::GETSPEAKERSKEW).alongWith(new AutoAdjustAngle(m_launcherRollers, m_launcherShoulder)));
     //operator controls
     operatorController.a().whileTrue(new AmpCommand(m_launcherShoulder, m_intakeRollers, m_intakeWrist)).onFalse(m_intakeRollers.ampOutCommand().andThen(m_intakeWrist.retractCommand()));
+    //amp 2 with shooter: shooter angle: 51 degrees: shooter speed goal: 10
+
     operatorController.b().whileTrue(m_launcherShoulder.goToSetpointCommandContinuous(LauncherConstants.DUCK_RADIANS));
     operatorController.x().whileTrue(m_launcherShoulder.goToSetpointCommandContinuous(LauncherConstants.SPEAKER_ANGLE_RADIANS));
     operatorController.y().whileTrue(m_launcherShoulder.goToSetpointCommandContinuous(LauncherConstants.PODIUM_ANGLE_RADIANS));
