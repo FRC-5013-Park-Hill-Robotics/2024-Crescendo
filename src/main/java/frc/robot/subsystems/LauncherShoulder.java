@@ -100,6 +100,11 @@ public class LauncherShoulder extends SubsystemBase {
     
       }
 
+
+    public double getGoal(){
+      return shoulderGoalRadians;
+    }
+
     public void retract() {
       setShoulderGoalRadians(LauncherConstants.RETRACT_SETPOINT);
     }
