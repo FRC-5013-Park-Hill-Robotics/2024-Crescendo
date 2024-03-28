@@ -45,13 +45,13 @@ public class StatusLED extends SubsystemBase {
     boolean isAutonomous = DriverStation.isAutonomous();
     double matchTime = DriverStation.getMatchTime();
 
-    if(isAutonomous){
+    if(isAutonomous && !isDisabled){
       if(mPattern != "Auto Chaos"){
-        m_AddressableLED.setPattern(new ChaosPattern());
+        m_AddressableLED.setPattern(new ChasePattern(new Color[]{Color.kFirstRed, Color.kFirstBlue}, 3));
       }
       mPattern = "Auto Chaos";
     }
-    if(!isDisabled){
+    else if(!isDisabled){
       if(matchTime >= 110 && matchTime <= 113){
         if(mPattern != "Match Time"){
           m_AddressableLED.setPattern(new RainbowPattern());
@@ -94,7 +94,6 @@ public class StatusLED extends SubsystemBase {
         }
         mPattern = "None";
       }
-
 
       SmartDashboard.putString("LED Command", mPattern);
     }
