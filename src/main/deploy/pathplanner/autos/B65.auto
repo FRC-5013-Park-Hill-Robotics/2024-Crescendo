@@ -24,12 +24,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Intake Down"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -44,20 +38,33 @@
                 "data": {
                   "name": "Duck2"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Down"
+                }
               }
             ]
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "Intake Up"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "B6end"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Up"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "B6end"
+                }
+              }
+            ]
           }
         },
         {
@@ -67,27 +74,41 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "Intake Down"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Down"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "65start"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "65start"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Up"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "65end"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Up"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "65end"
+                }
+              }
+            ]
           }
         },
         {
