@@ -54,6 +54,7 @@ public class AimAndDrive extends Command {
 		m_drivetrain = drivetrain;
 		m_limelight = limelight;
     	m_skew = skew;
+      thetaController.enableContinuousInput(0,2*Math.PI);
 	}
 
 	@Override
@@ -73,13 +74,14 @@ public class AimAndDrive extends Command {
 		
       	double thetaOutput = 0;
 		double horizontal_angle = -m_limelight.getVerticalAngleOfErrorDegrees() ;
+    //lead test
+    horizontal_angle += 6*translationY;
 		double setpoint = Math.toRadians(horizontal_angle)+ m_drivetrain.getPose().getRotation().getRadians() + Math.toRadians(m_skew.get());
       	
 		thetaController.setSetpoint(setpoint);
 		if (!thetaController.atSetpoint() ){
 			thetaOutput = thetaController.calculate(m_drivetrain.getPose().getRotation().getRadians(), setpoint);
 		} 
-
       	m_drivetrain.setControl(drive
 			.withVelocityX(-CommandSwerveDrivetrain.percentOutputToMetersPerSecond(xLimiter.calculate(translationX)))
 			.withVelocityY(CommandSwerveDrivetrain.percentOutputToMetersPerSecond(yLimiter.calculate(translationY))) 
