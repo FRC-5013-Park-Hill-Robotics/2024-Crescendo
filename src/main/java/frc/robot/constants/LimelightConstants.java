@@ -33,15 +33,9 @@ public class LimelightConstants {
     //BACK HEIGHT FROM FLOOR
     public static final double BACK_LL_HEIGHT_OFFSET_INCHES = 12.263;
     public static final Double GETSPEAKERSKEW(){
-    Alliance alliance = DriverStation.getAlliance().get();
-    Double skew = -1.5;
-    if (alliance == Alliance.Red) {
+      Double skew = -1.5;
       return skew;
     }
-    else {
-      return -skew;
-    }
-  }
 
 
 
