@@ -135,12 +135,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Intake Down"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -155,8 +149,20 @@
                 "data": {
                   "name": "Duck"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Down"
+                }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Up"
           }
         }
       ]

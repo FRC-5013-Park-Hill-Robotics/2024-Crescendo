@@ -61,12 +61,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Intake Down"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -80,6 +74,12 @@
                 "type": "named",
                 "data": {
                   "name": "Close To Wing Align"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Down"
                 }
               }
             ]
@@ -111,12 +111,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Intake Down"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -131,20 +125,33 @@
                 "data": {
                   "name": "Close To Wing Align"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Down"
+                }
               }
             ]
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "Intake Up"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "45end"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Up"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "45end"
+                }
+              }
+            ]
           }
         },
         {
