@@ -30,7 +30,7 @@ public class AimAndDrive extends Command {
 	private SlewRateLimiter yLimiter = new SlewRateLimiter(2.5);
 	private SlewRateLimiter rotationLimiter = new SlewRateLimiter(3);
 	private Limelight m_limelight;
-  private PIDController thetaController = new PIDController(ThetaGains.kP, ThetaGains.kI, ThetaGains.kD);
+  private PIDController thetaController = new PIDController(6, ThetaGains.kI, ThetaGains.kD);
   private Supplier<Double> m_skew;
  
 
@@ -53,7 +53,7 @@ public class AimAndDrive extends Command {
 		m_gamepad = gamepad;
 		m_drivetrain = drivetrain;
 		m_limelight = limelight;
-    m_skew = skew;
+    	m_skew = skew;
 	}
 
 	@Override
@@ -70,27 +70,21 @@ public class AimAndDrive extends Command {
 			translationY = Math.sin(angle) * throttle;
 		}
  
-		if (m_limelight.hasTarget()){
-      double thetaOutput = 0;
-			double horizontal_angle = -m_limelight.getVerticalAngleOfErrorDegrees() ;
-			double setpoint = Math.toRadians(horizontal_angle)+ m_drivetrain.getPose().getRotation().getRadians() + Math.toRadians(m_skew.get());
-      thetaController.setSetpoint(setpoint);
-			if (!thetaController.atSetpoint() ){
-				thetaOutput = thetaController.calculate(m_drivetrain.getPose().getRotation().getRadians(), setpoint);
-			} 
+		
+      	double thetaOutput = 0;
+		double horizontal_angle = -m_limelight.getVerticalAngleOfErrorDegrees() ;
+		double setpoint = Math.toRadians(horizontal_angle)+ m_drivetrain.getPose().getRotation().getRadians() + Math.toRadians(m_skew.get());
+      	
+		thetaController.setSetpoint(setpoint);
+		if (!thetaController.atSetpoint() ){
+			thetaOutput = thetaController.calculate(m_drivetrain.getPose().getRotation().getRadians(), setpoint);
+		} 
+
       	m_drivetrain.setControl(drive
 			.withVelocityX(-CommandSwerveDrivetrain.percentOutputToMetersPerSecond(xLimiter.calculate(translationX)))
 			.withVelocityY(CommandSwerveDrivetrain.percentOutputToMetersPerSecond(yLimiter.calculate(translationY))) 
 			.withRotationalRate(thetaOutput));
 	
-		} 
-		else {
-		//Applied %50 reduction to rotation
-		m_drivetrain.setControl(drive
-			.withVelocityX(-CommandSwerveDrivetrain.percentOutputToMetersPerSecond(xLimiter.calculate(translationX)))
-			.withVelocityY(CommandSwerveDrivetrain.percentOutputToMetersPerSecond(yLimiter.calculate(translationY))) 
-			.withRotationalRate(-CommandSwerveDrivetrain.percentOutputToRadiansPerSecond(rotationLimiter.calculate(m_gamepad.getRightX()/2))));
-		}
 
 		SmartDashboard.putNumber("Throttle", throttle);
 		SmartDashboard.putNumber("Drive Rotation",-CommandSwerveDrivetrain.percentOutputToRadiansPerSecond(m_gamepad.getRightX()) );

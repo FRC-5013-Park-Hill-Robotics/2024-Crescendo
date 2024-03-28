@@ -5,6 +5,7 @@
 package frc.robot;
 
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -41,6 +42,7 @@ import frc.robot.commands.DriveToLLTarget;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.GamepadDrive;
 import frc.robot.commands.IntakeCommandFactory;
+import frc.robot.commands.TurnToAngle;
 import frc.robot.constants.AutoConstants;
 import frc.robot.constants.LauncherConstants;
 import frc.robot.constants.LimelightConstants;
@@ -84,6 +86,8 @@ public class RobotContainer {
   private IntakeCommandFactory m_IntakeCommandFactory = new IntakeCommandFactory(this);
   private CommandFactory m_CommandFactory = new CommandFactory(this);
 
+  private StatusLED m_statusLED = new StatusLED(m_LimelightFront, m_launcherShoulder, m_intakeWrist); // creates the status led instance variable
+
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
       .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
@@ -123,14 +127,14 @@ public class RobotContainer {
         .whileTrue(m_intakeWrist.intakeGamePiece().andThen(rumbleSequence(driverController, 0.5)))
         .onFalse(m_intakeWrist.retractCommand().andThen(stopRumbleCommand(driverController)));
     driverController.leftBumper()
-        .onTrue(m_intakeWrist.intakeGamePieceManualCommand())
-        .onFalse(m_intakeWrist.intakeGamePieceManualEndCommand());
+        .whileTrue(m_intakeWrist.intakeGamePieceManualCommand().alongWith(new DriveToLLTarget(drivetrain, m_LimelightBack, this::gamepiecePipeline, driverController::getRightTriggerAxis))).onFalse(m_intakeWrist.intakeGamePieceManualEndCommand());
 
     driverController.y().onTrue(m_intakeRollers.throwOutManual()).onFalse(m_intakeRollers.stopC());
 
     driverController.x()
-        .whileTrue(m_intakeWrist.intakeGamePieceManualCommand().alongWith(new DriveToLLTarget(drivetrain, m_LimelightBack, this::gamepiecePipeline, driverController::getRightTriggerAxis))).onFalse(m_intakeWrist.intakeGamePieceManualEndCommand());
-    
+        .onTrue(m_intakeWrist.intakeGamePieceManualCommand())
+        .onFalse(m_intakeWrist.intakeGamePieceManualEndCommand());
+
     driverController.a()
         .whileTrue(m_CommandFactory.alignAndAdjustToSpeakerCommand());
        // .onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING));
@@ -142,7 +146,7 @@ public class RobotContainer {
         )
         */        
 
-    driverController.leftTrigger().whileTrue(new AimAndDrive(drivetrain, driverController, m_LimelightFront,this::getSpeakerSkew).alongWith(new AutoAdjustAngle(m_launcherRollers, m_launcherShoulder)));
+    driverController.leftTrigger().whileTrue(new AimAndDrive(drivetrain, driverController, m_LimelightFront, LimelightConstants::GETSPEAKERSKEW).alongWith(new AutoAdjustAngle(m_launcherRollers, m_launcherShoulder)));
     //operator controls
     operatorController.a().whileTrue(new AmpCommand(m_launcherShoulder, m_intakeRollers, m_intakeWrist)).onFalse(m_intakeRollers.ampOutCommand().andThen(m_intakeWrist.retractCommand()));
     operatorController.b().whileTrue(m_launcherShoulder.goToSetpointCommandContinuous(LauncherConstants.DUCK_RADIANS));
@@ -161,7 +165,13 @@ public class RobotContainer {
     operatorController.povUp().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(1)));
     operatorController.povDown().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(-1)));
 
-    operatorController.leftTrigger().whileTrue(m_launcherShoulder.goToSetpointCommandContinuous(LauncherConstants.PODIUM_ANGLE_RADIANS).alongWith(m_launcherRollers.setSpeedCommand(45))).onFalse(m_launcherRollers.setSpeedCommand(50));
+    operatorController.leftTrigger()
+      .whileTrue(m_launcherShoulder.goToSetpointCommandContinuous(LauncherConstants.PODIUM_ANGLE_RADIANS)
+      .alongWith(m_launcherRollers.setSpeedCommand(45))
+      .alongWith(new TurnToAngle(drivetrain, this::getShuttleAngle))
+      .alongWith(m_statusLED.setShuttlingCommand(true)))
+      .onFalse(m_launcherRollers.setSpeedCommand(50)
+      .alongWith(m_statusLED.setShuttlingCommand(false)));
 
     // operatorController.povLeft().whileTrue(drivetrain.runDriveQuasiTest(Direction.kForward));
     // operatorController.povRight().whileTrue(drivetrain.runDriveQuasiTest(Direction.kReverse));
@@ -286,6 +296,10 @@ public class RobotContainer {
     return m_launcherShoulder;
   }
 
+  public StatusLED getLED(){
+    return m_statusLED;
+  }
+
   public CommandXboxController getOperatorController() {
     return operatorController;
   }
@@ -299,17 +313,6 @@ public class RobotContainer {
     return pipeline;
   }
 
-  public Double getSpeakerSkew(){
-    Alliance alliance = DriverStation.getAlliance().get();
-    Double skew = -1.5;
-    if (alliance == Alliance.Red) {
-      return skew;
-    }
-    else {
-      return -skew;
-    }
-  }
-
   public Double getGamepieceSkew(){
     Double skew = 0.0;
     return skew;
@@ -317,6 +320,16 @@ public class RobotContainer {
 
   public int gamepiecePipeline(){
     return LimelightConstants.GAME_PIECE_RECOGNITION;
+  }
+
+  public double getShuttleAngle() {
+    Optional<Alliance> alliance = DriverStation.getAlliance();
+    if (alliance.get() == Alliance.Red) {
+      return 319.0;
+    }
+    else {
+      return 41.0;
+    }
   }
 
   //------------------------------
@@ -327,5 +340,6 @@ public class RobotContainer {
     Command ejectCommand = m_intakeRollers.ampOutCommand();
     return movementCommand.andThen(ejectCommand);
   }
+
 
 }

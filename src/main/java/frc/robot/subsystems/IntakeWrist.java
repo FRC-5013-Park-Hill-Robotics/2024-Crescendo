@@ -172,6 +172,10 @@ public class IntakeWrist extends SubsystemBase {
         return result;
     }
 
+    public double getGoal() {
+        return wristGoalRadians.getGoal();
+    }
+
     public boolean atGoal() {
         double errorBound = Math.PI;
         double m_positionError = MathUtil.inputModulus(wristGoalRadians.getGoal() - getAngle(), -errorBound, errorBound);
