@@ -86,15 +86,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "Intake Up"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "14end"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Up"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "14end"
+                }
+              }
+            ]
           }
         },
         {
