@@ -139,7 +139,7 @@ public class IntakeWrist extends SubsystemBase {
 
             //if intake is at 0 it is resting on launcher and does not need to have any
             //feed forward or pid adjustemnt.  Save motor stall.
-            if (wristGoalRadians.getGoal() == 0 && wristController.atGoal()){
+            if (wristGoalRadians.getGoal() == 0 && atGoal()){
                 pidVal = 0;
                 feedforwardVal = 0;
             }
@@ -177,7 +177,9 @@ public class IntakeWrist extends SubsystemBase {
     }
 
     public boolean atGoal() {
-        return wristController.atGoal();
+        double errorBound = Math.PI;
+        double m_positionError = MathUtil.inputModulus(wristGoalRadians.getGoal() - getAngle(), -errorBound, errorBound);
+        return TrobotUtil.withinTolerance(m_positionError,0.0,IntakeConstants.RotationGains.kPositionTolerance.getRadians());
     }
 
     public void retract() {
