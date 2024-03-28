@@ -13,76 +13,97 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.CommandSwerveDrivetrain;
 import frc.robot.constants.ControllerConstants;
+import frc.robot.constants.DrivetrainConstants;
 import frc.robot.constants.ThetaGains;
 import frc.robot.subsystems.Limelight;
 
-
 public class TurnToAngle extends Command {
-    private CommandSwerveDrivetrain m_Drivetrain;
-  private Supplier<Double> m_degreeAngle;
-  private CommandXboxController m_gamepad;
-  private SlewRateLimiter xLimiter = new SlewRateLimiter(2.5);
-	private SlewRateLimiter yLimiter = new SlewRateLimiter(2.5);
-  private PIDController thetaController = new PIDController(ThetaGains.kP, ThetaGains.kI, ThetaGains.kD);
-  
   /** Creates a new TurnToAngle. */
-  public TurnToAngle(CommandSwerveDrivetrain drivetrain, CommandXboxController controller, Supplier<Double> degreeAngle) {
-    addRequirements(drivetrain);
-    m_Drivetrain = drivetrain;
-    m_gamepad = controller;
-    m_degreeAngle = degreeAngle;
+ 	private CommandSwerveDrivetrain m_drivetrain;
+	private CommandXboxController m_gamepad;
+	private SlewRateLimiter xLimiter = new SlewRateLimiter(2.5);
+	private SlewRateLimiter yLimiter = new SlewRateLimiter(2.5);
+	private SlewRateLimiter rotationLimiter = new SlewRateLimiter(3);
+	private PIDController thetaController = new PIDController(6, ThetaGains.kI, ThetaGains.kD);
+  private Supplier<Double> m_angle;
+ 
 
-    // Use addRequirements() here to declare subsystem dependencies.
-  }
+	private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+      .withDeadband(DrivetrainConstants.maxAngularVelocityRadiansPerSecond * ControllerConstants.DEADBAND).withRotationalDeadband(DrivetrainConstants.maxAngularVelocityRadiansPerSecond * ControllerConstants.DEADBAND) // Add a 5% deadband
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
+      .withRotationalDeadband(0); // I want field-centric
+                                                               // driving in open loop
+															   // voltage mode	
+ 	private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+  	//private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
-  private final SwerveRequest.FieldCentricFacingAngle drive = new SwerveRequest.FieldCentricFacingAngle()
-    .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+	/**
+	 * Constructor method for the GamepadDrive class
+	 * - Creates a new GamepadDrive object.
+	 */
+	public TurnToAngle(CommandSwerveDrivetrain drivetrain, CommandXboxController gamepad, Supplier<Double> angle) {
+		super();
+		addRequirements(drivetrain);
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+		m_gamepad = gamepad;
+		m_drivetrain = drivetrain;
+		m_angle = angle;
+	}
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    thetaController.reset();
-    thetaController.setTolerance(Math.toRadians(1.5));
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
+	@Override
+	public void execute() {
+		
 		double throttle = modifyAxis(m_gamepad.getRightTriggerAxis());
 
 		double translationX = modifyAxis(-m_gamepad.getLeftY());
 		double translationY = modifyAxis(-m_gamepad.getLeftX());
 		if (!(translationX == 0.0 && translationY == 0.0)) {
+			
 			double angle = calculateTranslationDirection(translationX, translationY);
 			translationX = Math.cos(angle) * throttle;
 			translationY = Math.sin(angle) * throttle;
 		}
-    
-    SmartDashboard.putNumber("Angle Pointing to", Math.toRadians(m_degreeAngle.get()));
-    m_Drivetrain.setControl(drive
-      .withVelocityX(-CommandSwerveDrivetrain.percentOutputToMetersPerSecond(xLimiter.calculate(translationX)))
-			.withVelocityY(CommandSwerveDrivetrain.percentOutputToMetersPerSecond(yLimiter.calculate(translationY)))
-			.withTargetDirection(new Rotation2d(Math.toRadians(m_degreeAngle.get()))));
-  }
+ 
+		
+    double thetaOutput = 0;
+		double horizontal_angle = m_angle.get();
+		double setpoint = Math.toRadians(horizontal_angle);
+      	
+		thetaController.setSetpoint(setpoint);
+		//if (!thetaController.atSetpoint() ){
+			thetaOutput = thetaController.calculate(m_drivetrain.getPose().getRotation().getRadians(), setpoint);
+		//} 
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    SmartDashboard.putBoolean("TurnToAngle running", false);
-    m_Drivetrain.setControl(drive.withVelocityX(0).withVelocityY(0));
-  }
+    SmartDashboard.putNumber("Horizontal Angle", horizontal_angle);
+    SmartDashboard.putNumber("Rotation", m_drivetrain.getPose().getRotation().getDegrees());
 
-  private static double modifyAxis(double value) {
+    m_drivetrain.setControl(drive
+			.withVelocityX(-CommandSwerveDrivetrain.percentOutputToMetersPerSecond(xLimiter.calculate(translationX)))
+			.withVelocityY(CommandSwerveDrivetrain.percentOutputToMetersPerSecond(yLimiter.calculate(translationY))) 
+			.withRotationalRate(thetaOutput));
 	
+
+		SmartDashboard.putNumber("Throttle", throttle);
+		SmartDashboard.putNumber("Drive Rotation",-CommandSwerveDrivetrain.percentOutputToRadiansPerSecond(thetaOutput));
+		SmartDashboard.putNumber("VX", CommandSwerveDrivetrain.percentOutputToMetersPerSecond(xLimiter.calculate(translationX)));
+		SmartDashboard.putNumber("VY", CommandSwerveDrivetrain.percentOutputToMetersPerSecond(yLimiter.calculate(translationY)));
+		
+	 }
+
+	@Override
+	public void end(boolean interrupted) {
+		m_drivetrain.applyRequest(() -> brake);
+	}
+
+	private static double modifyAxis(double value) {
 		return modifyAxis(value, 1);
 	}
-	
+
 	private static double modifyAxis(double value, int exponent) {
 		// Deadband
 		value = MathUtil.applyDeadband(value, ControllerConstants.DEADBAND);
