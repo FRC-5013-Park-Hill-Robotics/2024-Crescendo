@@ -76,7 +76,7 @@ public class StatusLED extends SubsystemBase {
         }
         mPattern = "Ducking";
       } 
-      else if(mFrontLimelight.hasTarget() && mShoulder.atGoal()){
+      else if(mFrontLimelight.hasTarget() && mShoulder.atGoal() && mFrontLimelight.getVerticalAngleOfErrorDegrees() < 0){
         if(mPattern != "Ready to Shoot"){
           m_AddressableLED.setPattern(new SolidColorPattern(Color.kGreen));
         }
