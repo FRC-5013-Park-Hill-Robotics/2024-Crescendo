@@ -47,7 +47,7 @@ public class IntakeCommandFactory {
 
     public Command stopRollersCommand(){
         Command theCommand = m_rollers.runOnce(()->{
-            m_rollers.stop();;
+            m_rollers.stop();
         });
 
         return theCommand;

@@ -15,11 +15,11 @@ public final class IntakeConstants {
         public static final Rotation2d kPositionTolerance= Rotation2d.fromDegrees(2.5);
         //public static final double kP = 3.5;
         //public static final double kP = 3.75013;
-        public static final double kP = 4.55013;
+        public static final double kP = 6.5;
         public static final double kI = 0.0;
-        public static final double kD = 0.65013;
+        public static final double kD = 0.4;
         public static final double kF = 0;
-        public static final double kS = 0.45005013;
+        public static final double kS = 0.5005013;
         public static final double kG = 0.672;
         public static final double kV = 0.12212;
         public static final double kA = 0.037683;
@@ -41,7 +41,8 @@ public final class IntakeConstants {
     public static final double kIntakeRotation = 50;
     public static final double kOuttakeRotation = -50;
     public static final double kAmpOut = -15;
-    public static final double AMP_ANGLE_GROUND  =  Math.toRadians(76);// Math.toRadians(9.38);
+    public static final double AMP_ANGLE_GROUND  =  Math.toRadians(78);// Math.toRadians(9.38);
+    //old is 76
     public final static double DEPLOY_SETPOINT_TO_GROUND = Math.toRadians(-18);
     public final static double RETRACT_SETPOINT = 0;
     public static final int TIME_OF_FLIGHT_CAN_ID = 1;

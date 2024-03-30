@@ -22,16 +22,15 @@ import frc.robot.constants.DrivetrainConstants;
 import frc.robot.constants.ThetaGains;
 import frc.robot.subsystems.Limelight;
 
-public class AimAndDrive extends Command {
-  /** Creates a new AimAndDrive. */
+public class TurnToAngle extends Command {
+  /** Creates a new TurnToAngle. */
  	private CommandSwerveDrivetrain m_drivetrain;
 	private CommandXboxController m_gamepad;
 	private SlewRateLimiter xLimiter = new SlewRateLimiter(2.5);
 	private SlewRateLimiter yLimiter = new SlewRateLimiter(2.5);
 	private SlewRateLimiter rotationLimiter = new SlewRateLimiter(3);
-	private Limelight m_limelight;
-  private PIDController thetaController = new PIDController(6, ThetaGains.kI, ThetaGains.kD);
-  private Supplier<Double> m_skew;
+	private PIDController thetaController = new PIDController(6, ThetaGains.kI, ThetaGains.kD);
+  private Supplier<Double> m_angle;
  
 
 	private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -47,14 +46,13 @@ public class AimAndDrive extends Command {
 	 * Constructor method for the GamepadDrive class
 	 * - Creates a new GamepadDrive object.
 	 */
-	public AimAndDrive(CommandSwerveDrivetrain drivetrain, CommandXboxController gamepad, Limelight limelight, Supplier<Double> skew) {
+	public TurnToAngle(CommandSwerveDrivetrain drivetrain, CommandXboxController gamepad, Supplier<Double> angle) {
 		super();
 		addRequirements(drivetrain);
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
 		m_gamepad = gamepad;
 		m_drivetrain = drivetrain;
-		m_limelight = limelight;
-    	m_skew = skew;
-      thetaController.enableContinuousInput(0,2*Math.PI);
+		m_angle = angle;
 	}
 
 	@Override
@@ -72,24 +70,26 @@ public class AimAndDrive extends Command {
 		}
  
 		
-      	double thetaOutput = 0;
-		double horizontal_angle = -m_limelight.getVerticalAngleOfErrorDegrees() ;
-    //lead test
-    horizontal_angle += 6*translationY;
-		double setpoint = Math.toRadians(horizontal_angle)+ m_drivetrain.getPose().getRotation().getRadians() + Math.toRadians(m_skew.get());
+    double thetaOutput = 0;
+		double horizontal_angle = m_angle.get();
+		double setpoint = Math.toRadians(horizontal_angle);
       	
 		thetaController.setSetpoint(setpoint);
-		if (!thetaController.atSetpoint() ){
+		//if (!thetaController.atSetpoint() ){
 			thetaOutput = thetaController.calculate(m_drivetrain.getPose().getRotation().getRadians(), setpoint);
-		} 
-      	m_drivetrain.setControl(drive
+		//} 
+
+    SmartDashboard.putNumber("Horizontal Angle", horizontal_angle);
+    SmartDashboard.putNumber("Rotation", m_drivetrain.getPose().getRotation().getDegrees());
+
+    m_drivetrain.setControl(drive
 			.withVelocityX(-CommandSwerveDrivetrain.percentOutputToMetersPerSecond(xLimiter.calculate(translationX)))
 			.withVelocityY(CommandSwerveDrivetrain.percentOutputToMetersPerSecond(yLimiter.calculate(translationY))) 
 			.withRotationalRate(thetaOutput));
 	
 
 		SmartDashboard.putNumber("Throttle", throttle);
-		SmartDashboard.putNumber("Drive Rotation",-CommandSwerveDrivetrain.percentOutputToRadiansPerSecond(m_gamepad.getRightX()) );
+		SmartDashboard.putNumber("Drive Rotation",-CommandSwerveDrivetrain.percentOutputToRadiansPerSecond(thetaOutput));
 		SmartDashboard.putNumber("VX", CommandSwerveDrivetrain.percentOutputToMetersPerSecond(xLimiter.calculate(translationX)));
 		SmartDashboard.putNumber("VY", CommandSwerveDrivetrain.percentOutputToMetersPerSecond(yLimiter.calculate(translationY)));
 		
@@ -101,9 +101,9 @@ public class AimAndDrive extends Command {
 	}
 
 	private static double modifyAxis(double value) {
-	
 		return modifyAxis(value, 1);
 	}
+
 	private static double modifyAxis(double value, int exponent) {
 		// Deadband
 		value = MathUtil.applyDeadband(value, ControllerConstants.DEADBAND);

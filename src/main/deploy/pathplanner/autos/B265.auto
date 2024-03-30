@@ -61,12 +61,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Intake Down"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -81,14 +75,14 @@
                 "data": {
                   "name": "Duck"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Down"
+                }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Up"
           }
         },
         {
@@ -106,6 +100,12 @@
                 "data": {
                   "name": "Duck2"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Up"
+                }
               }
             ]
           }
@@ -117,27 +117,47 @@
           }
         },
         {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "65start"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Down"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "65end"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Up"
+                }
+              }
+            ]
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "Intake Down"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "65start"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Up"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "65end"
+            "name": "Intake Roller Out"
           }
         }
       ]

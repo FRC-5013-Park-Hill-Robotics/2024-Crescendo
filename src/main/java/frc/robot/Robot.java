@@ -12,6 +12,7 @@ import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -29,13 +30,14 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
-    DataLogManager.start();
+    //DataLogManager.start();
 
   }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
   }
 
   @Override
@@ -106,7 +108,7 @@ public class Robot extends TimedRobot {
   }
 
   private void checkUpdateAlliance() {
-
+    
     Optional<Alliance> alliance = DriverStation.getAlliance();
     if (DriverStation.isDSAttached() && alliance.isPresent()) {
       Limelight frontLL = m_robotContainer.getFrontLimelight();

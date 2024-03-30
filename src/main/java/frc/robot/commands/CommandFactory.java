@@ -10,11 +10,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.CommandSwerveDrivetrain;
 import frc.robot.RobotContainer;
 import frc.robot.constants.LauncherConstants;
+import frc.robot.constants.LimelightConstants;
 import frc.robot.subsystems.IntakeRollers;
 import frc.robot.subsystems.IntakeWrist;
 import frc.robot.subsystems.LauncherRollers;
 import frc.robot.subsystems.LauncherShoulder;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.StatusLED;
 
 /** Add your docs here. */
 public class CommandFactory {
@@ -24,6 +26,7 @@ public class CommandFactory {
     private LauncherRollers m_launcher_rollers;
     private IntakeRollers m_intake_rollers;
     private IntakeWrist m_intake_wrist;
+    private StatusLED m_LED;
     private LauncherShoulder m_shoulder;
     private Supplier<Integer> m_gamepiece_pipeline;
     private Supplier<Integer> m_speaker_pipeline;
@@ -37,9 +40,10 @@ public class CommandFactory {
         m_intake_rollers = robotContainer.getIntakeRollers();
         m_intake_wrist = robotContainer.getIntakeWrist();
         m_shoulder = robotContainer.getLauncherShoulder();
+        m_LED = robotContainer.getLED();
         m_gamepiece_pipeline = robotContainer::gamepiecePipeline;
         m_speaker_pipeline = robotContainer::getSpeakerPipeline;
-        m_speaker_skew = robotContainer::getSpeakerSkew;
+        m_speaker_skew = LimelightConstants::GETSPEAKERSKEW;
     }
     public Command alignToGamepieceCommand() {
         return new AllignOnLLTarget(m_drivetrain, m_limelight_back, m_gamepiece_pipeline, m_speaker_skew);
