@@ -15,7 +15,7 @@ public final class IntakeConstants {
         public static final Rotation2d kPositionTolerance= Rotation2d.fromDegrees(2.5);
         //public static final double kP = 3.5;
         //public static final double kP = 3.75013;
-        public static final double kP = 6.5;
+        public static final double kP = 7.5013;
         public static final double kI = 0.0;
         public static final double kD = 0.4;
         public static final double kF = 0;
@@ -23,7 +23,7 @@ public final class IntakeConstants {
         public static final double kG = 0.672;
         public static final double kV = 0.12212;
         public static final double kA = 0.037683;
-        public static final double kMaxSpeed =  Math.PI; //theoretical free speed of intake is 133.3333 radians per second we want to limit to 2pi
+        public static final double kMaxSpeed =  2*Math.PI; //theoretical free speed of intake is 133.3333 radians per second we want to limit to 2pi
         public static final double kMaxAcceleration = kMaxSpeed * 3;
     }
     public final static class RollerGains {

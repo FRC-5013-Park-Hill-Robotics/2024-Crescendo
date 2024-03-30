@@ -84,9 +84,9 @@ public final class LauncherConstants {
 
     }
     public final static double RETRACT_SETPOINT = 0;
-    public static final double AMP_ANGLE_RADANS = Math.toRadians(98);//Math.toRadians(96.5);
-    public static final double DUCK_RADIANS = Math.toRadians(31);
-    public static final double START_ANGLE_RADIANS = Math.toRadians(31);
+    public static final double AMP_ANGLE_RADANS = Math.toRadians(51);//Math.toRadians(96.5);
+    public static final double DUCK_RADIANS = Math.toRadians(29);
+    public static final double START_ANGLE_RADIANS = Math.toRadians(29);
     //start angle used to be 60, and 51
 
     public static final double SPEAKER_ANGLE_RADIANS = Math.toRadians(53);

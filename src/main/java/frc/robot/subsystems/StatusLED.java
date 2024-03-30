@@ -36,7 +36,7 @@ public class StatusLED extends SubsystemBase {
       3);
   private TrobotAddressableLEDPattern matchTimePattern = new RainbowPattern();
   private TrobotAddressableLEDPattern shuttlingPattern = new BlinkingPattern(Color.kDarkRed, 0.1);
-  private TrobotAddressableLEDPattern ampPattern = new BlinkingPattern(Color.kPurple, 0.1);
+  private TrobotAddressableLEDPattern ampPattern = new BlinkingPattern(Color.kWhite, 0.1);
   private TrobotAddressableLEDPattern duckingPattern = new BlinkingPattern(Color.kDeepPink, 0.1);
   private TrobotAddressableLEDPattern shotReadyPatterh = new SolidColorPattern(Color.kGreen);
   private TrobotAddressableLEDPattern hasTargetPattern = new BlinkingPattern(Color.kGreen, 0.1);
@@ -62,12 +62,12 @@ public class StatusLED extends SubsystemBase {
     double matchTime = DriverStation.getMatchTime();
 
     if (isAutonomous && !isDisabled) {
-      if (mPattern != "Auto Chaos") {
+      if (mPattern != "Auto Police") {
         m_AddressableLED.setPattern(autoPattern);
       }
-      mPattern = "Auto Chaos";
+      mPattern = "Auto Police";
     } else if (!isDisabled) {
-      if (matchTime >= 110 && matchTime <= 113) {
+      if (matchTime >= 20 && matchTime <= 23) {
         if (mPattern != "Match Time") {
           m_AddressableLED.setPattern(matchTimePattern);
         }
@@ -77,7 +77,7 @@ public class StatusLED extends SubsystemBase {
           m_AddressableLED.setPattern(shuttlingPattern);
         }
         mPattern = "Shuttling";
-      } else if (mIntake.getGoal() == IntakeConstants.AMP_ANGLE_GROUND) {
+      } else if (mShoulder.getGoal() == LauncherConstants.AMP_ANGLE_RADANS) {
         if (mPattern != "Amping") {
           m_AddressableLED.setPattern(ampPattern);
         }
@@ -88,7 +88,8 @@ public class StatusLED extends SubsystemBase {
         }
         mPattern = "Ducking";
       } else if (mFrontLimelight.hasTarget() && mShoulder.atGoal()
-          && mFrontLimelight.getVerticalAngleOfErrorDegrees() < 0) {
+          && TrobotUtil.withinTolerance(mFrontLimelight.getVerticalAngleOfErrorDegrees() + LimelightConstants.GETSPEAKERSKEW(), 0, 2)) {
+            
         if (mPattern != "Ready to Shoot") {
           m_AddressableLED.setPattern(shotReadyPatterh);
         }
