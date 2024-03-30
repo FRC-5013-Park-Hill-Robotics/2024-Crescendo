@@ -135,15 +135,53 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "14start"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "14start"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Down"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Duck2"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "14end"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "14end"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Up"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Roller Out"
           }
         }
       ]

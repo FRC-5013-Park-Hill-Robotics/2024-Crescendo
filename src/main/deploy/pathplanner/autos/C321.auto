@@ -133,12 +133,6 @@
           "data": {
             "name": "Intake Roller Out"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "14start"
-          }
         }
       ]
     }
