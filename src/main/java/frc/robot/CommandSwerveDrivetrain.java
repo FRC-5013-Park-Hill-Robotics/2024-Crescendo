@@ -1,6 +1,9 @@
 package frc.robot;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
@@ -12,7 +15,9 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
+import com.pathplanner.lib.path.PathPlannerTrajectory.State;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -20,6 +25,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -181,10 +187,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     public void periodic() {
         m_field.setRobotPose(m_odometry.getEstimatedPosition());
         SmartDashboard.putData("Field", m_field);
-        // m_field.getObject("trajectory").setTrajectory(null);
-
-        // PathPlannerAuto pathPlannerAuto = RobotContainer.getInstance().getPathPlannerAuto();
-        // PathPlannerTrajectory pathPlannerTrajectory = new PathPlannerTrajectory(null, getCurrentRobotChassisSpeeds(), m_fieldRelativeOffset);
+        
 
         if (!hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
             DriverStation.getAlliance().ifPresent((allianceColor) -> {
@@ -246,6 +249,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         else {
             m_pigeon2.setYaw(0);
         }
+    }
+
+    public Field2d getField() {
+        return m_field;
     }
 
 }
