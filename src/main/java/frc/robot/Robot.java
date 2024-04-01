@@ -4,10 +4,18 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.ctre.phoenix6.SignalLogger;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.StringLogEntry;
@@ -49,6 +57,21 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
+    
+    if (AutoBuilder.getAllAutoNames().contains(RobotContainer.getInstance().getPathPlannerAuto().getName())) {
+      // System.out.println(RobotContainer.getInstance().getPathPlannerAuto().getName());
+      List<PathPlannerPath> pathPlannerPaths = PathPlannerAuto.getPathGroupFromAutoFile(RobotContainer.getInstance().getPathPlannerAuto().getName());
+      List<Pose2d> poses = new ArrayList<>();
+      for (PathPlannerPath path : pathPlannerPaths) {
+          poses.addAll(path.getAllPathPoints().stream().map(point -> new Pose2d(point.position.getX(), point.position.getY(), new Rotation2d())).collect(Collectors.toList()));
+          // path.getAllPathPoints().stream().map(point -> new Pose2d(point.position, 0)).collect(Collectors.toList());
+      }
+      RobotContainer.getInstance().getDrivetrain().getField().getObject("path").setPoses(poses);
+      // PathPlannerTrajectory pathPlannerTrajectory = new PathPlannerTrajectory(pathPlannerTrajectoryStates);
+      // m_field.getObject("trajectory").setTrajectory((Trajectory) pathPlannerTrajectory);
+      // PathPlannerTrajectory pathPlannerTrajectory = new PathPlannerTrajectory(pathPlannerPaths, getCurrentRobotChassisSpeeds(), m_fieldRelativeOffset);
+    }
+    
   }
 
   @Override

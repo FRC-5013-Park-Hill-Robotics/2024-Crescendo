@@ -245,8 +245,8 @@ public class RobotContainer {
     return autoChooser.getSelected();
   }
 
-  public PathPlannerAuto getPathPlannerAuto() {
-    return (PathPlannerAuto) autoChooser.getSelected();
+  public Command getPathPlannerAuto() {
+    return autoChooser.getSelected();
   }
 
   public static RobotContainer getInstance() {
