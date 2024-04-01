@@ -18,6 +18,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.AutoAdjustAngle;
 import frc.robot.subsystems.Limelight;
+import com.ctre.phoenix6.Orchestra;
+import com.ctre.phoenix6.hardware.TalonFX;
+
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -26,6 +29,7 @@ public class Robot extends TimedRobot {
   BooleanLogEntry myBooleanLog;
   DoubleLogEntry myDoubleLog;
   StringLogEntry myStringLog;
+
 
   @Override
   public void robotInit() {
@@ -55,6 +59,19 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     checkUpdateAlliance();
+    final TalonFX frontleftS = new TalonFX(2);
+    Orchestra m_Orchestra = new Orchestra();
+      
+      // Add motors to orchestra
+      m_Orchestra.addInstrument(frontleftS);
+
+      // Load chrp file
+      var status = m_Orchestra.loadMusic("9NoteAuto.chrp");
+
+      if(!status.isOK()) {
+        m_Orchestra.play();
+    }
+
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     m_robotContainer.getLauncherShoulder().holdCommand().schedule();
     if (m_autonomousCommand != null) {
