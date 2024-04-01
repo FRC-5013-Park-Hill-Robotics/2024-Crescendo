@@ -32,7 +32,7 @@ public class StatusLED extends SubsystemBase {
 
   private Boolean mShuttling = false;
   private String mPattern = "none";
-  private TrobotAddressableLEDPattern autoPattern = new ChasePattern(new Color[] { Color.kFirstRed, Color.kFirstBlue },
+  private TrobotAddressableLEDPattern autoPattern = new ChasePattern(new Color[] { Color.kDarkRed, Color.kBlue },
       3);
   private TrobotAddressableLEDPattern matchTimePattern = new RainbowPattern();
   private TrobotAddressableLEDPattern shuttlingPattern = new BlinkingPattern(Color.kDarkRed, 0.1);
