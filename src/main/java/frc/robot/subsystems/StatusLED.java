@@ -34,16 +34,16 @@ public class StatusLED extends SubsystemBase {
   private String mPattern = "none";
   private TrobotAddressableLEDPattern autoPattern = new ChasePattern(new Color[] { Color.kDarkRed, Color.kBlue },
       3);
-  private TrobotAddressableLEDPattern matchTimePattern = new RainbowPattern();
+  private TrobotAddressableLEDPattern matchTimePattern =  new ChasePattern(
+            new Color[] { Color.kDarkRed, Color.kOrangeRed, Color.kYellow, Color.kGreen, Color.kBlue, Color.kPurple },
+            1);
   private TrobotAddressableLEDPattern shuttlingPattern = new BlinkingPattern(Color.kDarkRed, 0.1);
   private TrobotAddressableLEDPattern ampPattern = new BlinkingPattern(Color.kWhite, 0.1);
   private TrobotAddressableLEDPattern duckingPattern = new BlinkingPattern(Color.kDeepPink, 0.1);
   private TrobotAddressableLEDPattern shotReadyPatterh = new SolidColorPattern(Color.kGreen);
   private TrobotAddressableLEDPattern hasTargetPattern = new BlinkingPattern(Color.kGreen, 0.1);
   private TrobotAddressableLEDPattern nonePattern = new BlinkingPattern(Color.kBlue, 0.1);
-  private TrobotAddressableLEDPattern disabledPattern = new ChasePattern(
-            new Color[] { Color.kDarkRed, Color.kOrangeRed, Color.kYellow, Color.kGreen, Color.kBlue, Color.kPurple },
-            1);
+  private TrobotAddressableLEDPattern disabledPattern =new RainbowPattern();
   
   
 
@@ -67,7 +67,7 @@ public class StatusLED extends SubsystemBase {
       }
       mPattern = "Auto Police";
     } else if (!isDisabled) {
-      if (matchTime >= 20 && matchTime <= 23) {
+      if (matchTime >= 18 && matchTime <= 23) {
         if (mPattern != "Match Time") {
           m_AddressableLED.setPattern(matchTimePattern);
         }
