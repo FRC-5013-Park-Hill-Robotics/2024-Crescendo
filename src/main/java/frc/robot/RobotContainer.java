@@ -177,7 +177,7 @@ public class RobotContainer {
 
     operatorController.rightTrigger()
     .whileTrue(m_launcherShoulder.goToSetpointCommandContinuous(LauncherConstants.AMP_ANGLE_RADANS)
-    .alongWith(m_launcherRollers.setSpeedCommand(20)))
+    .alongWith(m_launcherRollers.setSpeedCommand(10)))
     .onFalse(m_launcherRollers.setSpeedCommand(50));
     //amp command right t
 
