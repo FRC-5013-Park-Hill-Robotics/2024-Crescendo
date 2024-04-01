@@ -103,7 +103,7 @@ public class RobotContainer {
     configureBindings();
     configureAutonomousCommands();
     //m_LimelightBack.setPipelineObjectDecection();
-
+    SmartDashboard.clearPersistent("Auto Chooser");
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
@@ -175,6 +175,11 @@ public class RobotContainer {
       .onFalse(m_launcherRollers.setSpeedCommand(50)
       .alongWith(m_statusLED.setShuttlingCommand(false)));
 
+    operatorController.rightTrigger()
+    .whileTrue(m_launcherShoulder.goToSetpointCommandContinuous(LauncherConstants.AMP_ANGLE_RADANS)
+    .alongWith(m_launcherRollers.setSpeedCommand(20)));
+    //amp command right t
+
     // operatorController.povLeft().whileTrue(drivetrain.runDriveQuasiTest(Direction.kForward));
     // operatorController.povRight().whileTrue(drivetrain.runDriveQuasiTest(Direction.kReverse));
 
@@ -227,7 +232,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Close To Wing Align", m_CommandFactory.presetAngleAdjust(AutoConstants.CLOSETOWING));
 
     NamedCommands.registerCommand("Intake Down", m_IntakeCommandFactory.deployAndStartIntakeCommand());
-    NamedCommands.registerCommand("Intake Up", m_IntakeCommandFactory.retractAndStopIntakeCommand());
+    NamedCommands.registerCommand("Intake Up", m_IntakeCommandFactory.retractAndStopIntakeCommand().andThen(new WaitCommand(0.05)));
 
     NamedCommands.registerCommand("Lower Speed", m_CommandFactory.lowerSpeed());
     NamedCommands.registerCommand("Reset Speed", m_CommandFactory.resetSpeed());
