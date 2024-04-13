@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7718481866382481,
-      "y": 6.563541857807322
+      "x": 0.765872873427322,
+      "y": 4.508504473180682
     },
-    "rotation": -120.54757174890703
+    "rotation": 119.82007256547375
   },
   "command": {
     "type": "sequential",
@@ -24,27 +24,28 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.35
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Intake Down"
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "X1start"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "X1end"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "LL Targeting"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Shooter Allign 3"
+                }
+              }
+            ]
           }
         },
         {
@@ -54,26 +55,14 @@
           }
         },
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 0.35
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CloseAllign 2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Roller Out"
+            "pathName": "LL Targeting End"
           }
         }
       ]
     }
   },
-  "folder": "A Autos",
+  "folder": null,
   "choreoAuto": false
 }

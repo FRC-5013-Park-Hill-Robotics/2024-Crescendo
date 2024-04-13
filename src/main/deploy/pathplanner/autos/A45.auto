@@ -1,0 +1,31 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.765872873427322,
+      "y": 6.579185680732721
+    },
+    "rotation": -119.74488129694225
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "X4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "45"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "A Autos",
+  "choreoAuto": false
+}

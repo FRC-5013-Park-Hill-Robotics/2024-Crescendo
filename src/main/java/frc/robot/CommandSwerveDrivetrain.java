@@ -2,6 +2,7 @@ package frc.robot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -15,6 +16,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.path.PathPlannerTrajectory.State;
@@ -35,10 +37,12 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.DrivetrainConstants;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Limelight;
 import frc.robot.trobot5013lib.ModifiedSignalLogger;
 import frc.robot.trobot5013lib.SwerveVoltageRequest;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -60,6 +64,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     private double m_lastSimTime;
     private Field2d m_field = new Field2d();
 
+    private boolean m_LLRotationOverride = false; 
+    private double m_NoteTargetSnapshot = 0; 
+    private double m_MaxError = 5;
+    
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private final Rotation2d BlueAlliancePerspectiveRotation = Rotation2d.fromDegrees(0);
     /* Red alliance sees forward as 180 degrees (toward blue alliance wall) */
@@ -109,7 +117,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             this::getCurrentRobotChassisSpeeds,
             (speeds)->this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the robot
             new HolonomicPathFollowerConfig(new PIDConstants(16.05013, 0, 0),
-                                            new PIDConstants(10, 0, 0),
+                                            new PIDConstants(5, 0, 0),
                                             DrivetrainConstants.autoMaxSpeedMetersPerSecond ,
                                             driveBaseRadius,
                                             new ReplanningConfig(true,true)),
@@ -197,9 +205,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
                 hasAppliedOperatorPerspective = true;
             });
         }
+        
+        SmartDashboard.putBoolean("LLRotationOverride", m_LLRotationOverride);
+
         SmartDashboard.putNumber("gyro", m_pigeon2.getAngle());
-
-
         SmartDashboard.putNumber("pose.x", getPose().getX());
     }
 
@@ -255,4 +264,39 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         return m_field;
     }
 
+    public Optional<Rotation2d> LLRotationOverrideSupplier(){
+        Limelight backLL = RobotContainer.getInstance().getBackLimelight();
+        Optional<Rotation2d> optionalRotation;
+        boolean NotLastNote = m_NoteTargetSnapshot-m_MaxError <= backLL.getHorizontalAngleOfErrorDegrees() && m_NoteTargetSnapshot+m_MaxError >= backLL.getHorizontalAngleOfErrorDegrees();
+        if(m_LLRotationOverride && backLL.hasTarget() && !NotLastNote){
+          Rotation2d rotation = new Rotation2d(Math.toRadians(-backLL.getHorizontalAngleOfErrorDegrees())+this.getPose().getRotation().getRadians());
+          optionalRotation = Optional.of(rotation);
+          m_NoteTargetSnapshot = backLL.getHorizontalAngleOfErrorDegrees();
+          SmartDashboard.putString("LLRotationOverrideSupplier", "Note");
+        }
+        else if(m_LLRotationOverride && (NotLastNote || !backLL.hasTarget())){
+          Rotation2d rotation = new Rotation2d(this.getPose().getRotation().getRadians());
+          optionalRotation = Optional.of(rotation);
+          SmartDashboard.putString("LLRotationOverrideSupplier", "Coast");
+        }
+        else{
+          optionalRotation = Optional.empty();
+          SmartDashboard.putString("LLRotationOverrideSupplier", "None");
+        }
+        return optionalRotation;
+    }
+
+  public void setLLRotationOverride(boolean a){
+    m_LLRotationOverride = a;
+    if(a == true){
+        Limelight backLL = RobotContainer.getInstance().getBackLimelight();
+        m_NoteTargetSnapshot = backLL.getHorizontalAngleOfErrorDegrees();
+    }
+    PPHolonomicDriveController.setRotationTargetOverride(this::LLRotationOverrideSupplier);
+  }
+
+  public Command setLLRotationOverrideC(boolean a){
+    Command result = Commands.run(() -> setLLRotationOverride(a));
+    return result;
+  }
 }
