@@ -90,7 +90,7 @@ public final class LauncherConstants {
     //start angle used to be 60, and 51
 
     public static final double SPEAKER_ANGLE_RADIANS = Math.toRadians(53);
-    public static final double PODIUM_ANGLE_RADIANS = Math.toRadians(38);
+    public static final double PODIUM_ANGLE_RADIANS = Math.toRadians(35);
     public static final double SHUTTLING_ANGLE = Math.toRadians(38);
     public static final double SHOULDER_ANGLE_MAX = Math.toRadians(65);
     public static final double SHOULDER_ANGLE_MIN = Math.toRadians(25);

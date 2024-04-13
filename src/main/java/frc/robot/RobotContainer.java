@@ -168,7 +168,7 @@ public class RobotContainer {
     operatorController.povDown().onTrue(m_launcherShoulder.incrementAngleCommand(Math.toRadians(-1)));
 
     operatorController.leftTrigger()
-      .whileTrue(m_launcherShoulder.goToSetpointCommandContinuous(LauncherConstants.PODIUM_ANGLE_RADIANS)
+      .whileTrue(m_launcherShoulder.goToSetpointCommandContinuous(LauncherConstants.SHUTTLING_ANGLE)
       .alongWith(m_launcherRollers.setSpeedCommand(45))
       .alongWith(new TurnToAngle(drivetrain, driverController, this::getShuttleAngle))
       .alongWith(m_statusLED.setShuttlingCommand(true)))
@@ -333,10 +333,10 @@ public class RobotContainer {
   public double getShuttleAngle() {
     Optional<Alliance> alliance = DriverStation.getAlliance();
     if (alliance.get() == Alliance.Red) {
-      return 41.0;
+      return 41.0 -7.0;
     }
     else {
-      return 139.0;
+      return 139.0 + 7.0;
     }
   }
 

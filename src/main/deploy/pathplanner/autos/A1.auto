@@ -24,12 +24,6 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.35
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Intake Down"
@@ -51,12 +45,6 @@
           "type": "named",
           "data": {
             "name": "Intake Up"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.35
           }
         },
         {
