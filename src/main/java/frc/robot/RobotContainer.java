@@ -177,7 +177,8 @@ public class RobotContainer {
 
     operatorController.rightTrigger()
     .whileTrue(m_launcherShoulder.goToSetpointCommandContinuous(LauncherConstants.AMP_ANGLE_RADANS)
-    .alongWith(m_launcherRollers.setSpeedCommand(20)));
+    .alongWith(m_launcherRollers.setSpeedCommand(10)))
+    .onFalse(m_launcherRollers.setSpeedCommand(50));
     //amp command right t
 
     // operatorController.povLeft().whileTrue(drivetrain.runDriveQuasiTest(Direction.kForward));
@@ -244,8 +245,8 @@ public class RobotContainer {
     return autoChooser.getSelected();
   }
 
-  public PathPlannerAuto getPathPlannerAuto() {
-    return (PathPlannerAuto) autoChooser.getSelected();
+  public Command getPathPlannerAuto() {
+    return autoChooser.getSelected();
   }
 
   public static RobotContainer getInstance() {
