@@ -77,9 +77,9 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "path goes here (placeholder)"
+                  "pathName": "78start"
                 }
               },
               {
@@ -92,9 +92,9 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "path goes here (placeholder)"
+            "pathName": "78end"
           }
         },
         {

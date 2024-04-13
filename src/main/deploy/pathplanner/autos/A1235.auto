@@ -141,13 +141,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "36start"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Duck"
+                  "pathName": "35start"
                 }
               },
               {
@@ -164,21 +158,21 @@
           "data": {
             "commands": [
               {
+                "type": "path",
+                "data": {
+                  "pathName": "35end"
+                }
+              },
+              {
                 "type": "named",
                 "data": {
                   "name": "Intake Up"
                 }
               },
               {
-                "type": "path",
-                "data": {
-                  "pathName": "36end"
-                }
-              },
-              {
                 "type": "named",
                 "data": {
-                  "name": "Duck2"
+                  "name": "Shooter Allign 2"
                 }
               }
             ]

@@ -63,64 +63,65 @@ public class Limelight extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    // // This method will be called once per scheduler run
 
-     //read values periodically
-    double x = this.tx.getDouble(0.0);
-    double y = this.ty.getDouble(0.0);
-    double area = this.ta.getDouble(0.0);
+      //read values periodically
+     double x = this.tx.getDouble(0.0);
+     double y = this.ty.getDouble(0.0);
+     double area = this.ta.getDouble(0.0);
 
 
-    //post to smart dashboard periodically
-    SmartDashboard.putNumber("LimelightX", x);
+     //post to smart dashboard periodically
+     SmartDashboard.putNumber("LimelightX", x);
     SmartDashboard.putNumber("LimelightY", y);
-    SmartDashboard.putNumber("LimelightArea", area);
+     SmartDashboard.putNumber("LimelightArea", area);
 
-    SmartDashboard.putNumber(name + ":tx", x);
-    SmartDashboard.putNumber(name + ":ty", y);
+     SmartDashboard.putNumber(name + ":tx", x);
+     SmartDashboard.putNumber(name + ":ty", y);
     SmartDashboard.putNumber(name + ":area", area);
 
     
-    //SmartDashboard.putBoolean(name + ":", aprilTagViable);
+    // //SmartDashboard.putBoolean(name + ":", aprilTagViable);
 
 
-    if (aprilTagViable && getPipeline() == LimelightConstants.APRIL_TAG_TARGETING) {
-      CommandSwerveDrivetrain drivetrain = RobotContainer.getInstance().getDrivetrain();
-      Double targetDistance = LimelightHelpers.getTargetPose3d_CameraSpace(name).getTranslation().getDistance(new Translation3d());
-      // Tune this for your robot around how much variance you see in the pose at a given distance
-      Double confidence = 1 - ((targetDistance - 1) / 6);
-      LimelightHelpers.Results result =
-          LimelightHelpers.getLatestResults(name).targetingResults;
-      if (result.valid) {
-        botpose = LimelightHelpers.getBotPose2d_wpiBlue(name);
-        limelightPub.set(new double[] {
-          botpose.getX(),
-          botpose.getY(),
-          botpose.getRotation().getDegrees()
-        });
-        if (field.isPoseWithinArea(botpose)) {
-          if (drivetrain.getState().Pose.getTranslation().getDistance(botpose.getTranslation()) < 0.5
-              || trust
-              || result.targets_Fiducials.length > 1) {
-                /*
-             drivetrain.addVisionMeasurement(
-                botpose,
-                Timer.getFPGATimestamp()
-                    - (result.latency_capture / 1000.0)
-                    - (result.latency_pipeline / 1000.0)
-                VecBuilder.fill(confidence, confidence, .01));
-                 */
+    // if (aprilTagViable && getPipeline() == LimelightConstants.APRIL_TAG_TARGETING) {
+    //   CommandSwerveDrivetrain drivetrain = RobotContainer.getInstance().getDrivetrain();
+    //   Double targetDistance = LimelightHelpers.getTargetPose3d_CameraSpace(name).getTranslation().getDistance(new Translation3d());
+    //   // Tune this for your robot around how much variance you see in the pose at a given distance
+    //   Double confidence = 1 - ((targetDistance - 1) / 6);
+    //   LimelightHelpers.Results result =
+    //       LimelightHelpers.getLatestResults(name).targetingResults;
+    //   if (result.valid) {
+    //     botpose = LimelightHelpers.getBotPose2d_wpiBlue(name);
+    //     limelightPub.set(new double[] {
+    //       botpose.getX(),
+    //       botpose.getY(),
+    //       botpose.getRotation().getDegrees()
+    //     });
+    //     if (field.isPoseWithinArea(botpose)) {
+    //       if (drivetrain.getState().Pose.getTranslation().getDistance(botpose.getTranslation()) < 0.5
+    //           || trust
+    //           || result.targets_Fiducials.length > 1) {
+    //             /*
+    //          drivetrain.addVisionMeasurement(
+    //             botpose,
+    //             Timer.getFPGATimestamp()
+    //                 - (result.latency_capture / 1000.0)
+    //                 - (result.latency_pipeline / 1000.0)
+    //             VecBuilder.fill(confidence, confidence, .01));
+    //              */
                 
-          } else {
-            distanceError++;
-            SmartDashboard.putNumber("Limelight Error", distanceError);
-          }
-        } else {
-          fieldError++;
-          SmartDashboard.putNumber("Field Error", fieldError);
-        }
-      }
-    }
+    //       } else {
+    //         distanceError++;
+    //         SmartDashboard.putNumber("Limelight Error", distanceError);
+    //       }
+    //     } else {
+    //       fieldError++;
+    //       SmartDashboard.putNumber("Field Error", fieldError);
+    //     }
+    //   }
+    // }
+    
   }
 
   public void setTrust(boolean newTrust){

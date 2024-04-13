@@ -36,6 +36,8 @@ public class Robot extends TimedRobot {
   BooleanLogEntry myBooleanLog;
   DoubleLogEntry myDoubleLog;
   StringLogEntry myStringLog;
+  String autoName;
+  String newAutoName;
 
   @Override
   public void robotInit() {
@@ -57,21 +59,23 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    
-    if (AutoBuilder.getAllAutoNames().contains(RobotContainer.getInstance().getPathPlannerAuto().getName())) {
-      // System.out.println(RobotContainer.getInstance().getPathPlannerAuto().getName());
-      List<PathPlannerPath> pathPlannerPaths = PathPlannerAuto.getPathGroupFromAutoFile(RobotContainer.getInstance().getPathPlannerAuto().getName());
-      List<Pose2d> poses = new ArrayList<>();
-      for (PathPlannerPath path : pathPlannerPaths) {
-          poses.addAll(path.getAllPathPoints().stream().map(point -> new Pose2d(point.position.getX(), point.position.getY(), new Rotation2d())).collect(Collectors.toList()));
-          // path.getAllPathPoints().stream().map(point -> new Pose2d(point.position, 0)).collect(Collectors.toList());
+    newAutoName = RobotContainer.getInstance().getPathPlannerAuto().getName();
+    if (autoName != newAutoName) {
+      autoName = newAutoName;
+      if (AutoBuilder.getAllAutoNames().contains(autoName)) {
+        System.out.println("Displaying " + autoName);
+        List<PathPlannerPath> pathPlannerPaths = PathPlannerAuto.getPathGroupFromAutoFile(autoName);
+        List<Pose2d> poses = new ArrayList<>();
+        for (PathPlannerPath path : pathPlannerPaths) {
+            poses.addAll(path.getAllPathPoints().stream().map(point -> new Pose2d(point.position.getX(), point.position.getY(), new Rotation2d())).collect(Collectors.toList()));
+            // path.getAllPathPoints().stream().map(point -> new Pose2d(point.position, 0)).collect(Collectors.toList());
+        }
+        RobotContainer.getInstance().getDrivetrain().getField().getObject("path").setPoses(poses);
+        // PathPlannerTrajectory pathPlannerTrajectory = new PathPlannerTrajectory(pathPlannerTrajectoryStates);
+        // m_field.getObject("trajectory").setTrajectory((Trajectory) pathPlannerTrajectory);
+        // PathPlannerTrajectory pathPlannerTrajectory = new PathPlannerTrajectory(pathPlannerPaths, getCurrentRobotChassisSpeeds(), m_fieldRelativeOffset);
       }
-      RobotContainer.getInstance().getDrivetrain().getField().getObject("path").setPoses(poses);
-      // PathPlannerTrajectory pathPlannerTrajectory = new PathPlannerTrajectory(pathPlannerTrajectoryStates);
-      // m_field.getObject("trajectory").setTrajectory((Trajectory) pathPlannerTrajectory);
-      // PathPlannerTrajectory pathPlannerTrajectory = new PathPlannerTrajectory(pathPlannerPaths, getCurrentRobotChassisSpeeds(), m_fieldRelativeOffset);
     }
-    
   }
 
   @Override
