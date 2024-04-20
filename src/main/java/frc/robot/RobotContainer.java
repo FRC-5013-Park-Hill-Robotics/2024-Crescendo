@@ -41,6 +41,7 @@ import frc.robot.commands.CommandFactory;
 import frc.robot.commands.DriveToLLTarget;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.GamepadDrive;
+import frc.robot.commands.GotoNote;
 import frc.robot.commands.IntakeCommandFactory;
 import frc.robot.commands.TurnToAngle;
 import frc.robot.constants.AutoConstants;
@@ -145,7 +146,7 @@ public class RobotContainer {
         //.andThen(m_intakeRollers.throwOut())
         )
         */        
-
+    driverController.b().whileTrue(new GotoNote(drivetrain, m_LimelightBack, this::gamepiecePipeline));
     driverController.leftTrigger().whileTrue(new AimAndDrive(drivetrain, driverController, m_LimelightFront, LimelightConstants::GETSPEAKERSKEW).alongWith(new AutoAdjustAngle(m_launcherRollers, m_launcherShoulder)));
     //operator controls
     operatorController.a().whileTrue(new AmpCommand(m_launcherShoulder, m_intakeRollers, m_intakeWrist)).onFalse(m_intakeRollers.ampOutCommand().andThen(m_intakeWrist.retractCommand()));
