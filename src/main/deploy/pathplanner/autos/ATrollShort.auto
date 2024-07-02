@@ -12,9 +12,22 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "X4"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "X4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Roller Out"
+                }
+              }
+            ]
           }
         },
         {

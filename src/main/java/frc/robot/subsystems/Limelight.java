@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -34,14 +36,13 @@ public class Limelight extends SubsystemBase {
   private boolean aprilTagViable;
   private RobotContainer m_robotContainer;
   Alliance alliance;
-  private Boolean enable = true;
+  //private Boolean enable = true;
   private Boolean trust = false;
-  private int fieldError = 0;
-  private int distanceError = 0;
-  private Pose2d botpose;
+  //private int fieldError = 0;
+  //private int distanceError = 0;
+  //private Pose2d botpose;
   private String name;
   private final DoubleArrayPublisher limelightPub;
-  private boolean aprilTagPipeline = false;
   public Limelight(String name, boolean aprilTagViable) {
     /**
      * tx - Horizontal Offset
@@ -80,7 +81,26 @@ public class Limelight extends SubsystemBase {
      SmartDashboard.putNumber(name + ":ty", y);
     SmartDashboard.putNumber(name + ":area", area);
 
-    
+    if(aprilTagViable && getPipeline() == LimelightConstants.POSE_ESTIMATION){
+      boolean doRejectUpdate = false;
+      LimelightHelpers.SetRobotOrientation("limelight", RobotContainer.getInstance().getDrivetrain().getPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+      LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2("limelight");
+      if(Math.abs(RobotContainer.getInstance().getDrivetrain().getCurrentRobotChassisSpeeds().omegaRadiansPerSecond) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
+      {
+        doRejectUpdate = true;
+      }
+      if(mt2.tagCount == 0)
+      {
+        doRejectUpdate = true;
+      }
+      if(!doRejectUpdate)
+      {
+        RobotContainer.getInstance().getDrivetrain().setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+        RobotContainer.getInstance().getDrivetrain().addVisionMeasurement(
+            mt2.pose,
+            mt2.timestampSeconds);
+      }
+    }
     // //SmartDashboard.putBoolean(name + ":", aprilTagViable);
 
 
@@ -141,12 +161,10 @@ public class Limelight extends SubsystemBase {
   }
 
   public void setPipelineAprilTag(){
-    aprilTagPipeline = true;
     setPipeline(LimelightConstants.APRIL_TAG_TARGETING);
   }
 
   public void setPipelineObjectDecection(){
-    aprilTagPipeline = false;
     setPipeline(LimelightConstants.GAME_PIECE_RECOGNITION);
   }
 

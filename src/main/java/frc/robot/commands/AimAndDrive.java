@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.CommandSwerveDrivetrain;
+import frc.robot.RobotContainer;
 import frc.robot.constants.ControllerConstants;
 import frc.robot.constants.DrivetrainConstants;
 import frc.robot.constants.ThetaGains;
@@ -54,7 +55,8 @@ public class AimAndDrive extends Command {
 		m_drivetrain = drivetrain;
 		m_limelight = limelight;
     	m_skew = skew;
-      thetaController.enableContinuousInput(0,2*Math.PI);
+		m_limelight.setPipeline(RobotContainer.getInstance().getSpeakerPipeline());
+      	thetaController.enableContinuousInput(0,2*Math.PI);
 	}
 
 	@Override
@@ -73,7 +75,7 @@ public class AimAndDrive extends Command {
  
 		
       	double thetaOutput = 0;
-		double horizontal_angle = -m_limelight.getVerticalAngleOfErrorDegrees() ;
+		double horizontal_angle = m_limelight.getVerticalAngleOfErrorDegrees() ;
     //lead test
     horizontal_angle += 6*translationY;
 		double setpoint = Math.toRadians(horizontal_angle)+ m_drivetrain.getPose().getRotation().getRadians() + Math.toRadians(m_skew.get());

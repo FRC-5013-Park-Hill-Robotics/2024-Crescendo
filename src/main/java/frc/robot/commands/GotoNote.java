@@ -15,12 +15,15 @@ import frc.robot.CommandSwerveDrivetrain;
 import frc.robot.constants.DrivetrainConstants;
 import frc.robot.constants.LimelightConstants;
 import frc.robot.constants.ThetaGains;
+import frc.robot.subsystems.IntakeRollers;
+import frc.robot.subsystems.IntakeWrist;
 import frc.robot.subsystems.Limelight;
 
 public class GotoNote extends Command {
   private Limelight m_Limelight;
   private CommandSwerveDrivetrain m_Drivetrain;
   private Supplier<Integer> m_pipeline;
+  private IntakeWrist m_Wrist;
   private PIDController thetaController = new PIDController(ThetaGains.kP, ThetaGains.kI, ThetaGains.kD);
   private boolean targeting = false;
 
@@ -34,11 +37,12 @@ public class GotoNote extends Command {
   boolean finished = false;
 
 
-  public GotoNote(CommandSwerveDrivetrain drivetrain, Limelight Limelight, Supplier<Integer> pipeline) {
+  public GotoNote(CommandSwerveDrivetrain drivetrain, Limelight Limelight, Supplier<Integer> pipeline, IntakeWrist wrist) {
     addRequirements(drivetrain);
     m_Drivetrain = drivetrain;
     m_Limelight = Limelight;
     m_pipeline = pipeline;
+    m_Wrist = wrist;
     lostGamepiece = false;
     finished = false;
   }
@@ -56,6 +60,8 @@ public class GotoNote extends Command {
     finished = false;
     lostGamepiece = false;
     m_timer = new Timer();
+    SmartDashboard.putNumber("AutoGP Timer", m_timer.get());
+    SmartDashboard.putBoolean("AutoGP Timer Bool", m_timer.get() < 0.05);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -65,6 +71,8 @@ public class GotoNote extends Command {
     double throttle = 0.5;
     double thetaOutput = 0;
     double xOutput = 0;
+    SmartDashboard.putNumber("AutoGP Timer", m_timer.get());
+    SmartDashboard.putBoolean("AutoGP Timer Bool", m_timer.get() < 0.05);
 		if (m_Limelight.hasTarget()){
       aquiredTarget = true;
 			double vertical_angle = m_Limelight.getVerticalAngleOfErrorDegrees();
@@ -84,7 +92,7 @@ public class GotoNote extends Command {
           lostGamepiece = true;
         }
         thetaOutput = 0;
-        if (lostGamepiece && m_timer.get() < 0.2){
+        if (lostGamepiece && m_timer.get() < 0.05){
          xOutput = -throttle*DrivetrainConstants.maxSpeedMetersPerSecond;
         } else {
           xOutput = 0;
@@ -109,6 +117,6 @@ public class GotoNote extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return finished;
+    return finished || m_Wrist.hasGamePieceAndDown();
   }
 }
