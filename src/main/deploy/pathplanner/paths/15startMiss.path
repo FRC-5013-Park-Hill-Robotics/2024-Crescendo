@@ -3,49 +3,49 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.46,
-        "y": 0.85
+        "x": 2.943465151461739,
+        "y": 6.329825233790444
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.973974319844885,
-        "y": 1.8926955523411082
+        "x": 5.718850061662163,
+        "y": 6.933593179167379
       },
       "isLocked": false,
-      "linkedName": "8"
+      "linkedName": "A1Miss"
     },
     {
       "anchor": {
-        "x": 8.143660035837273,
-        "y": 7.420502812535874
+        "x": 8.54292593519944,
+        "y": 5.7844864444177295
       },
       "prevControl": {
-        "x": 9.117691246836182,
-        "y": 7.24340622871789
+        "x": 6.538915666692992,
+        "y": 5.7844864444177295
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "4IN"
+      "linkedName": "45startend"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.8,
+    "maxVelocity": 5.79,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 133.0,
+    "velocity": 0.0,
+    "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "TrollConnections",
+  "folder": null,
   "previewStartingState": {
-    "rotation": 133.0,
+    "rotation": -179.01223960036015,
     "velocity": 0
   },
   "useDefaultConstraints": true

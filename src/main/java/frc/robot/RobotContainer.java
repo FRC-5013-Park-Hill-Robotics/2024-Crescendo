@@ -242,7 +242,7 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("Lower Speed", m_CommandFactory.lowerSpeed());
     NamedCommands.registerCommand("Reset Speed", m_CommandFactory.resetSpeed());
-    NamedCommands.registerCommand("AutoGP", new GotoNote(drivetrain, m_LimelightBack, this::gamepiecePipeline, m_intakeWrist));
+    NamedCommands.registerCommand("AutoGP", new GotoNote(drivetrain, m_LimelightBack, this::gamepiecePipeline, m_intakeWrist).withTimeout(1.5));
 
     //NamedCommands.registerCommand("Intake Up", m_intakeWrist.intakeGamePieceManualEndCommand().until(m_intakeWrist::atGoal));
   }

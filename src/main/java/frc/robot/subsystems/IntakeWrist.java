@@ -127,6 +127,7 @@ public class IntakeWrist extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("IntakeAngle", Math.toDegrees(getAngle()));
+        SmartDashboard.putNumber("IntakeDeployAngle", Math.toDegrees(getGroundRelativeWristPositionRadians(IntakeConstants.DEPLOY_SETPOINT_TO_GROUND)));
         if (this.stop == true) {
             intakeWristMotor.setControl(wristVoltageOut.withOutput(0));
         } else {
