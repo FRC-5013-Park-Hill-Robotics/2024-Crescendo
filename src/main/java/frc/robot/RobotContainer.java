@@ -221,7 +221,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Align and Adjust to Speaker", m_CommandFactory.alignAndAdjustToSpeakerCommand());
     NamedCommands.registerCommand("Intake Roller Out", m_CommandFactory.intakeRollerOutCommand().andThen(new WaitCommand(0.15)));
     
-    NamedCommands.registerCommand("Auto Drive to Note", new DriveToLLTarget(drivetrain, m_LimelightBack, this::gamepiecePipeline, AutoConstants::AUTODRIVETONOTESPEED).withTimeout(0.35));
+    //NamedCommands.registerCommand("Auto Drive to Note", new DriveToLLTarget(drivetrain, m_LimelightBack, this::gamepiecePipeline, AutoConstants::AUTODRIVETONOTESPEED).withTimeout(0.35));
     NamedCommands.registerCommand("Auto Align to Speaker", new AutoAdjustAngle(m_launcherRollers, m_launcherShoulder));
 
     NamedCommands.registerCommand("Adjust to Subwoofer", m_CommandFactory.presetAngleAdjust(AutoConstants.SUBWOOFER));
@@ -339,10 +339,10 @@ public class RobotContainer {
   public double getShuttleAngle() {
     Optional<Alliance> alliance = DriverStation.getAlliance();
     if (alliance.get() == Alliance.Red) {
-      return 41.0 -7.0;
+      return (41.0 - 7); //+towards amp
     }
     else {
-      return 139.0 + 7.0;
+      return (139.0 + 7); //-towards amp
     }
   }
 
