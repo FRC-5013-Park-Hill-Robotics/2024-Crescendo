@@ -37,11 +37,11 @@ public class Limelight extends SubsystemBase {
   private boolean aprilTagViable;
   private RobotContainer m_robotContainer;
   Alliance alliance;
-  private Boolean enable = true;
+  //private Boolean enable = true;
   private Boolean trust = false;
-  private int fieldError = 0;
-  private int distanceError = 0;
-  private Pose2d botpose;
+  //private int fieldError = 0;
+  //private int distanceError = 0;
+  //private Pose2d botpose;
   private String name;
   private final DoubleArrayPublisher limelightPub;
   private boolean aprilTagPipeline = false;
@@ -137,12 +137,10 @@ public class Limelight extends SubsystemBase {
   }
 
   public void setPipelineAprilTag(){
-    aprilTagPipeline = true;
     setPipeline(LimelightConstants.APRIL_TAG_TARGETING);
   }
 
   public void setPipelineObjectDecection(){
-    aprilTagPipeline = false;
     setPipeline(LimelightConstants.GAME_PIECE_RECOGNITION);
   }
 

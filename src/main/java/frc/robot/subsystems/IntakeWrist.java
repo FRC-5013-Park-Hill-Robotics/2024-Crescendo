@@ -16,6 +16,7 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.units.Angle;
@@ -65,6 +66,9 @@ public class IntakeWrist extends SubsystemBase {
     private double lastSpeed = 0;
     private double lastTime = 0;
 
+    private Debouncer mDebouncer = new Debouncer(0.1);
+    private Timer mTimer = new Timer();
+
     private boolean stop = true;
     private IntakeRollers m_intakeRollers;
 
@@ -108,6 +112,8 @@ public class IntakeWrist extends SubsystemBase {
         intakeWristMotor.getConfigurator().apply(config);
         wristController.setTolerance(IntakeConstants.RotationGains.kPositionTolerance.getRadians(), 0.01);
         wristController.enableContinuousInput(0, 2 * Math.PI);
+
+        mTimer.reset();
     }
 
     public double getAngle() {
@@ -121,6 +127,7 @@ public class IntakeWrist extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("IntakeAngle", Math.toDegrees(getAngle()));
+        SmartDashboard.putNumber("IntakeDeployAngle", Math.toDegrees(getGroundRelativeWristPositionRadians(IntakeConstants.DEPLOY_SETPOINT_TO_GROUND)));
         if (this.stop == true) {
             intakeWristMotor.setControl(wristVoltageOut.withOutput(0));
         } else {
@@ -153,6 +160,7 @@ public class IntakeWrist extends SubsystemBase {
         SmartDashboard.putNumber("Ground Angle", Math.toDegrees(getGroundRelativeWristPositionRadians()));
         SmartDashboard.putNumber("Wrist Position", encoder.getAngle().getDegrees());
         SmartDashboard.putNumber("Wrist  goal", Math.toDegrees(wristGoalRadians.getGoal()));
+        SmartDashboard.putBoolean("HasGamePieceAndDown", hasGamePieceAndDown());
         
     }
 
@@ -225,8 +233,19 @@ public class IntakeWrist extends SubsystemBase {
     }
 
     public Command intakeGamePiece() {
-        return deployCommand().andThen(m_intakeRollers.intakeGamepieceCommand()).until(m_intakeRollers::hasGamePiece)
+        return deployCommand().andThen(m_intakeRollers.intakeGamepieceCommand()).until(this::hasGamePieceAndDown)
                 .andThen(retractCommand());
+    }
+
+    public boolean hasGamePieceAndDown() {
+        boolean value = false;
+        if(MathUtil.isNear(getGroundRelativeWristPositionRadians(), IntakeConstants.DEPLOY_SETPOINT_TO_GROUND, Math.toRadians(2))){
+            mTimer.start();
+        } 
+        if (mTimer.get() > 0.4){
+            value = mDebouncer.calculate(m_intakeRollers.hasGamePiece());
+        }
+        return value;
     }
 
     public Command intakeGamePieceManualCommand() {

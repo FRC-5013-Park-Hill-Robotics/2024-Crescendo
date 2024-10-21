@@ -17,6 +17,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.playingwithfusion.TimeOfFlight;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -139,6 +140,8 @@ public class RobotContainer {
         .onTrue(m_intakeWrist.intakeGamePieceManualCommand())
         .onFalse(m_intakeWrist.intakeGamePieceManualEndCommand());
 
+    //driverController.a().onTrue(m_intakeWrist.intakeGamePieceManualCommand());
+
     driverController.a()
         .whileTrue(m_CommandFactory.alignAndAdjustToSpeakerCommand());
        // .onFalse(m_LimelightFront.setPipelineCommand(LimelightConstants.APRIL_TAG_TARGETING));
@@ -149,7 +152,8 @@ public class RobotContainer {
         //.andThen(m_intakeRollers.throwOut())
         )
         */        
-    driverController.b().whileTrue(new GotoNote(drivetrain, m_LimelightBack, this::gamepiecePipeline));
+    driverController.b().whileTrue(new GotoNote(drivetrain, m_LimelightBack, this::gamepiecePipeline, m_intakeWrist).andThen(m_intakeWrist.intakeGamePieceManualEndCommand())).onFalse(m_intakeWrist.intakeGamePieceManualEndCommand());
+    
     driverController.leftTrigger().whileTrue(new AimAndDrive(drivetrain, driverController, m_LimelightFront, LimelightConstants::GETSPEAKERSKEW).alongWith(new AutoAdjustAngle(m_launcherRollers, m_launcherShoulder)));
     //operator controls
     operatorController.a().whileTrue(new AmpCommand(m_launcherShoulder, m_intakeRollers, m_intakeWrist)).onFalse(m_intakeRollers.ampOutCommand().andThen(m_intakeWrist.retractCommand()));
@@ -317,6 +321,10 @@ public class RobotContainer {
   public CommandXboxController getOperatorController() {
     return operatorController;
   }
+
+  /*public TimeOfFlight getTimeOfFlight() {
+    return m_intakeRollers.ge
+  }*/
 
   //------------------------------
   //  Math Return Fuctions

@@ -52,6 +52,8 @@ public class IntakeRollers extends SubsystemBase {
         config.Slot0.kS = IntakeConstants.RollerGains.kS;
         config.Slot0.kV = IntakeConstants.RollerGains.kV;
         config.Slot0.kA = IntakeConstants.RollerGains.kA;
+        config.CurrentLimits.StatorCurrentLimit = 40;
+        config.CurrentLimits.SupplyTimeThreshold = 0.25;
         intakeRollerMotor.getConfigurator().apply(config);
         intakeRollerMotor.set(0);
         m_VelocityVoltage.withSlot(0);
