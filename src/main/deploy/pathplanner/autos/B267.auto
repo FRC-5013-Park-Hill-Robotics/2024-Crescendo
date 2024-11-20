@@ -61,6 +61,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Intake Down"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -75,14 +81,14 @@
                 "data": {
                   "name": "Duck"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Down"
-                }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Up"
           }
         },
         {
@@ -100,12 +106,6 @@
                 "data": {
                   "name": "Duck2"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Up"
-                }
               }
             ]
           }
@@ -117,47 +117,27 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "67start"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Down"
-                }
-              }
-            ]
+            "name": "Intake Down"
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "67end"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Up"
-                }
-              }
-            ]
+            "pathName": "67start"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Intake Roller Out"
+            "name": "Intake Up"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "67end"
           }
         }
       ]

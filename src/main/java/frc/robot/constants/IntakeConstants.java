@@ -47,6 +47,6 @@ public final class IntakeConstants {
     public final static double RETRACT_SETPOINT = 0;
     public static final int TIME_OF_FLIGHT_CAN_ID = 1;
     public static final double TIME_OF_FLIGHT_RANGE_MM = 110;
-    public static final double ENCODER_OFFSET_RADIANS = Math.toRadians(-114.5);
+    public static final double ENCODER_OFFSET_RADIANS = Math.toRadians(6.7); //-114.5
 
 }

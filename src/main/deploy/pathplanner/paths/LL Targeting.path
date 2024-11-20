@@ -1,0 +1,70 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.7805585557503859,
+        "y": 4.508504473180682
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 0.9567867436271553,
+        "y": 0.5433702459533729
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.697514929913581,
+        "y": 2.2175380307826815
+      },
+      "prevControl": {
+        "x": 6.390489203160875,
+        "y": 2.1441096191673603
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "LL OVERRIDE TEST"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "Start Rotation Override",
+      "waypointRelativePos": 0.8,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Override Rotation"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 2.4,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0,
+    "rotateFast": true
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": {
+    "rotation": 121.6607510966366,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

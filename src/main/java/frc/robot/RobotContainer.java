@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Rotation;
+
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
@@ -71,6 +73,7 @@ public class RobotContainer {
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController operatorController = new CommandXboxController(1);
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
+  private boolean LLRotationOverride = false;
 
   private Climber m_climber = new Climber(); // creates the climber instance variable
 
@@ -104,15 +107,15 @@ public class RobotContainer {
     instance = this;
     configureBindings();
     configureAutonomousCommands();
-    //m_LimelightBack.setPipelineObjectDecection();
+    
     SmartDashboard.clearPersistent("Auto Chooser");
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
-    //SmartDashboard.putStringArray("Auto List", AutoBuilder.getAllAutoNames().toArray(new String[0]));
-
     m_LimelightFront.setPipeline(getSpeakerPipeline());
     m_LimelightBack.setPipeline(LimelightConstants.GAME_PIECE_RECOGNITION);
+
+    SmartDashboard.putString("LLRotationOverrideSupplier", "None");
   }
 
   private void configureBindings() {
@@ -222,7 +225,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Align and Adjust to Speaker", m_CommandFactory.alignAndAdjustToSpeakerCommand());
     NamedCommands.registerCommand("Intake Roller Out", m_CommandFactory.intakeRollerOutCommand().andThen(new WaitCommand(0.15)));
     
-    NamedCommands.registerCommand("Auto Drive to Note", new DriveToLLTarget(drivetrain, m_LimelightBack, this::gamepiecePipeline, AutoConstants::AUTODRIVETONOTESPEED).withTimeout(0.35));
+    //NamedCommands.registerCommand("Auto Drive to Note", new DriveToLLTarget(drivetrain, m_LimelightBack, this::gamepiecePipeline, AutoConstants::AUTODRIVETONOTESPEED).withTimeout(0.35));
     NamedCommands.registerCommand("Auto Align to Speaker", new AutoAdjustAngle(m_launcherRollers, m_launcherShoulder));
 
     NamedCommands.registerCommand("Adjust to Subwoofer", m_CommandFactory.presetAngleAdjust(AutoConstants.SUBWOOFER));
@@ -242,7 +245,9 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("Lower Speed", m_CommandFactory.lowerSpeed());
     NamedCommands.registerCommand("Reset Speed", m_CommandFactory.resetSpeed());
-    NamedCommands.registerCommand("AutoGP", new GotoNote(drivetrain, m_LimelightBack, this::gamepiecePipeline, m_intakeWrist).withTimeout(1.5));
+
+    NamedCommands.registerCommand("Override Rotation", drivetrain.setLLRotationOverrideC(true));
+    NamedCommands.registerCommand("Stop Override", drivetrain.setLLRotationOverrideC(false));
 
     //NamedCommands.registerCommand("Intake Up", m_intakeWrist.intakeGamePieceManualEndCommand().until(m_intakeWrist::atGoal));
   }
@@ -261,7 +266,7 @@ public class RobotContainer {
   }
 
   public void setRumble(CommandXboxController controller, boolean rumble){
-     controller.getHID().setRumble(RumbleType.kBothRumble, rumble?1:0);
+    controller.getHID().setRumble(RumbleType.kBothRumble, rumble?1:0);
   }
 
   public Command startRumbleCommand(CommandXboxController controller) {
@@ -285,11 +290,9 @@ public class RobotContainer {
     return m_LimelightFront;
   }
 
-  /*
   public Limelight getBackLimelight() {
     return m_LimelightBack;
   }
-   */
 
   public CommandSwerveDrivetrain getDrivetrain() {
     return drivetrain;
@@ -344,10 +347,10 @@ public class RobotContainer {
   public double getShuttleAngle() {
     Optional<Alliance> alliance = DriverStation.getAlliance();
     if (alliance.get() == Alliance.Red) {
-      return 41.0 -7.0;
+      return (41.0 - 7); //+towards amp
     }
     else {
-      return 139.0 + 7.0;
+      return (139.0 + 7); //-towards amp
     }
   }
 
@@ -359,6 +362,5 @@ public class RobotContainer {
     Command ejectCommand = m_intakeRollers.ampOutCommand();
     return movementCommand.andThen(ejectCommand);
   }
-
 
 }

@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7511871911042578,
+      "x": 0.765872873427322,
       "y": 6.579185680732721
     },
-    "rotation": -120.0
+    "rotation": -119.74488129694225
   },
   "command": {
     "type": "sequential",
@@ -36,20 +36,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "A1Miss"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "14startMiss"
+                  "pathName": "X4"
                 }
               },
               {
@@ -57,33 +44,14 @@
                 "data": {
                   "name": "Close To Wing Align"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Down"
-                }
               }
             ]
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Up"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "14end"
-                }
-              }
-            ]
+            "name": "Intake Up"
           }
         },
         {
@@ -93,47 +61,21 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "45start"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Close To Wing Align"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Down"
-                }
-              }
-            ]
+            "name": "Intake Down"
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Up"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "45end"
-                }
-              }
-            ]
+            "pathName": "45"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Up"
           }
         },
         {

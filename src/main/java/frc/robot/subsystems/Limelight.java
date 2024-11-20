@@ -1,11 +1,12 @@
 package frc.robot.subsystems;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
@@ -43,6 +44,8 @@ public class Limelight extends SubsystemBase {
   //private Pose2d botpose;
   private String name;
   private final DoubleArrayPublisher limelightPub;
+  private boolean aprilTagPipeline = false;
+  private Debouncer targetDebouncer = new Debouncer(0.6);
   public Limelight(String name, boolean aprilTagViable) {
     /**
      * tx - Horizontal Offset
@@ -67,40 +70,13 @@ public class Limelight extends SubsystemBase {
     // // This method will be called once per scheduler run
 
       //read values periodically
-     double x = this.tx.getDouble(0.0);
-     double y = this.ty.getDouble(0.0);
-     double area = this.ta.getDouble(0.0);
+     //double x = this.tx.getDouble(0.0);
+     //double y = this.ty.getDouble(0.0);
+     //double area = this.ta.getDouble(0.0);
 
 
-     //post to smart dashboard periodically
-     SmartDashboard.putNumber("LimelightX", x);
-    SmartDashboard.putNumber("LimelightY", y);
-     SmartDashboard.putNumber("LimelightArea", area);
 
-     SmartDashboard.putNumber(name + ":tx", x);
-     SmartDashboard.putNumber(name + ":ty", y);
-    SmartDashboard.putNumber(name + ":area", area);
-
-    if(aprilTagViable && getPipeline() == LimelightConstants.POSE_ESTIMATION){
-      boolean doRejectUpdate = false;
-      LimelightHelpers.SetRobotOrientation("limelight", RobotContainer.getInstance().getDrivetrain().getPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
-      LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2("limelight");
-      if(Math.abs(RobotContainer.getInstance().getDrivetrain().getCurrentRobotChassisSpeeds().omegaRadiansPerSecond) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
-      {
-        doRejectUpdate = true;
-      }
-      if(mt2.tagCount == 0)
-      {
-        doRejectUpdate = true;
-      }
-      if(!doRejectUpdate)
-      {
-        RobotContainer.getInstance().getDrivetrain().setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
-        RobotContainer.getInstance().getDrivetrain().addVisionMeasurement(
-            mt2.pose,
-            mt2.timestampSeconds);
-      }
-    }
+    
     // //SmartDashboard.putBoolean(name + ":", aprilTagViable);
 
 
@@ -189,8 +165,7 @@ public class Limelight extends SubsystemBase {
     return getTxAngleRadians()+m_robotContainer.getDrivetrain().getPose().getRotation().getRadians();
   }
   public boolean hasTarget(){
-    SmartDashboard.putNumber("tv; ", tv.getDouble(0));
-    return tv.getDouble(0) != 0;
+    return targetDebouncer.calculate(tv.getDouble(0) != 0);
   }
   public void setPipeline(int pipeline){
     table.getEntry("pipeline").setNumber(pipeline);

@@ -24,6 +24,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Intake Down"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -38,33 +44,20 @@
                 "data": {
                   "name": "Duck2"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Down"
-                }
               }
             ]
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Up"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "B6end"
-                }
-              }
-            ]
+            "name": "Intake Up"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "B6end"
           }
         },
         {
@@ -74,41 +67,27 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Down"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "67start"
-                }
-              }
-            ]
+            "name": "Intake Down"
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Up"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "67end"
-                }
-              }
-            ]
+            "pathName": "67start"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Up"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "67end"
           }
         },
         {

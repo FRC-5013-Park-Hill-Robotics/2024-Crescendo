@@ -1,0 +1,31 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.2798717547345657,
+      "y": 5.698044741348875
+    },
+    "rotation": 180.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "B4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "45"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "B Autos",
+  "choreoAuto": false
+}
